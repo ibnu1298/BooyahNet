@@ -1,0 +1,14 @@
+Folder App pada NextJs  ini sama seperti folder pages pada Next sebelum versi 13
+jika pada  umumnya menggunakan index.tsx, disini penggunakan page.tsx
+
+page.tsx pada Folder app ini juga sebagai path awal url.
+misal, ketika di run "localhost:3000" (tanpa path nya) maka 
+yang diakses adalah file page.tsx tersebut
+
+jika ingin membuat path baru maka harus dibuatkan folder baru
+didalam folder app lalu buat file dengan nama page.tsx
+
+misal dalam folder app membuat folder login 
+didalam folder login dibuat file(Component) dengan nama page.tsx
+maka ketika di run "localhost:3000/login" akan mengakses file page.tsx 
+yang ada di folder login

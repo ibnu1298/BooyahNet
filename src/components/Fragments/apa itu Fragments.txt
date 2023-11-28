@@ -1,0 +1,3 @@
+Fragments, Merupakan Component yang akan menggunakan
+Kumpulan Component yang ada di Folder Element 
+yang nantinya akan digunakan di Component pada Folder Layouts

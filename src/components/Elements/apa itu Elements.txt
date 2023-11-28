@@ -1,0 +1,17 @@
+Elements, merupakan Component dasar
+dimana Kumpulan Component di folder Elements ini 
+akan digunakan (di panggil)  di Folder Fragments
+
+Penggunaan:
+Misal dalam Membuat Form Login
+Terdapat Button, Input, Label
+nah, di  Folder Elements ini akan dibuat 
+1.Component Button
+2.Component Input
+3.Component Label
+
+Supaya memudahkan maintenance
+Jika 2 Component dianggap sama, bisa  dibuat dalam 1  Folder
+(untuk management Component)  misal Component Input dan 
+Component Label berada dalam Folder Input lalu 2 Component
+tersebut dipanggil dalam folder index.jsx
