@@ -9,7 +9,7 @@ export default function LoginPage() {
       description="Silakan masukan Email dan Kata Sandi"
       type="login"
     >
-      <title>Login</title>
+      <title>BooyahNet - Sign In</title>
       <FormLogin />
     </AuthLayouts>
   );

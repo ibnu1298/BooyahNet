@@ -25,7 +25,7 @@ export default function AuthLayouts({
       <div className="container mx-auto">
         <div className="max-w-md mx-auto my-10">
           <div className="text-center">
-            <div className="my-3  font-semibold text-gray-700 dark:text-gray-200">
+            <div className="my-3 text-5xl font-semibold text-gray-700 dark:text-gray-200">
               {title}
             </div>
             <p className="text-gray-500 dark:text-gray-400">{description}</p>

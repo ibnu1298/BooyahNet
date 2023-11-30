@@ -11,7 +11,7 @@ export default function RegisterPage() {
       type="register"
     >
       <FormRegister />
-      <title>Register</title>
+      <title>BooyahNet - Register</title>
     </AuthLayouts>
   );
 }

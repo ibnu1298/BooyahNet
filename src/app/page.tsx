@@ -1,10 +1,10 @@
-import { Session } from "inspector";
-import Image from "next/image";
+import Navbar from "@/components/Fragments/Navbar";
 
 export default function Home() {
   return (
-    <div>
+    <>
+      <Navbar />
       <div>anjay</div>
-    </div>
+    </>
   );
 }

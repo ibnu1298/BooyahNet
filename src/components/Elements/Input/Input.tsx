@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { TbEye, TbEyeClosed } from "react-icons/tb";
+import InputEmail from "./InputType/InputEmail";
+import InputPassword from "./InputType/InputPassword";
 
 const Input = ({
   type,
@@ -8,16 +10,18 @@ const Input = ({
   name,
   id,
   eyeIcon,
+  input,
 }: {
   type: string;
   placeholder: string;
   name: string;
   id: string;
   eyeIcon?: React.ReactNode;
+  input?: React.ReactNode;
 }) => {
   const hide = <TbEyeClosed className="absolute mr-14" size="28px" />;
   const show = <TbEye className="absolute mr-14" size="28px" />;
-  const [password, setPassword] = useState("");
+
   const [tipe, setTipe] = useState(type);
   const [icon, setIcon] = useState(show);
 
@@ -31,6 +35,14 @@ const Input = ({
     }
   };
   if (name == "password") {
+    input = (
+      <InputPassword
+        type={tipe}
+        name={name}
+        id={id}
+        placeholder={placeholder}
+      />
+    );
     eyeIcon = (
       <span
         className="flex justify-around items-center"
@@ -41,16 +53,16 @@ const Input = ({
       </span>
     );
   }
+  if (name == "email") {
+    input = (
+      <InputEmail type={tipe} name={name} id={id} placeholder={placeholder} />
+    );
+  }
+
   return (
     <>
       <div className="mb-4 flex">
-        <input
-          type={tipe}
-          name={name}
-          id={id}
-          placeholder={placeholder}
-          className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
-        />
+        {input}
         {eyeIcon}
       </div>
     </>

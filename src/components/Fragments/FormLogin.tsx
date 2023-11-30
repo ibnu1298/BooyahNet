@@ -1,11 +1,18 @@
+"use client";
 import React from "react";
 import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
 
 export default function FormLogin() {
+  const handleLogin = (event: any) => {
+    event.preventDefault();
+    localStorage.setItem("Email", event.target.email.value);
+    localStorage.setItem("Password", event.target.password.value);
+    window.location.href = "/";
+  };
   return (
     <div className="m-9">
-      <form action="">
+      <form onSubmit={handleLogin}>
         <InputForm
           label="Email atau Username"
           type="email"
@@ -27,7 +34,7 @@ export default function FormLogin() {
           }
         />
         <div className="mb-5"></div>
-        <Button>Sign In</Button>
+        <Button type="submit">Sign In</Button>
       </form>
     </div>
   );
