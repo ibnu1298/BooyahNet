@@ -21,7 +21,7 @@ async function getPackage() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    cache: "force-cache",
+    cache: "no-cache",
     next: {
       tags: ["paket"], //revalidate manual menggunakan api local
       revalidate: 60, //revalidate setiap 60 detik
