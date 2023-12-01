@@ -53,7 +53,7 @@ const Input = ({
       </span>
     );
   }
-  if (name == "email") {
+  if (name != "password") {
     input = (
       <InputEmail type={tipe} name={name} id={id} placeholder={placeholder} />
     );

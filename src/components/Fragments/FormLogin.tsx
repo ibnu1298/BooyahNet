@@ -1,22 +1,61 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
+import ModalLoginError from "./Modal/ModalLoginError";
+import ModalForgotPass from "./Modal/ModalForgotPass";
 
+async function LoginAuth(user: string, pass: string) {
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      usernameOrEmail: user,
+      password: pass,
+    }),
+  });
+  return res.json();
+}
 export default function FormLogin() {
-  const handleLogin = (event: any) => {
+  const [forgotPass, setForgotPass] = useState("hidden");
+  const [errLogin, setErrLogin] = useState("hidden");
+  const handleLogin = async (event: any) => {
     event.preventDefault();
-    localStorage.setItem("Email", event.target.email.value);
-    localStorage.setItem("Password", event.target.password.value);
-    window.location.href = "/";
+    const user = event.currentTarget.text.value;
+    const password = event.currentTarget.password.value;
+    const response = await LoginAuth(user, password);
+    window.localStorage.setItem("token", response.token);
+    window.localStorage.setItem("name", response.firstname);
+    if (response.isSucceeded) {
+      setErrLogin("hidden");
+      window.location.href = "/";
+    } else {
+      setErrLogin("");
+    }
+  };
+  const errLoginModal = () => {
+    if (errLogin == "") {
+      setErrLogin("hidden");
+    }
+  };
+  const forgotPassModal = () => {
+    if (forgotPass == "hidden") {
+      setForgotPass("");
+    } else {
+      setForgotPass("hidden");
+    }
   };
   return (
     <div className="m-9">
-      <form onSubmit={handleLogin}>
+      <ModalLoginError show={errLogin} showModal={errLoginModal} />
+      <ModalForgotPass show={forgotPass} showModal={forgotPassModal} />
+      <form onSubmit={(event) => handleLogin(event)}>
         <InputForm
           label="Email atau Username"
-          type="email"
-          name="email"
+          type="text"
+          name="text"
           placeholder="contoh@mail.com"
         />
         <InputForm
@@ -26,14 +65,16 @@ export default function FormLogin() {
           placeholder="*********"
           additional={
             <a
-              href="#!"
+              onClick={forgotPassModal}
+              type="button"
+              style={{ cursor: "pointer" }}
               className="text-sm text-gray-400 underline focus:outline-none focus:text-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-300"
             >
               Lupa Kata Sandi?
             </a>
           }
         />
-        <div className="mb-5"></div>
+
         <Button type="submit">Sign In</Button>
       </form>
     </div>

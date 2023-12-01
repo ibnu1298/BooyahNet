@@ -1,0 +1,5 @@
+revalidate api ini berfungsi untuk melakukan hit api manual 
+sesuai tag dari revalidate yang di gunakan, ketika api revalidate ini
+di hit maka api yang menggunakan tags ini akan di lakukan hit ulang
+
+pada contoh ini akan dilakukan revalidate api di (app/src/package/page.tsx)

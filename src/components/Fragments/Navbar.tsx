@@ -2,6 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+interface DataProps {
+  name: string;
+  email: string;
+  token: string;
+}
 export default function Navbar() {
   const pathName = usePathname();
   return (
@@ -14,7 +19,7 @@ export default function Navbar() {
         {/* <!-- Nav Links --> */}
         <ul className="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-4">
           <Link
-            className={`px-3 pb-0.3  ${
+            className={`px-3 pb-0.4  ${
               pathName === "/"
                 ? "rounded-md bg-yellow-500"
                 : "text-gray-400 hover:text-gray-200"
@@ -24,7 +29,7 @@ export default function Navbar() {
             <li>Home</li>
           </Link>
           <Link
-            className={`px-3 pb-0.3 ${
+            className={`px-3 pb-0.4 ${
               pathName === "/payment"
                 ? "rounded-md bg-yellow-500"
                 : "text-gray-400 hover:text-gray-200"
@@ -34,30 +39,30 @@ export default function Navbar() {
             <li>Payment</li>
           </Link>
           <Link
-            className={`px-3 pb-0.3 ${
-              pathName === "/collections"
+            className={`px-3 pb-0.4 ${
+              pathName === "/products"
                 ? "rounded-md bg-yellow-500"
                 : "text-gray-400 hover:text-gray-200"
             } `}
-            href="/collections"
+            href="/products"
           >
-            <li>Collections</li>
+            <li>Products</li>
           </Link>
           <Link
-            className={`px-3 pb-0.3 ${
-              pathName === "/contact"
+            className={`px-3 pb-0.4 ${
+              pathName === "/package"
                 ? "rounded-md bg-yellow-500"
                 : "text-gray-400 hover:text-gray-200"
             } `}
-            href="/contact"
+            href="/package"
           >
-            <li>Contact Us</li>
+            <li>Package</li>
           </Link>
         </ul>
         {/* <!-- Header Icons --> */}
-        <div className="hidden xl:flex items-center space-x-5 items-center">
+        <div className="hidden xl:flex items-center space-x-1 items-center">
           {/* <!-- Sign In / Register      --> */}
-          {/* <div>{email}</div> */}
+          {/* <div className="mr-2">{name}</div> */}
           <a
             className="flex items-center hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
             href="#"

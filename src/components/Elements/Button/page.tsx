@@ -23,7 +23,7 @@ const Button = ({
     <a href={href}>
       <button
         type={type}
-        className={`w-full mt-2 px-3   ${className} `}
+        className={`w-full mt-2 px-3  ${className} `}
         onClick={() => onClick()}
       >
         {children}
