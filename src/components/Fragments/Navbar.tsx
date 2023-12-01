@@ -63,7 +63,7 @@ export default function Navbar() {
         <div className="hidden xl:flex items-center space-x-1 items-center">
           {/* <!-- Sign In / Register      --> */}
           {/* <div className="mr-2">{name}</div> */}
-          <a
+          {/* <a
             className="flex items-center hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
             href="#"
           >
@@ -72,7 +72,7 @@ export default function Navbar() {
               src="/images/people/cat.jpg"
               alt=""
             />
-          </a>
+          </a> */}
         </div>
       </div>
       {/* <!-- Responsive navbar --> */}
