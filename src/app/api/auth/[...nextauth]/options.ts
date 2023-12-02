@@ -6,7 +6,7 @@ export const options: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: "ibnuaqil1298",
+  secret: process.env.JWT_SECRET,
   providers: [
     GitHubProvider({
       name: "githubLogin",
@@ -20,12 +20,10 @@ export const options: NextAuthOptions = {
         email: {
           label: "Email atau Username",
           type: "text",
-          placeholder: "contoh@mail.com",
         },
         password: {
           label: "Password:",
           type: "password",
-          placeholder: "your-awesome-password",
         },
       },
       async authorize(credentials) {
@@ -47,23 +45,7 @@ export const options: NextAuthOptions = {
           });
           return res.json();
         }
-
         const response = await LoginAuth(email, password);
-
-        // const data = {
-        //   userId: response.userId,
-        //   firstname: response.firstname,
-        //   lastname: response.lastname,
-        //   address: response.address,
-        //   email: response.email,
-        //   gender: response.gender,
-        //   phoneNumber: response.phoneNumber,
-        //   username: response.username,
-        //   token: response.token,
-        //   message: response.message,
-        //   isSucceeded: response.isSucceeded,
-        // };
-
         if (response.isSucceeded) {
           return response;
         } else {
@@ -72,9 +54,6 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
-  jwt: {
-    secret: "secretCode",
-  },
   callbacks: {
     async jwt({ token, account, profile, user }: any) {
       console.log(user);

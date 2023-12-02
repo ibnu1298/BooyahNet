@@ -1,8 +1,10 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import DropdownUser from "./Dropdown/DropdownUser";
 
 interface DataProps {
   name: string;
@@ -13,25 +15,29 @@ export default function Navbar() {
   const pathName = usePathname();
   const router = useRouter();
   const { data: session, status }: { data: any; status: string } = useSession();
-  console.log(session?.user);
-  console.log(session?.user.token);
   console.log(status);
-
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/api/auth/signin/credentials");
+      router.push("/login");
     }
   }, [router, status]);
+  const [show, setShow] = useState("hidden");
+  const showDropdown = () => {
+    if (show == "hidden") {
+      setShow("");
+    } else {
+      setShow("hidden");
+    }
+  };
 
   return (
-    <nav className="flex justify-between bg-gray-900 text-white w-screen">
+    <nav className="flex justify-between bg-gray-900 text-white w-screen ">
       <div className="px-5 xl:px-12 py-6 flex w-full items-center">
         <a className="text-3xl font-bold font-heading" href="/">
-          {/* <!-- <img className="h-9" src="logo.png" alt="logo"> --> */}
           Booyah.Net
         </a>
         {/* <!-- Nav Links --> */}
-        <ul className="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-4">
+        <ul className="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-4 ">
           <Link
             className={`px-3 pb-0.4  ${
               pathName === "/"
@@ -74,32 +80,29 @@ export default function Navbar() {
           </Link>
         </ul>
         {/* <!-- Header Icons --> */}
-        <div className="hidden xl:flex items-center space-x-1 items-center">
-          <div>{session?.user.name}</div>
-          {status === "authenticated" ? (
-            <a href="/api/auth/signin/credentials">
-              <button
-                className="text-white py-1 px-4 ml-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100"
-                onClick={() => signOut()}
-              >
-                Logout
-              </button>
-            </a>
-          ) : (
-            <></>
-          )}
+        <div className="hidden xl:flex items-center space-x-1 items-center ">
           {/* <!-- Sign In / Register      --> */}
-          {/* <a
+          <a onClick={showDropdown}>
+            <div className="mr-1 cursor-pointer px-2">
+              aaasssssss
+              {/* {session?.user.name} */}
+            </div>
+          </a>
+          <a
             className="flex items-center hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
-            href="#"
+            onClick={showDropdown}
           >
-            <div>{name}</div>
-            <img
-              className="h-8 w-8 rounded-full"
+            <Image
+              className="rounded-full cursor-pointer"
+              width={32}
+              height={32}
               src="/images/people/cat.jpg"
               alt=""
             />
-          </a> */}
+          </a>
+          <div className="absolute top-16 right-12">
+            <DropdownUser show={show} />
+          </div>
         </div>
       </div>
       {/* <!-- Responsive navbar --> */}
