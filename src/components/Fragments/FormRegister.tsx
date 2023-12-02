@@ -10,31 +10,26 @@ export default function FormRegister() {
   return (
     <div className="m-9">
       <form action="">
-        <div className="flex">
+        <div className="flex space-x-4 " style={{ marginBottom: "-20px" }}>
           <InputForm
-            label="Nama Depan"
+            label=""
             type="name"
-            name="name"
-            placeholder="Tuliskan Nama Depan Anda"
+            name="firstname"
+            placeholder="Nama Depan"
           />
           <InputForm
-            label="Nama Belakang"
+            label=""
             type="name"
-            name="name"
-            placeholder="Tuliskan Nama Belakang Anda"
+            name="lastname"
+            placeholder="Nama Belakang"
           />
         </div>
+        <InputForm label="" type="email" name="email" placeholder="Email" />
         <InputForm
-          label="Email"
-          type="email"
-          name="email"
-          placeholder="contoh@mail.com"
-        />
-        <InputForm
-          label="Kata Sandi"
+          label=""
           type="password"
           name="password"
-          placeholder="*********"
+          placeholder="Kata Sandi"
         />
         <div className="mb-5"></div>
         <Button onClick={handleRegister}>Daftar</Button>

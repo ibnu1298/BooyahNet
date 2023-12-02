@@ -1,6 +1,8 @@
 "use client";
+import { signOut, useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 interface DataProps {
   name: string;
@@ -9,6 +11,18 @@ interface DataProps {
 }
 export default function Navbar() {
   const pathName = usePathname();
+  const router = useRouter();
+  const { data: session, status }: { data: any; status: string } = useSession();
+  console.log(session?.user);
+  console.log(session?.user.token);
+  console.log(status);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/api/auth/signin/credentials");
+    }
+  }, [router, status]);
+
   return (
     <nav className="flex justify-between bg-gray-900 text-white w-screen">
       <div className="px-5 xl:px-12 py-6 flex w-full items-center">
@@ -61,12 +75,25 @@ export default function Navbar() {
         </ul>
         {/* <!-- Header Icons --> */}
         <div className="hidden xl:flex items-center space-x-1 items-center">
+          <div>{session?.user.name}</div>
+          {status === "authenticated" ? (
+            <a href="/api/auth/signin/credentials">
+              <button
+                className="text-white py-1 px-4 ml-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100"
+                onClick={() => signOut()}
+              >
+                Logout
+              </button>
+            </a>
+          ) : (
+            <></>
+          )}
           {/* <!-- Sign In / Register      --> */}
-          {/* <div className="mr-2">{name}</div> */}
           {/* <a
             className="flex items-center hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
             href="#"
           >
+            <div>{name}</div>
             <img
               className="h-8 w-8 rounded-full"
               src="/images/people/cat.jpg"

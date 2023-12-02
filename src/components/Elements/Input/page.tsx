@@ -16,7 +16,7 @@ export default function InputForm({
   placeholder: string;
 }) {
   return (
-    <div className="mb-7">
+    <div className="mb-5">
       <div className="flex justify-between">
         <Label htmlFor={name}>{label}</Label>
         {additional}

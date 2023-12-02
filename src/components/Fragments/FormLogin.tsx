@@ -4,6 +4,9 @@ import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
 import ModalLoginError from "./Modal/ModalLoginError";
 import ModalForgotPass from "./Modal/ModalForgotPass";
+import { NextResponse } from "next/server";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 async function LoginAuth(user: string, pass: string) {
   const res = await fetch("/api/auth/login", {
@@ -21,18 +24,25 @@ async function LoginAuth(user: string, pass: string) {
 export default function FormLogin() {
   const [forgotPass, setForgotPass] = useState("hidden");
   const [errLogin, setErrLogin] = useState("hidden");
+  const { push } = useRouter();
   const handleLogin = async (event: any) => {
     event.preventDefault();
-    const user = event.currentTarget.text.value;
-    const password = event.currentTarget.password.value;
-    const response = await LoginAuth(user, password);
-    window.localStorage.setItem("token", response.token);
-    window.localStorage.setItem("name", response.firstname);
-    if (response.isSucceeded) {
-      setErrLogin("hidden");
-      window.location.href = "/";
-    } else {
-      setErrLogin("");
+    try {
+      const response = await signIn("credentials", {
+        redirect: false,
+        email: event.currentTarget.text.value,
+        password: event.currentTarget.password.value,
+        callbackUrl: "/",
+      });
+      if (!response?.error) {
+        setErrLogin("hidden");
+        push("/");
+      } else {
+        setErrLogin("");
+        console.log(response.error);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
   const errLoginModal = () => {

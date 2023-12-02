@@ -1,12 +1,12 @@
 import React from "react";
-import PaymentPage from "./page";
 import Navbar from "@/components/Fragments/Navbar";
+import ProductsPage from "./page";
 
-export default function Paymentlayout() {
+export default function Productlayout() {
   return (
     <div>
       <Navbar />
-      <PaymentPage />
+      <ProductsPage />
     </div>
   );
 }
