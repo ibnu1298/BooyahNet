@@ -6,7 +6,7 @@ export default function AdminPackagePage() {
   const [status, setStatus] = useState("");
   const revalidate = async () => {
     const res = await fetch(
-      "/api/revalidate?tag=paket&secret=ibnuaqil1298Password",
+      `${process.env.NEXT_URL_PUBLIC}/api/revalidate?tag=paket&secret=ibnuaqil1298Password`,
       {
         method: "POST",
       }
