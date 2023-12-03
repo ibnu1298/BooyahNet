@@ -1,12 +1,13 @@
 import type { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CridetialsProvider from "next-auth/providers/credentials";
+import { jwtDecode } from "jwt-decode";
 
 export const options: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.JWT_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GitHubProvider({
       name: "githubLogin",
@@ -27,13 +28,14 @@ export const options: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        const url = "https://booyahnetapi.azurewebsites.net/api/User/Login";
+        const urlLogin =
+          "https://booyahnetapi.azurewebsites.net/api/User/Login";
         const { email, password } = credentials as {
           email: string;
           password: string;
         };
         async function LoginAuth(user: string, pass: string) {
-          const res = await fetch(url, {
+          const res = await fetch(urlLogin, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -45,9 +47,11 @@ export const options: NextAuthOptions = {
           });
           return res.json();
         }
-        const response = await LoginAuth(email, password);
-        if (response.isSucceeded) {
-          return response;
+
+        const getToken = await LoginAuth(email, password);
+
+        if (getToken.isSucceeded) {
+          return getToken;
         } else {
           return null;
         }
@@ -56,26 +60,62 @@ export const options: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account, profile, user }: any) {
-      console.log(user);
+      const urlGetUser =
+        "https://booyahnetapi.azurewebsites.net/api/User/GetByEmail";
+      async function GetUser(email: any, token: string) {
+        const res = await fetch(urlGetUser, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        });
+        return res.json();
+      }
+      interface JwtDecodeCustom {
+        exp?: number;
+        email?: string;
+        role?: string;
+      }
       if (account?.provider === "credentials") {
-        token.email = user.email;
-        token.name = `${user.firstname} ${user.lastname}`;
+        const decoded = jwtDecode<JwtDecodeCustom>(user.token);
+
+        const getUser = await GetUser(decoded?.email, user.token);
+        token.id = getUser.id;
+        token.email = getUser.email;
+        token.role = decoded?.role;
+        token.name = `${getUser.firstName} ${getUser.lastName}`;
+        token.firstName = getUser.firstName;
+        token.lastName = getUser.lastName;
+        token.address = getUser.address;
+        token.gender = getUser.gender;
+        token.userName = getUser.userName;
+        token.phoneNumber = getUser.phoneNumber;
         token.token = user.token;
-        token.picture = null;
       }
 
-      console.log(token);
       return token;
     },
     async session({ session, token }: any) {
-      console.log(token);
       if ("email" in token) {
         session.user.email = token.email;
       }
-      if ("token" in token) {
-        session.user.token = token.token;
+      if ("fullname" in token) {
+        session.user.fullname = token.fullname;
       }
-      console.log(session);
+      session.user.id = token.id;
+      session.user.token = token.token;
+      session.user.role = token.role;
+      session.user.name = token.name;
+      session.user.firstName = token.lastName;
+      session.user.address = token.address;
+      session.user.gender = token.gender;
+      session.user.userName = token.userName;
+      session.user.phoneNumber = token.phoneNumber;
+
       return session;
     },
   },

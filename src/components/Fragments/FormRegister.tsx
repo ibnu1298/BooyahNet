@@ -4,9 +4,7 @@ import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
 
 export default function FormRegister() {
-  const handleRegister = () => {
-    console.log("Register di Klik");
-  };
+  const handleRegister = () => {};
   return (
     <div className="m-9">
       <form action="">

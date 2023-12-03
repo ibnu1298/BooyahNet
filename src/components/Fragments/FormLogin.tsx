@@ -4,45 +4,38 @@ import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
 import ModalLoginError from "./Modal/ModalLoginError";
 import ModalForgotPass from "./Modal/ModalForgotPass";
-import { NextResponse } from "next/server";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-async function LoginAuth(user: string, pass: string) {
-  const res = await fetch("/api/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      usernameOrEmail: user,
-      password: pass,
-    }),
-  });
-  return res.json();
-}
-export default function FormLogin() {
+export default function FormLogin({ searchParams }: any) {
   const [forgotPass, setForgotPass] = useState("hidden");
   const [errLogin, setErrLogin] = useState("hidden");
+  const [isLoading, setIsloading] = useState(false);
   const { push } = useRouter();
+  const callbackUrl = searchParams?.callbackUrl || "/";
   const handleLogin = async (event: any) => {
     event.preventDefault();
+    setIsloading(true);
     try {
       const response = await signIn("credentials", {
         redirect: false,
         email: event.currentTarget.text.value,
         password: event.currentTarget.password.value,
-        callbackUrl: "/",
+        callbackUrl,
       });
+
       if (!response?.error) {
+        setIsloading(false);
         setErrLogin("hidden");
-        push("/");
+        push(callbackUrl);
       } else {
+        setIsloading(false);
         setErrLogin("");
-        console.log(response.error);
+        // console.log(response.error);
       }
     } catch (err) {
-      console.log(err);
+      setIsloading(false);
+      // console.log(err);
     }
   };
   const errLoginModal = () => {
@@ -85,7 +78,9 @@ export default function FormLogin() {
           }
         />
 
-        <Button type="submit">Sign In</Button>
+        <Button type="submit">
+          {isLoading ? "Tunggu Sebentar yaa..." : "Masuk"}
+        </Button>
       </form>
     </div>
   );

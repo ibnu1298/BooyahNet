@@ -6,27 +6,17 @@ import Image from "next/image";
 import Link from "next/link";
 import DropdownUser from "./Dropdown/DropdownUser";
 
-interface DataProps {
-  name: string;
-  email: string;
-  token: string;
-}
 export default function Navbar() {
   const pathName = usePathname();
   const router = useRouter();
   const { data: session, status }: { data: any; status: string } = useSession();
-  console.log(status);
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [router, status]);
-  const [show, setShow] = useState("hidden");
+
+  const [dropdown, setDropdown] = useState("hidden");
   const showDropdown = () => {
-    if (show == "hidden") {
-      setShow("");
+    if (dropdown == "hidden") {
+      setDropdown("");
     } else {
-      setShow("hidden");
+      setDropdown("hidden");
     }
   };
 
@@ -80,14 +70,9 @@ export default function Navbar() {
           </Link>
         </ul>
         {/* <!-- Header Icons --> */}
-        <div className="hidden xl:flex items-center space-x-1 items-center ">
+        <div className="hidden xl:flex items-center space-x-1">
           {/* <!-- Sign In / Register      --> */}
-          <a onClick={showDropdown}>
-            <div className="mr-1 cursor-pointer px-2">
-              aaasssssss
-              {/* {session?.user.name} */}
-            </div>
-          </a>
+
           <a
             className="flex items-center hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
             onClick={showDropdown}
@@ -100,8 +85,8 @@ export default function Navbar() {
               alt=""
             />
           </a>
-          <div className="absolute top-16 right-12">
-            <DropdownUser show={show} />
+          <div className="absolute top-5 right-20 z-50">
+            <DropdownUser show={dropdown} />
           </div>
         </div>
       </div>

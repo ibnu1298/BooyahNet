@@ -1,16 +1,17 @@
-"use client";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React from "react";
-
-export default function PaymentPage() {
-  const router = useRouter();
-  const { data: session, status }: { data: any; status: string } = useSession();
-
+import TablePayment from "@/components/Fragments/Table/TablePayment";
+import { sessionCustom } from "@/interface/payment";
+import { AuthOptions } from "next-auth";
+import { getServerSession } from "next-auth/next";
+import { options } from "../api/auth/[...nextauth]/options";
+export default async function PaymentPage() {
+  const session = await getServerSession<AuthOptions, sessionCustom>(options);
   return (
-    <div className=" 2-fix; - hg-96 reunded-[12px] flex justify center items-center">
-      <h1></h1>
-      <div>Token: {session?.user.token}</div>
+    <div className="mt-5">
+      <div className="flex justify-center my-5 text-3xl text-bold">
+        Riwayat Pembayaran
+      </div>
+      <div>Nama : {session?.user?.name}</div>
+      <TablePayment />
     </div>
   );
 }

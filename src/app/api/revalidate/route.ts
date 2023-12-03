@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
       message: "Missing tag param",
     });
   }
-
   revalidateTag(tag);
 
   return NextResponse.json({
