@@ -25,8 +25,8 @@ export default async function TablePayment() {
   const host = headers().get("host");
   const userId = session?.user?.id;
   const token = session?.user?.token;
-  const payments = await getUserPayment(userId, token, host);
-  console.log(payments);
+  const { payments } = await getUserPayment(userId, token, host);
+  console.log(payments[1].package.packageName);
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -56,7 +56,7 @@ export default async function TablePayment() {
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                Apple MacBook Pro 17
+                {payments[1].package.packageName}
               </th>
               <td className="px-6 py-4">Silver</td>
               <td className="px-6 py-4">Laptop</td>

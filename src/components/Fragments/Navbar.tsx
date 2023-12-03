@@ -1,16 +1,12 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import DropdownUser from "./Dropdown/DropdownUser";
 
 export default function Navbar() {
   const pathName = usePathname();
-  const router = useRouter();
-  const { data: session, status }: { data: any; status: string } = useSession();
-
   const [dropdown, setDropdown] = useState("hidden");
   const showDropdown = () => {
     if (dropdown == "hidden") {

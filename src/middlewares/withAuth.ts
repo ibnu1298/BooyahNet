@@ -19,7 +19,9 @@ export default function withAuth(
     if (requireAuth.includes(pathname)) {
       const token = await getToken({
         req,
-        secret: process.env.NEXTAUTH_SECRET,
+        secret:
+          process.env.NEXTAUTH_SECRET ||
+          "x5/AQqYaheIZme7wSIre0G/GBpLLJJRTCLxszpAmN/0=",
       });
       console.log(token);
       if (!token && !authPage.includes(pathname)) {

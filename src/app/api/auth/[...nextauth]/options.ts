@@ -7,7 +7,9 @@ export const options: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret:
+    process.env.NEXTAUTH_SECRET ||
+    "x5/AQqYaheIZme7wSIre0G/GBpLLJJRTCLxszpAmN/0=",
   providers: [
     GitHubProvider({
       name: "githubLogin",

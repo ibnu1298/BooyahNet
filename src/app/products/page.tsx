@@ -1,7 +1,4 @@
-import { getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
 import React from "react";
-import { options } from "../api/auth/[...nextauth]/options";
 
 async function getProducts() {
   const res = await fetch("https://fakestoreapi.com/products", {
