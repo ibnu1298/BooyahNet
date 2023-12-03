@@ -15,13 +15,10 @@ export default function withAuth(
 ) {
   return async (req: NextRequest, next: NextFetchEvent) => {
     const pathname = req.nextUrl.pathname;
-    // const callbackUrl = searchParams?.callbackUrl;
     if (requireAuth.includes(pathname)) {
       const token = await getToken({
         req,
-        secret:
-          process.env.NEXTAUTH_SECRET ||
-          "x5/AQqYaheIZme7wSIre0G/GBpLLJJRTCLxszpAmN/0=",
+        secret: process.env.NEXTAUTH_SECRET,
       });
       console.log(token);
       if (!token && !authPage.includes(pathname)) {
