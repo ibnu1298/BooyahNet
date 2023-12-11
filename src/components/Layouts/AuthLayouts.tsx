@@ -21,14 +21,14 @@ export default function AuthLayouts({
     askHaveAccount = <AskHaveAccount type={type} />;
   }
   return (
-    <div className="flex items-center min-h-screen bg-white dark:bg-gray-900">
+    <div className="flex items-center min-h-screen bg-gray-900 ">
       <div className="container mx-auto">
-        <div className="max-w-md mx-auto my-10">
+        <div className="max-w-md mx-auto my-10 rounded-3xl px-4 py-9">
           <div className="text-center">
-            <div className="my-3 text-5xl font-semibold text-gray-700 dark:text-gray-200">
+            <div className="my-3 text-5xl font-semibold text-gray-100 dark:text-gray-100">
               {title}
             </div>
-            <p className="text-gray-500 dark:text-gray-400">{description}</p>
+            <p className="text-gray-500 dark:text-gray-300">{description}</p>
           </div>
           {children}
           {askHaveAccount}

@@ -2,6 +2,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import Background from "@/components/Elements/Background/Background";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,10 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <SessionProvider>
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <Background />
+          {children}
+        </body>
       </SessionProvider>
     </html>
   );

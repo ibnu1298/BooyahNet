@@ -44,11 +44,14 @@ export default function DropdownUser({ show }: { show: string }) {
             Role : {session?.user.role}
           </a>
         </li>
-        <li>
-          <a className="block px-4 py-2 bg-gradient-to-b from-gray-800 to-gray-700  hover:from-gray-900 hover:to-gray-900 hover:text-white">
-            <button onClick={() => signOut()}>Sign out</button>
-          </a>
-        </li>
+        <a
+          onClick={() => signOut()}
+          className="block px-4 py-2 bg-gradient-to-b from-gray-800 to-gray-700  hover:from-gray-900 hover:to-gray-900 hover:text-white cursor-pointer"
+        >
+          <li>
+            <button>Sign out</button>
+          </li>
+        </a>
       </ul>
     </div>
   );

@@ -1,4 +1,7 @@
+import { sessionCustom } from "@/interface/payment";
+import { AuthOptions, getServerSession } from "next-auth";
 import React from "react";
+import { options } from "../api/auth/[...nextauth]/options";
 
 interface Package {
   id: number;
@@ -12,34 +15,36 @@ interface responsePackages {
   message: string;
   isSucceeded: boolean;
 }
-// const token =
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpYm51YXFpbDEyOThAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW4iLCJleHAiOjE3MDE0NDA3MzF9.t3BJwty76Xcoi-8GE49hYEP1hkcRgEjSZZBSfu5Ehic";
-// const url = "https://booyahnetapi.azurewebsites.net/api/Package";
-// async function getPackage() {
-//   const res = await fetch(url, {
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     cache: "no-cache",
-//     next: {
-//       tags: ["paket"], //revalidate manual menggunakan api local
-//       revalidate: 60, //revalidate setiap 60 detik
-//       //jadi bisa tunggu 1 menit atau hit api revalidate dengan tag=paket
-//     },
-//   });
-//   if (!res.ok) {
-//     throw new Error("Gagal Fecthing Data");
-//   }
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpYm51YXFpbDEyOThAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW4iLCJleHAiOjE3MDE0NDA3MzF9.t3BJwty76Xcoi-8GE49hYEP1hkcRgEjSZZBSfu5Ehic";
+const url = "https://booyahnetapi.azurewebsites.net/api/Package";
+async function getPackage(token: any) {
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    // cache: "no-cache",
+    next: {
+      tags: ["paket"], //revalidate manual menggunakan api local
+      revalidate: 60, //revalidate setiap 60 detik
+      //jadi bisa tunggu 1 menit atau hit api revalidate dengan tag=paket
+    },
+  });
+  if (!res.ok) {
+    console.log(`${await res.status} Gagal Fecthing Data`);
+  }
 
-//   return res.json();
-// }
+  return res.json();
+}
 
 export default async function PackagePage() {
-  // const data = await getPackage();
+  const session = await getServerSession<AuthOptions, sessionCustom>(options);
+  const token = session?.user?.token;
+  const data = await getPackage(token);
   return (
     <div className="grid grid-cols-4">
-      {/* {data.packages.length > 0 &&
+      {data.packages.length > 0 &&
         data.packages.map((myPackage: Package) => (
           <div key={myPackage.id}>
             <div>Package Page</div>
@@ -49,7 +54,7 @@ export default async function PackagePage() {
             <div>Max Banwitdh : {myPackage.maxBandwidth}</div>
             <br />
           </div>
-        ))} */}
+        ))}
     </div>
   );
 }

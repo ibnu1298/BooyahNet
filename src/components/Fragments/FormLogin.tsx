@@ -5,13 +5,14 @@ import Button from "../Elements/Button/page";
 import ModalLoginError from "./Modal/ModalLoginError";
 import ModalForgotPass from "./Modal/ModalForgotPass";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function FormLogin({ searchParams }: any) {
   const [forgotPass, setForgotPass] = useState("hidden");
   const [errLogin, setErrLogin] = useState("hidden");
   const [isLoading, setIsloading] = useState(false);
   const { push } = useRouter();
+  const pathName = usePathname();
   const callbackUrl = searchParams?.callbackUrl || "/";
   const handleLogin = async (event: any) => {
     event.preventDefault();
@@ -25,11 +26,15 @@ export default function FormLogin({ searchParams }: any) {
       });
 
       if (!response?.error) {
-        setIsloading(false);
+        if (pathName == "/" || errLogin == "") {
+          setIsloading(false);
+        }
         setErrLogin("hidden");
         push(callbackUrl);
       } else {
-        setIsloading(false);
+        if (pathName == "/" || errLogin == "") {
+          setIsloading(false);
+        }
         setErrLogin("");
         // console.log(response.error);
       }
@@ -41,6 +46,7 @@ export default function FormLogin({ searchParams }: any) {
   const errLoginModal = () => {
     if (errLogin == "") {
       setErrLogin("hidden");
+      setIsloading(false);
     }
   };
   const forgotPassModal = () => {

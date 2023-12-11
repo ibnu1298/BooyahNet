@@ -5,6 +5,7 @@ import ProductsPage from "./page";
 export default function Productlayout() {
   return (
     <div>
+      <title>Product</title>
       <Navbar />
       <ProductsPage />
     </div>

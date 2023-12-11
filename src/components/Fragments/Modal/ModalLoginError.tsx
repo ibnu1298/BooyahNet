@@ -58,7 +58,7 @@ export default function ModalLoginError({
               </h3>
               <button
                 type="button"
-                className="text-white bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+                className="text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
               >
                 Login OTP
               </button>

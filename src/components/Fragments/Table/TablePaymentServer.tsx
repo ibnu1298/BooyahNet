@@ -1,59 +1,50 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import NavigasiTabel from "../Navigasi/NavigasiTabel";
 import { useSession } from "next-auth/react";
-const TablePayment = () => {
-  const { data: session }: { data: any } = useSession();
-  const tokenSession = session?.user.token;
-  const userIdSession = session?.user.id;
-  const [token, setToken] = useState(tokenSession);
-  const [userId, setUserId] = useState(userIdSession);
-  const [payments, setPayments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const take = 12;
-  const page = 1;
+import { usePathname, useSearchParams } from "next/navigation";
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import { sessionCustom } from "@/interface/payment";
+import { AuthOptions, getServerSession } from "next-auth";
+import { pages } from "next/dist/build/templates/app-page";
 
-  const getUserPayment = async (userId: any, token: any, page: number) => {
-    const url = "https://booyahnetapi.azurewebsites.net/api/Payment/Page";
-    if (token != undefined) {
-      const res = await fetch(`${url}?page=${page}&take=${take}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          userId,
-        }),
-      });
-      const response = await res.json();
-      if (!response.isSucceeded) {
-        setIsLoading(false);
-        return { response, payments: null };
-      }
-      setPayments(response.payments);
-      setIsLoading(false);
+const getUserPayment = async (userId: any, token: any, page: number) => {
+  const url = "https://booyahnetapi.azurewebsites.net/api/Payment/Page";
+  if (token != undefined) {
+    const res = await fetch(`${url}?page=${page}&take=5`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        userId,
+      }),
+    });
+    const response = await res.json();
+    console.log(response);
+    if (!response.isSucceeded) {
+      return { response, payments: null };
     }
-  };
-
-  useEffect(() => {
-    if (userIdSession !== undefined && tokenSession !== undefined) {
-      setToken(tokenSession);
-      setUserId(userIdSession);
-    }
-    getUserPayment(userId, token, page);
-  }, [tokenSession, userIdSession, userId, token, page]);
+    return response;
+  }
+};
+const TablePaymentServer = async () => {
+  const session = await getServerSession<AuthOptions, sessionCustom>(options);
+  const Page = 2;
+  const take = 5;
+  const tokenSession = session?.user?.token;
+  const userIdSession = session?.user?.id;
+  const { payments, totalData, currentPage, totalPages } = await getUserPayment(
+    userIdSession,
+    tokenSession,
+    Page
+  );
   return (
     <>
-      {isLoading ? (
-        <div className="relative overflow-x-auto shadow-xl mx-3 px-9 mt-5 rounded-lg md:absolute backdrop-blur-sm bg-gray-100/50">
-          <div className="flex justify-center my-5 text-3xl text-bold">
-            Loading...
-          </div>
-        </div>
-      ) : payments.length > 0 ? (
+      {payments.length > 0 ? (
         <>
-          <div className="relative overflow-x-auto shadow-xl mx-3 md:ml-40 rounded-lg md:absolute backdrop-blur-sm bg-gray-700/70">
-            <div className="flex justify-center my-5 text-3xl text-bold text-white">
+          <div className="relative overflow-x-auto shadow-xl mx-3  mt-5  rounded-lg md:absolute backdrop-blur-sm bg-gray-100/50">
+            <div className="flex justify-center my-5 text-3xl text-bold">
               Riwayat Pembayaran
             </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -102,6 +93,12 @@ const TablePayment = () => {
                   ))}
               </tbody>
             </table>
+            <NavigasiTabel
+              totalData={totalData}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              take={take}
+            />
           </div>
         </>
       ) : (
@@ -115,4 +112,4 @@ const TablePayment = () => {
   );
 };
 
-export default TablePayment;
+export default TablePaymentServer;
