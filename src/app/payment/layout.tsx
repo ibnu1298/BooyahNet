@@ -1,13 +1,18 @@
 import React from "react";
 import PaymentPage from "./page";
 import Navbar from "@/components/Fragments/Navbar";
+import Footer from "@/components/Fragments/Footer";
 
 export default function Paymentlayout() {
   return (
-    <div>
-      <title>Payment</title>
+    <>
       <Navbar />
-      <PaymentPage />
-    </div>
+      <title>Payment</title>
+      <div>
+        <PaymentPage />
+      </div>
+      <div className="my-20"></div>
+      <Footer />
+    </>
   );
 }

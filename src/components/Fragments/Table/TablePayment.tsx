@@ -43,7 +43,7 @@ const TablePayment = () => {
     getUserPayment(userId, token, page);
   }, [tokenSession, userIdSession, userId, token, page]);
   return (
-    <>
+    <div className="pt-9 md:pt-14 md:ml-9">
       {isLoading ? (
         <div className="relative overflow-x-auto shadow-xl mx-3 px-9 mt-5 rounded-lg md:absolute backdrop-blur-sm bg-gray-100/50">
           <div className="flex justify-center my-5 text-3xl text-bold">
@@ -52,7 +52,7 @@ const TablePayment = () => {
         </div>
       ) : payments.length > 0 ? (
         <>
-          <div className="relative overflow-x-auto shadow-xl mx-3 md:ml-40 rounded-lg md:absolute backdrop-blur-sm bg-gray-700/70">
+          <div className="relative overflow-x-auto shadow-xl mx-3 mt-9 rounded-lg md:absolute backdrop-blur-sm bg-gray-700/70">
             <div className="flex justify-center my-5 text-3xl text-bold text-white">
               Riwayat Pembayaran
             </div>
@@ -63,7 +63,7 @@ const TablePayment = () => {
                     Nama Paket
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Tanggal Pembayaran
+                    Tanggal
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Status
@@ -111,7 +111,7 @@ const TablePayment = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
