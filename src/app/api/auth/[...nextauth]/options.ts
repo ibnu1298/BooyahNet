@@ -77,13 +77,14 @@ export const options: NextAuthOptions = {
       }
       interface JwtDecodeCustom {
         exp?: number;
+        username?: string;
         email?: string;
         role?: string;
       }
       if (account?.provider === "credentials") {
         const decoded = jwtDecode<JwtDecodeCustom>(user.token);
 
-        const getUser = await GetUser(decoded?.email, user.token);
+        const getUser = await GetUser(decoded?.username, user.token);
         token.id = getUser.id;
         token.email = getUser.email;
         token.role = decoded?.role;

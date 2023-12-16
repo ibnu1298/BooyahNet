@@ -1,10 +1,10 @@
-import Navbar from "@/components/Fragments/Navbar";
+import TablePayment from "@/components/Fragments/Table/TablePayment";
+
 export default function Home() {
   return (
     <>
       <title>Home</title>
-
-      <Navbar />
+      <TablePayment />
     </>
   );
 }

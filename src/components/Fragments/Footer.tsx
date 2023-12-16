@@ -1,9 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import DropdownUser from "./Dropdown/DropdownUser";
 
 export default function Footer() {
   const pathName = usePathname();

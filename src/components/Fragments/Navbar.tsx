@@ -1,13 +1,23 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import DropdownUser from "./Dropdown/DropdownUser";
 
 export default function Navbar() {
-  const pathName = usePathname();
   const [dropdown, setDropdown] = useState("hidden");
+  const [hideNav, setHideNav] = useState(false);
+  const pathName = usePathname();
+
+  useEffect(() => {
+    if (pathName == "/register" || pathName == "/login") {
+      setHideNav(true);
+    } else {
+      setHideNav(false);
+    }
+  }, [pathName]);
+
   const showDropdown = () => {
     if (dropdown == "hidden") {
       setDropdown("");
@@ -16,14 +26,24 @@ export default function Navbar() {
     }
   };
 
+  const hideNavFunction = () => {
+    setHideNav(true);
+  };
+
   return (
-    <nav className="fixed z-10 mt-0 bg-gray-900 text-white w-screen ">
-      <div className="px-5 xl:px-12 py-3 md:py-4 flex w-full items-center">
-        <a className="text-lg md:text-3xl font-bold font-heading" href="/">
+    <nav
+      className="fixed z-10 mt-0 bg-gray-900 text-white w-screen "
+      hidden={hideNav}
+    >
+      <div className="px-5 md:px-12 py-3 md:py-4 flex justify-between w-full items-center">
+        <a
+          className="text-lg md:text-3xl font-bold font-heading hover:underline"
+          href="/"
+        >
           Booyah.Net
         </a>
         {/* <!-- Nav Links --> */}
-        <ul className="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-4 ">
+        {/* <ul className="hidden md:flex px-4 mx-auto font-semibold font-heading space-x-4 ">
           <Link
             className={`px-3 pb-0.4  ${
               pathName === "/"
@@ -64,25 +84,25 @@ export default function Navbar() {
           >
             <li>Package</li>
           </Link>
-        </ul>
+        </ul> */}
         {/* <!-- Header Icons --> */}
-        <div className="hidden xl:flex items-center space-x-1">
+        <div className=" flex xl:flex items-center space-x-1">
           {/* <!-- Sign In / Register      --> */}
 
           <a
-            className="flex items-center hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
+            className="flex items-center hover:text-gray-200 mx-2 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
             onClick={showDropdown}
           >
             <Image
-              className="rounded-full cursor-pointer"
+              className="rounded-full cursor-pointer w-7 md:w-8 "
               width={32}
               height={32}
               src="/images/people/cat.jpg"
               alt=""
             />
           </a>
-          <div className="absolute top-5 right-20 z-50">
-            <DropdownUser show={dropdown} />
+          <div className="fixed top-[10px] right-16 md:right-24 z-50">
+            <DropdownUser hideNavFunction={hideNavFunction} show={dropdown} />
           </div>
         </div>
       </div>

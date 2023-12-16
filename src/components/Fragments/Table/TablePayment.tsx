@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Button from "@/components/Elements/Button/page";
+import ModalPayment from "../Modal/ModalPayment";
 const TablePayment = () => {
   const { data: session }: { data: any } = useSession();
   const tokenSession = session?.user.token;
@@ -9,6 +11,7 @@ const TablePayment = () => {
   const [userId, setUserId] = useState(userIdSession);
   const [payments, setPayments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState("");
   const take = 12;
   const page = 1;
 
@@ -35,6 +38,15 @@ const TablePayment = () => {
     }
   };
 
+  const PaymentModal = () => {
+    if (showModal == "hidden") {
+      setShowModal("");
+    } else {
+      setShowModal("hidden");
+    }
+  };
+  console.log(showModal);
+
   useEffect(() => {
     if (userIdSession !== undefined && tokenSession !== undefined) {
       setToken(tokenSession);
@@ -52,6 +64,25 @@ const TablePayment = () => {
         </div>
       ) : payments.length > 0 ? (
         <>
+          {payments.length > 0 &&
+            payments.map((payment: any) => (
+              <>
+                {payment.status == "BelumDibayar" && (
+                  <>
+                    {showModal == "" ? (
+                      <ModalPayment show={showModal} showModal={PaymentModal} />
+                    ) : (
+                      <a onClick={PaymentModal}>
+                        <div className="z-50 fixed bottom-6 end-2 text-white bg-gray-500 rounded-full px-4 text-center sm:px-4 py-1">
+                          Bayar Sekarang
+                        </div>
+                      </a>
+                    )}
+                  </>
+                )}
+              </>
+            ))}
+
           <div className="relative overflow-x-auto shadow-xl mx-3 mt-9 rounded-lg md:absolute backdrop-blur-sm bg-gray-700/70">
             <div className="flex justify-center my-5 text-3xl text-bold text-white">
               Riwayat Pembayaran
@@ -59,9 +90,6 @@ const TablePayment = () => {
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3 hidden sm:flex">
-                    Nama Paket
-                  </th>
                   <th scope="col" className="px-6 py-3">
                     Tanggal
                   </th>
@@ -77,18 +105,15 @@ const TablePayment = () => {
                       className=" bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       key={payment.id}
                     >
-                      <td className="px-6 py-4 hidden sm:flex">
-                        {payment.package.packageName}
-                      </td>
                       <td className="px-6 py-4">{payment.paymentDate}</td>
-                      <td className="px-6 py-4 flex">
+                      <td className="px-6 py-4 ">
                         {payment.status == "Lunas" && (
-                          <div className="text-white bg-emerald-500 rounded-full px-4 py-1">
+                          <div className="text-white bg-emerald-500 rounded-full px-4 py-1 w-20 flex justify-center">
                             {payment.status}
                           </div>
                         )}
                         {payment.status == "Pending" && (
-                          <div className="text-white bg-yellow-500 rounded-full px-4 py-1">
+                          <div className="text-white bg-yellow-500 rounded-full px-4 py-1 w-24 flex justify-center">
                             {payment.status}
                           </div>
                         )}
@@ -106,7 +131,7 @@ const TablePayment = () => {
         </>
       ) : (
         <div className="relative overflow-x-auto shadow-xl mx-3 px-9 mt-5  rounded-lg md:absolute backdrop-blur-sm bg-gray-100/50">
-          <div className="flex justify-center my-5 text-3xl text-bold">
+          <div className="flex justify-center my-5 text-base md:text-3xl text-bold">
             Belum Ada Riwayat Pembayaran
           </div>
         </div>

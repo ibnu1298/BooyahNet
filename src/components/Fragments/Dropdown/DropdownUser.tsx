@@ -1,12 +1,23 @@
 import { signOut, useSession } from "next-auth/react";
-import React from "react";
+import React, { useState } from "react";
 
-export default function DropdownUser({ show }: { show: string }) {
+export default function DropdownUser({
+  show,
+  hideNavFunction,
+}: {
+  show: string;
+  hideNavFunction: any;
+}) {
   const { data: session }: { data: any } = useSession();
+  const [isLoading, setIsloading] = useState(false);
+  function isLoadingLogout() {
+    setIsloading(true);
+    signOut();
+  }
   return (
     <div
       id="dropdown"
-      className={`z-90 ${show} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700`}
+      className={`z-50 ${show} bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700`}
     >
       <div className="px-4 py-3">
         <span className="block text-sm text-gray-900 dark:text-white">
@@ -45,11 +56,14 @@ export default function DropdownUser({ show }: { show: string }) {
           </a>
         </li>
         <a
-          onClick={() => signOut()}
-          className="block px-4 py-2 bg-gradient-to-b from-gray-800 to-gray-700  hover:from-gray-900 hover:to-gray-900 hover:text-white cursor-pointer"
+          onClick={() => {
+            hideNavFunction;
+            isLoadingLogout();
+          }}
+          className="block px-4 py-2 bg-gradient-to-b from-gray-800 to-gray-700  hover:text-bold hover:text-white cursor-pointer"
         >
           <li>
-            <button>Sign out</button>
+            <button>{isLoading ? <>Loading....</> : <>Sign out</>}</button>
           </li>
         </a>
       </ul>
