@@ -1,5 +1,4 @@
 import { Payments } from "@/interface/payment";
-import { Radio } from "@nextui-org/react";
 import React, { useState } from "react";
 
 const ModalPayment = ({
@@ -66,12 +65,12 @@ const ModalPayment = ({
             </svg>
           </button>
           <div className="p-4 md:p-5 text-center flex flex-col">
-            <h3 className=" text-lg font-normal text-white py-2">
-              Anda Punya tagihan WIFI
+            <h3 className=" text-2xl font-bold text-white py-2">
+              Tagihan WIFI
             </h3>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 my-4">
-              <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr className="text-lg">
+            <table className="w-full text-sm text-left rtl:text-right  my-4">
+              <thead className=" text-gray-700 uppercase ">
+                <tr className="text-lg text-white">
                   <th>
                     <div className="flex items-center">
                       <input
@@ -115,7 +114,12 @@ const ModalPayment = ({
                       </div>
                     </td>
                     <td>{payment.billingDateDesc}</td>
-                    <td>Rp {payment.package?.pricePackage}</td>
+                    <td>
+                      Rp{" "}
+                      {payment.package?.pricePackage
+                        ?.toString()
+                        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")}
+                    </td>
                   </tr>
                 ))}
               </tbody>
