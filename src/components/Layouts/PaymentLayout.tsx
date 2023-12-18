@@ -7,7 +7,7 @@ import TablePayment from "../Fragments/Table/TablePayment";
 
 const getUserPayment = async (userId: string, token: string) => {
   if (token != undefined) {
-    const res = await fetch("http://localhost:3000/api/payment", {
+    const res = await fetch(`${process.env.NEXT_URL_PUBLIC}/api/payment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
