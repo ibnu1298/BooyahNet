@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-const url = "https://booyahnetapi.azurewebsites.net/api/Payment/Page";
+const url = "https://booyahnetapi.azurewebsites.net/api/Payment/GetAllByUserId";
 
-async function GetPaymentUser(userId: string, token: any, page: any) {
-  const res = await fetch(`${url}?page=${page}&take=3`, {
+async function GetPaymentUser(userId: string, token: any) {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,6 +14,8 @@ async function GetPaymentUser(userId: string, token: any, page: any) {
       userId,
     }),
   });
+  console.log(res);
+
   if (res.status === 401) {
     return res;
   }
@@ -28,10 +30,12 @@ export async function POST(request: NextRequest) {
   const page = request.nextUrl.searchParams.get("page");
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
-  // console.log(headersInstance.get("host"));
+  console.log(headersInstance.get("host"));
   const req = await request.json();
-  const res = await GetPaymentUser(req.userId, authorization, page);
+  const res = await GetPaymentUser(req.userId, authorization);
   const result = await res.json();
+  console.log(result);
+
   try {
     if (res.status !== 401) {
       console.log(result);

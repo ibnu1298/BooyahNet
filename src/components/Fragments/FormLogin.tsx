@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
 import ModalLoginError from "./Modal/ModalLoginError";
 import ModalForgotPass from "./Modal/ModalForgotPass";
 import { signIn } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import SpinCircle from "../Elements/Loading/spinCircle";
 
 export default function FormLogin({ searchParams }: any) {
   const [forgotPass, setForgotPass] = useState("hidden");
@@ -13,6 +14,7 @@ export default function FormLogin({ searchParams }: any) {
   const [isLoading, setIsloading] = useState(false);
   const [emailField, setEmailField] = useState("invisible");
   const [passField, setPassField] = useState("invisible");
+  const [cursor, setCursor] = useState("");
   const { push } = useRouter();
   const pathName = usePathname();
   const callbackUrl = searchParams?.callbackUrl || "/";
@@ -29,11 +31,13 @@ export default function FormLogin({ searchParams }: any) {
     } else {
       setPassField("invisible");
     }
+
     if (
       event.currentTarget.password.value !== "" &&
       event.currentTarget.text.value !== ""
     ) {
       setIsloading(true);
+
       try {
         const response = await signIn("credentials", {
           redirect: false,
@@ -41,6 +45,7 @@ export default function FormLogin({ searchParams }: any) {
           password: event.currentTarget.password.value,
           callbackUrl,
         });
+        console.log(cursor);
 
         if (!response?.error) {
           if (pathName == "/" || errLogin == "") {
@@ -61,6 +66,13 @@ export default function FormLogin({ searchParams }: any) {
       }
     }
   };
+  useEffect(() => {
+    if (isLoading == true) {
+      setCursor("cursor-wait");
+    } else {
+      setCursor("");
+    }
+  }, [isLoading]);
   const errLoginModal = () => {
     if (errLogin == "") {
       setErrLogin("hidden");
@@ -108,8 +120,15 @@ export default function FormLogin({ searchParams }: any) {
           Password harus diisi
         </p>
 
-        <Button type="submit">
-          {isLoading ? "Tunggu Sebentar yaa..." : "Masuk"}
+        <Button className={`${cursor}`} type="submit">
+          {isLoading ? (
+            <div className="flex justify-center">
+              <SpinCircle />
+              Loading...{" "}
+            </div>
+          ) : (
+            <>Masuk</>
+          )}
         </Button>
       </form>
     </div>

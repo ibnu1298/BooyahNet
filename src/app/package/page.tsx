@@ -1,4 +1,4 @@
-import { sessionCustom } from "@/interface/payment";
+import { sessionCustom } from "@/interface/user";
 import { AuthOptions, getServerSession } from "next-auth";
 import React from "react";
 import { options } from "../api/auth/[...nextauth]/options";

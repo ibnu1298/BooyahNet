@@ -10,7 +10,7 @@ interface ButtonProps {
 }
 const Button = ({
   href,
-  className = "text-white py-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100",
+  className = "",
   useFrom,
   onClick = () => {},
   children,
@@ -23,7 +23,7 @@ const Button = ({
     <a href={href}>
       <button
         type={type}
-        className={`w-full mt-2 px-3  ${className} `}
+        className={`w-full mt-2 px-3 text-white py-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 ${className} `}
         onClick={() => onClick()}
       >
         {children}

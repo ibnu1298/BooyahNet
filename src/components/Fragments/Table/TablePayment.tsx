@@ -1,42 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import Button from "@/components/Elements/Button/page";
+import React, { useEffect, useMemo, useState } from "react";
 import ModalPayment from "../Modal/ModalPayment";
-const TablePayment = () => {
-  const { data: session }: { data: any } = useSession();
-  const tokenSession = session?.user.token;
-  const userIdSession = session?.user.id;
-  const [token, setToken] = useState(tokenSession);
-  const [userId, setUserId] = useState(userIdSession);
-  const [payments, setPayments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+import { Payments } from "@/interface/payment";
+import { Pagination } from "@nextui-org/react";
+const TablePayment = ({ payments }: { payments: Payments[] }) => {
+  const [hidePagination, setHidePagination] = useState("");
   const [showModal, setShowModal] = useState("");
-  const take = 12;
-  const page = 1;
-
-  const getUserPayment = async (userId: any, token: any, page: number) => {
-    const url = "https://booyahnetapi.azurewebsites.net/api/Payment/Page";
-    if (token != undefined) {
-      const res = await fetch(`${url}?page=${page}&take=${take}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          userId,
-        }),
-      });
-      const response = await res.json();
-      if (!response.isSucceeded) {
-        setIsLoading(false);
-        return { response, payments: null };
-      }
-      setPayments(response.payments);
-      setIsLoading(false);
-    }
-  };
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 6;
 
   const PaymentModal = () => {
     if (showModal == "hidden") {
@@ -45,46 +16,50 @@ const TablePayment = () => {
       setShowModal("hidden");
     }
   };
-  console.log(showModal);
+
+  const notPayment = payments.filter(function (payment) {
+    return payment.status == "BelumDibayar";
+  });
 
   useEffect(() => {
-    if (userIdSession !== undefined && tokenSession !== undefined) {
-      setToken(tokenSession);
-      setUserId(userIdSession);
+    if (payments.length <= rowsPerPage) {
+      setHidePagination("invisible");
     }
-    getUserPayment(userId, token, page);
-  }, [tokenSession, userIdSession, userId, token, page]);
-  return (
-    <div className="pt-9 md:pt-14 md:ml-9">
-      {isLoading ? (
-        <div className="relative overflow-x-auto shadow-xl mx-3 px-9 mt-5 rounded-lg md:absolute backdrop-blur-sm bg-gray-100/50">
-          <div className="flex justify-center my-5 text-3xl text-bold">
-            Loading...
-          </div>
-        </div>
-      ) : payments.length > 0 ? (
-        <>
-          {payments.length > 0 &&
-            payments.map((payment: any) => (
-              <>
-                {payment.status == "BelumDibayar" && (
-                  <>
-                    {showModal == "" ? (
-                      <ModalPayment show={showModal} showModal={PaymentModal} />
-                    ) : (
-                      <a onClick={PaymentModal}>
-                        <div className="z-50 fixed bottom-6 end-2 text-white bg-gray-500 rounded-full px-4 text-center sm:px-4 py-1">
-                          Bayar Sekarang
-                        </div>
-                      </a>
-                    )}
-                  </>
-                )}
-              </>
-            ))}
+  }, [payments]);
 
-          <div className="relative overflow-x-auto shadow-xl mx-3 mt-9 rounded-lg md:absolute backdrop-blur-sm bg-gray-700/70">
-            <div className="flex justify-center my-5 text-3xl text-bold text-white">
+  const pages = Math.ceil(payments.length / rowsPerPage);
+
+  const items = useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return payments.slice(start, end);
+  }, [page, payments]);
+  return (
+    <div className="md:ml-9">
+      {payments.length > 0 ? (
+        <>
+          {payments.length > 0 && notPayment.length > 0 && (
+            <>
+              {showModal == "" ? (
+                <ModalPayment
+                  payments={notPayment}
+                  show={showModal}
+                  showModal={PaymentModal}
+                />
+              ) : (
+                <a onClick={PaymentModal}>
+                  <div className="z-50 fixed bottom-8 end-2 text-white bg-red-500 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
+                    Bayar
+                    <br />
+                  </div>
+                </a>
+              )}
+            </>
+          )}
+
+          <div className="relative w-[350px] md:w-[450px]  shadow-xl rounded-lg md:absolute backdrop-blur-sm bg-gray-700/70">
+            <div className="flex justify-center mx-4 py-4 w-full text-2xl text-bold text-white">
               Riwayat Pembayaran
             </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -99,26 +74,30 @@ const TablePayment = () => {
                 </tr>
               </thead>
               <tbody>
-                {payments.length > 0 &&
-                  payments.map((payment: any) => (
+                {items.length > 0 &&
+                  items.map((payment: any) => (
                     <tr
                       className=" bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       key={payment.id}
                     >
-                      <td className="px-6 py-4">{payment.paymentDate}</td>
+                      <td className="px-6 py-4">
+                        {payment.status == "BelumDibayar"
+                          ? payment.billingDateDesc
+                          : payment.paymentDateDesc}
+                      </td>
                       <td className="px-6 py-4 ">
                         {payment.status == "Lunas" && (
-                          <div className="text-white bg-emerald-500 rounded-full px-4 py-1 w-20 flex justify-center">
+                          <div className="text-emerald-300 bg-emerald-500/30 rounded-full px-4 py-1 w-20 flex justify-center">
                             {payment.status}
                           </div>
                         )}
                         {payment.status == "Pending" && (
-                          <div className="text-white bg-yellow-500 rounded-full px-4 py-1 w-24 flex justify-center">
+                          <div className="text-yellow-300 bg-yellow-500/30 rounded-full px-4 py-1 w-24 flex justify-center">
                             {payment.status}
                           </div>
                         )}
                         {payment.status == "BelumDibayar" && (
-                          <div className="text-white bg-red-500 rounded-full px-2 text-center sm:px-4 py-1 ">
+                          <div className="text-red-300  bg-red-500/30 rounded-full px-2 w-fit text-center sm:px-4 py-1 w-34 ">
                             Belum Dibayar
                           </div>
                         )}
@@ -127,11 +106,24 @@ const TablePayment = () => {
                   ))}
               </tbody>
             </table>
+            <div className={`h-fit py-3 flex justify-center ${hidePagination}`}>
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="primary"
+                page={page}
+                total={pages}
+                onChange={(page) => {
+                  setPage(page);
+                }}
+              />
+            </div>
           </div>
         </>
       ) : (
         <div className="relative overflow-x-auto shadow-xl mx-3 px-9 mt-5  rounded-lg md:absolute backdrop-blur-sm bg-gray-100/50">
-          <div className="flex justify-center my-5 text-base md:text-3xl text-bold">
+          <div className="flex justify-center my-5 text-base md:text-2xl text-bold">
             Belum Ada Riwayat Pembayaran
           </div>
         </div>

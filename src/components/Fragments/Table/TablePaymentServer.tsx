@@ -1,11 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import NavigasiTabel from "../Navigasi/NavigasiTabel";
-import { useSession } from "next-auth/react";
-import { usePathname, useSearchParams } from "next/navigation";
+import React from "react";
 import { options } from "@/app/api/auth/[...nextauth]/options";
-import { sessionCustom } from "@/interface/payment";
+import { sessionCustom } from "@/interface/user";
 import { AuthOptions, getServerSession } from "next-auth";
-import { pages } from "next/dist/build/templates/app-page";
 
 const getUserPayment = async (userId: any, token: any, page: number) => {
   const url = "https://booyahnetapi.azurewebsites.net/api/Payment/Page";
@@ -93,12 +89,6 @@ const TablePaymentServer = async () => {
                   ))}
               </tbody>
             </table>
-            <NavigasiTabel
-              totalData={totalData}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              take={take}
-            />
           </div>
         </>
       ) : (
