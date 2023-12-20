@@ -19,7 +19,6 @@ const getUserPayment = async (userId: string, token: string) => {
     });
 
     const response = await res.json();
-    console.log(response);
     if (!response.isSucceeded) {
       return { response };
     }
@@ -34,7 +33,7 @@ const PaymentLayout = async () => {
   const { payments } = await getUserPayment(userIdSession, tokenSession);
   return (
     <div className="absolute m-3 mt-[72px] md:mt-24">
-      <TablePayment payments={payments != null ? payments : []} />
+      <TablePayment paymentsbase={payments != null ? payments : []} />
     </div>
   );
 };

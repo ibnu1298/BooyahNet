@@ -4,11 +4,12 @@ export interface responsePayments {
 export interface Payments {
   id: number;
   pricePayment?: number;
-  billingDate?: string;
+  billingDate: number;
   billingDateDesc?: string;
+  billingDatelong: number;
   paymentDate?: any;
   paymentDateDesc?: any;
-  status: "Lunas" | "BelumDibayar" | "Pending";
+  status: number;
   package?: Package;
 }
 export interface Package {

@@ -3,13 +3,40 @@ import React, { useEffect, useMemo, useState } from "react";
 import ModalPayment from "../Modal/ModalPayment";
 import { Payments } from "@/interface/payment";
 import { Pagination } from "@nextui-org/react";
-import { color } from "framer-motion";
-const TablePayment = ({ payments }: { payments: Payments[] }) => {
+const TablePayment = ({ paymentsbase }: { paymentsbase: Payments[] }) => {
   const [hidePagination, setHidePagination] = useState("");
   const [showModal, setShowModal] = useState("");
+  const [ascStatus, setAscStatus] = useState(false);
+  const [ascDate, setAscDate] = useState(false);
+  const [payments, setPayments] = useState(paymentsbase);
   const [page, setPage] = useState(1);
   const rowsPerPage = 6;
-
+  function sortData(sortBy: string) {
+    return sortBy == "status" ? sortStatus() : sortDate();
+    function sortStatus() {
+      if (!ascStatus) {
+        setAscStatus(true);
+        setPayments(payments.sort((a, b) => a.status - b.status));
+      } else {
+        setAscStatus(false);
+        setPayments(payments.sort((a, b) => b.status - a.status));
+      }
+    }
+    function sortDate() {
+      if (!ascDate) {
+        setAscDate(true);
+        setPayments(
+          payments.sort((a, b) => b.billingDatelong - a.billingDatelong)
+        );
+      } else {
+        setAscDate(false);
+        setPayments(
+          payments.sort((a, b) => a.billingDatelong - b.billingDatelong)
+        );
+      }
+    }
+  }
+  console.log(payments);
   const PaymentModal = () => {
     if (showModal == "hidden") {
       setShowModal("");
@@ -19,23 +46,25 @@ const TablePayment = ({ payments }: { payments: Payments[] }) => {
   };
 
   const notPayment = payments.filter(function (payment) {
-    return payment.status == "BelumDibayar";
+    return payment.status == 0;
   });
 
   useEffect(() => {
     if (payments.length <= rowsPerPage) {
       setHidePagination("invisible");
     }
+    console.log(payments);
   }, [payments]);
 
   const pages = Math.ceil(payments.length / rowsPerPage);
-
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-
+    ascStatus;
+    ascDate;
     return payments.slice(start, end);
-  }, [page, payments]);
+  }, [page, payments, ascDate, ascStatus]);
+
   return (
     <div className="md:ml-9">
       {payments.length > 0 ? (
@@ -59,18 +88,28 @@ const TablePayment = ({ payments }: { payments: Payments[] }) => {
             </>
           )}
 
-          <div className="relative w-[350px] md:w-[450px]  shadow-xl rounded-lg md:absolute backdrop-blur-sm bg-gray-700/70">
-            <div className="flex justify-center mx-4 py-4 w-full text-2xl text-bold text-white">
+          <div className="relative w-[365px] sm:w-[500px] flex flex-col justify-center shadow-xl rounded-lg sm:absolute backdrop-blur-sm bg-gray-700/70">
+            <div className="flex justify-center py-4 w-full text-2xl md:text-3xl text-bold text-white">
               Riwayat Pembayaran
             </div>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
+                <tr className="text-base md:text-lg text-white">
                   <th scope="col" className="px-6 py-3">
-                    Tanggal
+                    <a
+                      className="cursor-pointer"
+                      onClick={() => sortData("date")}
+                    >
+                      Tanggal
+                    </a>
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Status
+                    <a
+                      className="cursor-pointer"
+                      onClick={() => sortData("status")}
+                    >
+                      Status
+                    </a>
                   </th>
                 </tr>
               </thead>
@@ -82,22 +121,22 @@ const TablePayment = ({ payments }: { payments: Payments[] }) => {
                       key={payment.id}
                     >
                       <td className="px-6 py-4">
-                        {payment.status == "BelumDibayar"
+                        {payment.status == 0
                           ? payment.billingDateDesc
                           : payment.paymentDateDesc}
                       </td>
-                      <td className="px-6 py-4 ">
-                        {payment.status == "Lunas" && (
+                      <td className="px-6 py-4 sm:w-56 w-[180px]">
+                        {payment.status == 2 && (
                           <div className="text-emerald-300 bg-emerald-500/30 rounded-full px-4 py-1 w-20 flex justify-center">
-                            {payment.status}
+                            {payment.statusDesc}
                           </div>
                         )}
-                        {payment.status == "Pending" && (
+                        {payment.status == 1 && (
                           <div className="text-yellow-300 bg-yellow-500/30 rounded-full px-4 py-1 w-24 flex justify-center">
-                            {payment.status}
+                            {payment.statusDesc}
                           </div>
                         )}
-                        {payment.status == "BelumDibayar" && (
+                        {payment.status == 0 && (
                           <div className="relative">
                             <a
                               onClick={PaymentModal}
@@ -107,7 +146,7 @@ const TablePayment = ({ payments }: { payments: Payments[] }) => {
                             </a>
 
                             <div className="text-red-300  bg-red-500/30 rounded-full px-2 w-fit text-center sm:px-4 py-1 ">
-                              Belum Dibayar
+                              {payment.statusDesc}
                             </div>
                           </div>
                         )}

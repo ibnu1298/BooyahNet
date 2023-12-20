@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import DropdownUser from "./Dropdown/DropdownUser";
+import DropdownNext from "./Dropdown/DropdownNext";
 
 export default function Navbar() {
   const [dropdown, setDropdown] = useState("hidden");
@@ -87,9 +88,10 @@ export default function Navbar() {
         </ul> */}
         {/* <!-- Header Icons --> */}
         <div className=" flex xl:flex items-center space-x-1">
+          <DropdownNext />
           {/* <!-- Sign In / Register      --> */}
 
-          <a
+          {/* <a
             className="flex items-center hover:text-gray-200 mx-2 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600"
             onClick={showDropdown}
           >
@@ -103,7 +105,7 @@ export default function Navbar() {
           </a>
           <div className="fixed top-[10px] right-16 md:right-24 z-50">
             <DropdownUser hideNavFunction={hideNavFunction} show={dropdown} />
-          </div>
+          </div> */}
         </div>
       </div>
       {/* <!-- Responsive navbar --> */}

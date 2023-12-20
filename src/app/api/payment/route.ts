@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 
 const url = "https://booyahnetapi.azurewebsites.net/api/Payment/GetAllByUserId";
 
-async function GetPaymentUser(userId: string, token: any) {
+async function GetPaymentUser(userId: string, sort: string, token: any) {
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -12,8 +12,10 @@ async function GetPaymentUser(userId: string, token: any) {
     },
     body: JSON.stringify({
       userId,
+      sort,
     }),
   });
+  console.log(res);
 
   if (res.status === 401) {
     return res;
@@ -28,11 +30,11 @@ export async function POST(request: NextRequest) {
   const page = request.nextUrl.searchParams.get("page");
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
-  console.log(headersInstance.get("host"));
   const req = await request.json();
-  const res = await GetPaymentUser(req.userId, authorization);
-  const result = await res.json();
+  const Sort = "Date";
   console.log(req);
+  const res = await GetPaymentUser(req.userId, Sort, authorization);
+  const result = await res.json();
 
   try {
     if (res.status !== 401) {
