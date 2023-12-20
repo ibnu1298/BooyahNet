@@ -1,12 +1,20 @@
 import React from "react";
 
-const SpinCircle = ({ color = "#11bfd6" }: { color?: string }) => {
+const SpinCircle = ({
+  className = "inline",
+  size = 6,
+  color = "#11bfd6",
+}: {
+  className?: string;
+  size?: number;
+  color?: string;
+}) => {
   return (
     <div>
       <svg
         aria-hidden="true"
         role="status"
-        className="inline w-6 h-6 me-3 text-gray-200 animate-spin dark:text-gray-600 "
+        className={` w-${size} h-${size} me-3 text-gray-200 animate-spin dark:text-gray-600 ${className}`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

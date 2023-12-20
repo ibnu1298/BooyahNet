@@ -123,7 +123,7 @@ export default function FormLogin({ searchParams }: any) {
         <Button className={`${cursor}`} type="submit">
           {isLoading ? (
             <div className="flex justify-center">
-              <SpinCircle />
+              <SpinCircle size={6} />
               Loading...{" "}
             </div>
           ) : (

@@ -49,6 +49,7 @@ export const options: NextAuthOptions = {
         }
 
         const getToken = await LoginAuth(email, password);
+        console.log(getToken);
 
         if (getToken.isSucceeded) {
           return getToken;
@@ -61,7 +62,7 @@ export const options: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account, profile, user }: any) {
       const urlGetUser =
-        "https://booyahnetapi.azurewebsites.net/api/User/GetByEmail";
+        "https://booyahnetapi.azurewebsites.net/api/User/GetByEmailOrUsername";
       async function GetUser(email: any, token: string) {
         const res = await fetch(urlGetUser, {
           method: "POST",
@@ -70,9 +71,11 @@ export const options: NextAuthOptions = {
             Authorization: "Bearer " + token,
           },
           body: JSON.stringify({
-            email: email,
+            UsernameOrEmail: email,
           }),
         });
+        console.log(res);
+
         return res.json();
       }
       interface JwtDecodeCustom {
@@ -85,6 +88,8 @@ export const options: NextAuthOptions = {
         const decoded = jwtDecode<JwtDecodeCustom>(user.token);
 
         const getUser = await GetUser(decoded?.username, user.token);
+        console.log(getUser);
+
         token.id = getUser.id;
         token.email = getUser.email;
         token.role = decoded?.role;

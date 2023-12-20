@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import ModalPayment from "../Modal/ModalPayment";
 import { Payments } from "@/interface/payment";
 import { Pagination } from "@nextui-org/react";
+import { color } from "framer-motion";
 const TablePayment = ({ payments }: { payments: Payments[] }) => {
   const [hidePagination, setHidePagination] = useState("");
   const [showModal, setShowModal] = useState("");
@@ -49,7 +50,7 @@ const TablePayment = ({ payments }: { payments: Payments[] }) => {
                 />
               ) : (
                 <a onClick={PaymentModal}>
-                  <div className="z-50 fixed bottom-8 end-2 text-white bg-red-500 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
+                  <div className="z-50 fixed bottom-8 end-2 md:hidden text-white bg-red-500 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
                     Bayar
                     <br />
                   </div>
@@ -97,8 +98,17 @@ const TablePayment = ({ payments }: { payments: Payments[] }) => {
                           </div>
                         )}
                         {payment.status == "BelumDibayar" && (
-                          <div className="text-red-300  bg-red-500/30 rounded-full px-2 w-fit text-center sm:px-4 py-1 w-34 ">
-                            Belum Dibayar
+                          <div className="relative">
+                            <a
+                              onClick={PaymentModal}
+                              className="absolute px-2 w-fit h-full  sm:px-4 py-1 rounded-full z-10  bg-gray-50 dark:bg-gray-600 text-white flex flex-col items-center justify-center opacity-0  hover:opacity-100 cursor-pointer bg-opacity-90 duration-300"
+                            >
+                              <p>Klik Untuk Bayar</p>
+                            </a>
+
+                            <div className="text-red-300  bg-red-500/30 rounded-full px-2 w-fit text-center sm:px-4 py-1 ">
+                              Belum Dibayar
+                            </div>
                           </div>
                         )}
                       </td>
@@ -111,12 +121,10 @@ const TablePayment = ({ payments }: { payments: Payments[] }) => {
                 isCompact
                 showControls
                 showShadow
-                color="primary"
+                color="secondary"
                 page={page}
                 total={pages}
-                onChange={(page) => {
-                  setPage(page);
-                }}
+                onChange={(page) => setPage(page)}
               />
             </div>
           </div>
