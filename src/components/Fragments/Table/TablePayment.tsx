@@ -3,12 +3,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import ModalPayment from "../Modal/ModalPayment";
 import { Payments } from "@/interface/payment";
 import { Pagination } from "@nextui-org/react";
-const TablePayment = ({ paymentsbase }: { paymentsbase: Payments[] }) => {
+import { FaSortDown, FaSortUp } from "react-icons/fa6";
+
+const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
   const [hidePagination, setHidePagination] = useState("");
   const [showModal, setShowModal] = useState("");
   const [ascStatus, setAscStatus] = useState(false);
   const [ascDate, setAscDate] = useState(false);
-  const [payments, setPayments] = useState(paymentsbase);
+  const [payments, setPayments] = useState(paymentsBase);
   const [page, setPage] = useState(1);
   const rowsPerPage = 6;
   function sortData(sortBy: string) {
@@ -97,18 +99,36 @@ const TablePayment = ({ paymentsbase }: { paymentsbase: Payments[] }) => {
                 <tr className="text-base md:text-lg text-white">
                   <th scope="col" className="px-6 py-3">
                     <a
-                      className="cursor-pointer"
+                      className="cursor-pointer flex "
                       onClick={() => sortData("date")}
                     >
                       Tanggal
+                      <div className="opacity-0 hover:opacity-100 duration-700 w-32 pl-20 sm:pl-[90px] absolute">
+                        {ascDate ? (
+                          <FaSortDown />
+                        ) : (
+                          <div className="mt-2">
+                            <FaSortUp />
+                          </div>
+                        )}
+                      </div>
                     </a>
                   </th>
                   <th scope="col" className="px-6 py-3">
                     <a
-                      className="cursor-pointer"
+                      className="cursor-pointer flex"
                       onClick={() => sortData("status")}
                     >
                       Status
+                      <div className="opacity-0 hover:opacity-100 duration-700 w-32 pl-16 sm:pl-20 absolute">
+                        {ascStatus ? (
+                          <FaSortDown />
+                        ) : (
+                          <div className="mt-2">
+                            <FaSortUp />
+                          </div>
+                        )}
+                      </div>
                     </a>
                   </th>
                 </tr>

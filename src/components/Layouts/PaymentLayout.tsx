@@ -33,7 +33,7 @@ const PaymentLayout = async () => {
   const { payments } = await getUserPayment(userIdSession, tokenSession);
   return (
     <div className="absolute m-3 mt-[72px] md:mt-24">
-      <TablePayment paymentsbase={payments != null ? payments : []} />
+      <TablePayment paymentsBase={payments != null ? payments : []} />
     </div>
   );
 };

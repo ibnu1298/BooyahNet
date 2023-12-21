@@ -4,6 +4,7 @@ import { Payments } from "@/interface/payment";
 import { Checkbox } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
+import ModalMakeSure from "./ModalMakeSure";
 
 const ModalPayment = ({
   payments,
@@ -14,12 +15,10 @@ const ModalPayment = ({
   show: string;
   showModal: any;
 }) => {
-  const { data: session }: { data: any } = useSession();
   const defaultId = payments[payments.length - 1].id;
   const defaultPrice = payments[payments.length - 1].package?.pricePackage;
   const [selectedPayments, setSelectedPayments] = useState([defaultId]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [cursor, setCursor] = useState("");
+  const [showMakeSureModal, setShowMakeSureModal] = useState("hidden");
   const [selectedPricePayments, setSelectedPricePayments] = useState([
     defaultPrice as number,
   ]);
@@ -63,46 +62,27 @@ const ModalPayment = ({
       setSelectedPricePayments([]);
     }
   };
-  const PaymentUser = async (
-    paymentId: Array<number>,
-    pricePayment: Array<number>,
-    packageId: number,
-    userId: string,
-    token: string
-  ) => {
-    setIsLoading(true);
-    setCursor("cursor-wait");
-    if (token != undefined) {
-      const res = await fetch(`/api/payment/paymentUser`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          paymentId,
-          pricePayment,
-          packageId,
-          userId,
-        }),
-      });
 
-      const response = await res.json();
-      console.log(response);
-      if (!response.isSucceeded) {
-        return { response };
-      }
-      setIsLoading(false);
-      setCursor("");
-      window.location.reload();
-      return response;
+  function MakeSureModal() {
+    if (showMakeSureModal == "hidden") {
+      setShowMakeSureModal("");
+    } else {
+      setShowMakeSureModal("hidden");
     }
-  };
+  }
   return (
     <>
+      <ModalMakeSure
+        totalTagihan={TotalTagihan}
+        packageId={payments[0].package?.id as number}
+        selectedPayments={selectedPayments}
+        selectedPricePayments={selectedPricePayments}
+        show={showMakeSureModal}
+        showModal={MakeSureModal}
+      />
       <div
         id="popup-modal"
-        className={`${show}  flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50  w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
+        className={`${show}  flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10  w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
       >
         <div className="relative p-4 w-full max-w-md max-h-full">
           <div className="relative bg-white rounded-lg  shadow dark:bg-gray-700">
@@ -214,23 +194,11 @@ const ModalPayment = ({
                   Nanti
                 </button>
                 <button
-                  type="submit"
-                  onClick={() =>
-                    PaymentUser(
-                      selectedPayments,
-                      selectedPricePayments,
-                      payments[0].package?.id as number,
-                      session.user.id,
-                      session.user.token
-                    )
-                  }
-                  className={`w-20 text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
+                  type="button"
+                  onClick={MakeSureModal}
+                  className={`w-20 text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
                 >
-                  {isLoading ? (
-                    <SpinCircle size={6} className="mx-3 flex justify-center" />
-                  ) : (
-                    <>Bayar</>
-                  )}
+                  Lanjut
                 </button>
               </div>
             </div>
