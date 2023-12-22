@@ -109,7 +109,7 @@ const ModalMakeSure = ({
                   />
                 </div>
               </div>
-              <div className="flex justify-between px-[75px] sm:px-[100px] mb-2">
+              <div className="flex justify-center gap-2 mb-2">
                 <button
                   type="submit"
                   onClick={() =>

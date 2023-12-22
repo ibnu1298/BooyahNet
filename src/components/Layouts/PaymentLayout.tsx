@@ -32,7 +32,7 @@ const PaymentLayout = async () => {
   const userIdSession = session?.user?.id as string;
   const { payments } = await getUserPayment(userIdSession, tokenSession);
   return (
-    <div className="absolute m-3 mt-[72px] md:mt-24">
+    <div className=" sm:absolute relative m-3 flex justify-center items-center">
       <TablePayment paymentsBase={payments != null ? payments : []} />
     </div>
   );

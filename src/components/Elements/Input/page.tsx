@@ -9,18 +9,22 @@ export default function InputForm({
   placeholder,
   additional,
 }: {
-  label: React.ReactNode;
+  label?: React.ReactNode;
   additional?: React.ReactNode;
   type: string;
   name: string;
   placeholder: string;
 }) {
+  const margin = label != null ? "my-1 flex justify-between" : "";
+  const hidden = label != null ? false : true;
   return (
-    <div className="mb-5">
-      <div className="flex justify-between">
-        <Label htmlFor={name}>{label}</Label>
-        {additional}
-      </div>
+    <div>
+      <Label htmlFor={name}>
+        <div className={`${margin}`} hidden={hidden}>
+          <span>{label}</span>
+          <span>{additional}</span>
+        </div>
+      </Label>
       <Input type={type} placeholder={placeholder} name={name} id={name} />
     </div>
   );

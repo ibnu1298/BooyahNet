@@ -11,7 +11,9 @@ const Input = ({
   id,
   eyeIcon,
   input,
+  classname = "w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500",
 }: {
+  classname?: string;
   type: string;
   placeholder: string;
   name: string;
@@ -37,6 +39,7 @@ const Input = ({
   if (name == "password") {
     input = (
       <InputPassword
+        classname={classname}
         type={tipe}
         name={name}
         id={id}
@@ -55,13 +58,19 @@ const Input = ({
   }
   if (name != "password") {
     input = (
-      <InputEmail type={tipe} name={name} id={id} placeholder={placeholder} />
+      <InputEmail
+        classname={classname}
+        type={tipe}
+        name={name}
+        id={id}
+        placeholder={placeholder}
+      />
     );
   }
 
   return (
     <>
-      <div className="mb-4 flex">
+      <div className="flex">
         {input}
         {eyeIcon}
       </div>

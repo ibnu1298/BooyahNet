@@ -82,9 +82,9 @@ const ModalPayment = ({
       />
       <div
         id="popup-modal"
-        className={`${show}  flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10  w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
+        className={`${show}  flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 w-full md:w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
       >
-        <div className="relative p-4 w-full max-w-md max-h-full">
+        <div className="relative p-4 w-96 md:w-full max-w-md max-h-full">
           <div className="relative bg-white rounded-lg  shadow dark:bg-gray-700">
             <button
               type="button"
@@ -108,7 +108,7 @@ const ModalPayment = ({
                 />
               </svg>
             </button>
-            <div className="p-4 md:p-5 text-center flex flex-col">
+            <div className="p-4 md:p-5  text-center flex flex-col">
               <h3 className=" text-2xl font-bold text-white pt-2">
                 Tagihan WIFI
               </h3>

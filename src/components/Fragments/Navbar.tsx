@@ -32,13 +32,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className="fixed z-10 mt-0 bg-gray-900 text-white w-screen "
-      hidden={hideNav}
-    >
+    <nav className="mt-0 bg-gray-900 text-white w-screen " hidden={hideNav}>
       <div className="px-5 md:px-12 py-3 md:py-4 flex justify-between w-full items-center">
         <a
-          className="text-lg md:text-3xl font-bold font-heading hover:underline"
+          className="text-xl sm:text-3xl font-bold font-heading hover:underline"
           href="/"
         >
           Booyah.Net

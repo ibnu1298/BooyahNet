@@ -7,6 +7,7 @@ import ModalForgotPass from "./Modal/ModalForgotPass";
 import { signIn } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import SpinCircle from "../Elements/Loading/spinCircle";
+import ErrorInput from "../Elements/Input/ErrorInput";
 
 export default function FormLogin({ searchParams }: any) {
   const [forgotPass, setForgotPass] = useState("hidden");
@@ -87,7 +88,7 @@ export default function FormLogin({ searchParams }: any) {
     }
   };
   return (
-    <div className="m-9">
+    <div className="mx-9">
       <ModalLoginError show={errLogin} showModal={errLoginModal} />
       <ModalForgotPass show={forgotPass} showModal={forgotPassModal} />
       <form onSubmit={(event) => handleLogin(event)}>
@@ -97,9 +98,9 @@ export default function FormLogin({ searchParams }: any) {
           name="text"
           placeholder="contoh@mail.com"
         />
-        <p className={`text-red-500 text-xs italic -mt-3 mb-2 ${emailField}`}>
-          Email atau Username belum diisi
-        </p>
+        <ErrorInput visible={emailField}>
+          Email atau Username Harus Diisi
+        </ErrorInput>
         <InputForm
           label="Kata Sandi"
           type="password"
@@ -116,13 +117,10 @@ export default function FormLogin({ searchParams }: any) {
             </a>
           }
         />
-        <p className={`text-red-500 text-xs italic -mt-3 mb-2 ${passField}`}>
-          Password harus diisi
-        </p>
-
-        <Button className={`${cursor}`} type="submit">
+        <ErrorInput visible={passField}>Password harus diisi</ErrorInput>
+        <Button className={`${cursor} mt-3`} type="submit">
           {isLoading ? (
-            <div className="flex justify-center">
+            <div className="flex justify-center ">
               <SpinCircle size={6} />
               Loading...{" "}
             </div>
