@@ -2,12 +2,6 @@
 import React from "react";
 import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
-import {
-  Autocomplete,
-  AutocompleteItem,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
 import SelectOption from "../Elements/Select/SelectOption";
 
 export default function FormRegister() {

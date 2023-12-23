@@ -13,6 +13,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
   const [payments, setPayments] = useState(paymentsBase);
   const [page, setPage] = useState(1);
   const rowsPerPage = 6;
+
   function sortData(sortBy: string) {
     return sortBy == "status" ? sortStatus() : sortDate();
     function sortStatus() {
@@ -149,7 +150,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                           ? payment.billingDateDesc
                           : payment.paymentDateDesc}
                       </td>
-                      <td className="px-6 py-4 sm:w-56  w-[180px]">
+                      <td className="px-6 py-4 sm:w-60  w-[180px]">
                         {payment.status == 2 && (
                           <div className="text-emerald-300 bg-emerald-500/30 rounded-full px-4 py-1 w-20 flex justify-center">
                             {payment.statusDesc}
@@ -165,7 +166,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                             <div className="absolute px-2 w-fit h-full  sm:px-4 py-1 rounded-full z-10  bg-gray-50 dark:bg-gray-600 text-white flex flex-col items-center justify-center opacity-0  hover:opacity-100 cursor-pointer bg-opacity-90 duration-300">
                               <p>Klik Untuk Bayar</p>
                             </div>
-                            <div className="text-red-300  bg-red-500/30 rounded-full px-2 w-fit text-center sm:px-4 py-1 ">
+                            <div className="text-red-300  bg-red-500/30 rounded-full px-4 w-fit text-center py-1 ">
                               {payment.statusDesc}
                             </div>
                           </div>

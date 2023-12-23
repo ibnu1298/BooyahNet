@@ -128,6 +128,34 @@ export default function FormLogin({ searchParams }: any) {
             <>Masuk</>
           )}
         </Button>
+        <Button
+          className={`${cursor} mt-3`}
+          type="button"
+          onClick={() => signIn("google", { callbackUrl, redirect: false })}
+        >
+          {isLoading ? (
+            <div className="flex justify-center ">
+              <SpinCircle size={6} />
+              Loading...{" "}
+            </div>
+          ) : (
+            <>Login With Google</>
+          )}
+        </Button>
+        <Button
+          className={`${cursor} mt-3`}
+          type="button"
+          onClick={() => signIn("facebook", { callbackUrl, redirect: false })}
+        >
+          {isLoading ? (
+            <div className="flex justify-center ">
+              <SpinCircle size={6} />
+              Loading...{" "}
+            </div>
+          ) : (
+            <>Login With Facebook</>
+          )}
+        </Button>
       </form>
     </div>
   );

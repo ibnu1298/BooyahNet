@@ -1,13 +1,12 @@
 import Input from "@/components/Elements/Input/Input";
-import InputForm from "@/components/Elements/Input/page";
 import React from "react";
 
 export default function ModalForgotPass({
   show,
   showModal,
 }: {
-  show: string;
-  showModal: any;
+  show?: string;
+  showModal?: any;
 }) {
   return (
     <>
@@ -28,7 +27,7 @@ export default function ModalForgotPass({
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 14 14"
+                viewBox="0 0 0 0"
               >
                 <path
                   stroke="currentColor"
@@ -39,8 +38,8 @@ export default function ModalForgotPass({
                 />
               </svg>
             </button>
-            <div className="p-4 md:p-5 text-center">
-              <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+            <div className="p-4 md:px-12 text-center">
+              <h3 className="mb-5 text-lg font-normal text-white ">
                 Silahkan Isi alamat Email
               </h3>
               <Input
@@ -49,19 +48,21 @@ export default function ModalForgotPass({
                 name="email"
                 id="email"
               />
-              <button
-                type="button"
-                className="text-white bg-teal-800  focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
-              >
-                Send OTP
-              </button>
-              <button
-                onClick={showModal}
-                type="button"
-                className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-              >
-                Kembali
-              </button>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  className="text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+                >
+                  Send OTP
+                </button>
+                <button
+                  onClick={showModal}
+                  type="button"
+                  className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                >
+                  Kembali
+                </button>
+              </div>
             </div>
           </div>
         </div>
