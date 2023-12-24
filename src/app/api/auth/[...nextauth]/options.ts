@@ -97,8 +97,6 @@ export const options: NextAuthOptions = {
             "Content-Type": "application/json",
           },
         });
-        console.log(res.status);
-        console.log(res.url);
 
         urlImage = res.status === 200 ? res.url : "";
 
@@ -114,7 +112,7 @@ export const options: NextAuthOptions = {
         picture: string,
         type: string
       ) {
-        console.log(email, userName, picture, id, type);
+        console.log(id, firstName, lastName, email, userName, picture, type);
 
         const res = await fetch(urlLogin, {
           method: "POST",
@@ -131,7 +129,7 @@ export const options: NextAuthOptions = {
             type,
           }),
         });
-        console.log(res.status);
+        console.log(res);
         const response = await res.json();
         console.log(response);
 
@@ -179,6 +177,16 @@ export const options: NextAuthOptions = {
           image,
           token.type
         );
+        console.log(
+          user.id,
+          name[0],
+          name[1],
+          user.email,
+          username[0],
+          image,
+          token.type
+        );
+
         const decoded = jwtDecode<JwtDecodeCustom>(getToken.token);
         console.log(getToken);
         const getUser = await GetUser(decoded?.email, getToken.token);

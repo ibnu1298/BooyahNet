@@ -9,8 +9,6 @@ async function Registrasi(
   email: string,
   password: string
 ) {
-  console.log(firstName, gender, userName, email, password);
-
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -24,7 +22,6 @@ async function Registrasi(
       password,
     }),
   });
-  console.log(res);
 
   if (res.status === 401) {
     return res;
@@ -41,7 +38,6 @@ export async function POST(request: NextRequest) {
   const authorization = headersInstance.get("authorization");
   const req = await request.json();
   const Sort = "Date";
-  console.log(req);
   const res = await Registrasi(
     req.firstname,
     req.gender,
@@ -50,8 +46,6 @@ export async function POST(request: NextRequest) {
     req.password
   );
   const result = await res.json();
-  console.log(result);
-
   try {
     if (res.status !== 401) {
       return NextResponse.json(result, { status: res.status });

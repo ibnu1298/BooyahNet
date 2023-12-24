@@ -12,20 +12,13 @@ import Image from "next/image";
 
 export default function DropdownNext() {
   const { data: session }: { data: any } = useSession();
-  console.log(session);
+
   let image = "";
   if (session?.user.image != undefined) {
     image = session?.user.image as string;
   }
-
-  console.log(image);
-
-  const name =
-    session?.user.firstName.charAt(0).toUpperCase() +
-    session?.user.firstName.slice(1) +
-    " " +
-    session?.user.lastName.charAt(0).toUpperCase() +
-    session?.user.lastName.slice(1);
+  const email = session?.user.email.toString().substring(0, 20);
+  console.log(email);
 
   return (
     <div className="flex items-center justify-center">
@@ -36,18 +29,16 @@ export default function DropdownNext() {
         <DropdownTrigger>
           <div className="flex items-center justify-center cursor-pointer">
             <div className="text-right">
-              <div className="text-md text-bold ">{name}</div>
-              {name == "" ? (
+              <div className="text-md text-bold ">
+                {session?.user.firstName}
+              </div>
+              {session?.user.name == "" ? (
                 <div className="text-md text-bold ">
-                  {session?.user.email == ""
-                    ? session?.user.userName
-                    : session?.user.email}
+                  {session?.user.email == "" ? session?.user.userName : email}
                 </div>
               ) : (
                 <div className="text-xs text-slate-400 -mt-1">
-                  {session?.user.email == ""
-                    ? session?.user.userName
-                    : session?.user.email}
+                  {session?.user.email == "" ? session?.user.userName : email}
                 </div>
               )}
             </div>

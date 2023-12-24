@@ -15,7 +15,6 @@ async function GetPaymentUser(userId: string, sort: string, token: any) {
       sort,
     }),
   });
-  console.log(res);
 
   if (res.status === 401) {
     return res;
@@ -32,7 +31,6 @@ export async function POST(request: NextRequest) {
   const authorization = headersInstance.get("authorization");
   const req = await request.json();
   const Sort = "Date";
-  console.log(req);
   const res = await GetPaymentUser(req.userId, Sort, authorization);
   const result = await res.json();
 
