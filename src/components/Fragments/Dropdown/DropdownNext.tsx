@@ -17,7 +17,7 @@ export default function DropdownNext() {
   if (session?.user.image != undefined) {
     image = session?.user.image as string;
   }
-  const email = session?.user.email.toString().substring(0, 20);
+  const email = `${session?.user.email.toString().substring(0, 20)}...`;
   console.log(email);
 
   return (
