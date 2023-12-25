@@ -35,6 +35,7 @@ const UploadImage = () => {
     setImageUrl(image);
   }, [image]);
   console.log(session?.user.image as string);
+  console.log(imageUrl);
 
   return (
     <>
