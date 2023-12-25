@@ -98,7 +98,8 @@ export const options: NextAuthOptions = {
           },
         });
 
-        urlImage = res.status === 200 ? res.url : "";
+        urlImage = res.status === 200 ? res.url : "/images/people/default.jpg";
+        console.log(res);
 
         return urlImage;
       }
@@ -147,6 +148,14 @@ export const options: NextAuthOptions = {
 
         const getUser = await GetUser(decoded?.username, user.token);
         console.log(getUser);
+        console.log(getUser.urlImage);
+
+        const image =
+          getUser.urlImage != ""
+            ? await CekImage(getUser.urlImage)
+            : "/images/people/default.jpg";
+
+        console.log(image);
 
         token.id = getUser.id;
         token.email = getUser.email;
@@ -158,7 +167,8 @@ export const options: NextAuthOptions = {
         token.gender = getUser.gender;
         token.userName = getUser.userName;
         token.phoneNumber = getUser.phoneNumber;
-        token.picture = getUser.urlImage;
+        token.picture = image;
+        token.asName = getUser.asName;
         token.emailConfirmed = getUser.emailConfirmed;
         token.token = user.token;
       }
@@ -177,6 +187,7 @@ export const options: NextAuthOptions = {
           image,
           token.type
         );
+        console.log(getToken);
 
         const decoded = jwtDecode<JwtDecodeCustom>(getToken.token);
         const getUser = await GetUser(decoded?.email, getToken.token);
@@ -193,12 +204,11 @@ export const options: NextAuthOptions = {
         token.userName = getUser.userName;
         token.phoneNumber = getUser.phoneNumber;
         token.picture = getUser.urlImage;
+        token.asName = getUser.asName;
         token.emailConfirmed = getUser.emailConfirmed;
         token.token = getToken.token;
       }
       if (trigger === "update" && session?.image) {
-        console.log(trigger);
-
         const sessionImage = session.image;
 
         token.picture = sessionImage;
@@ -225,6 +235,7 @@ export const options: NextAuthOptions = {
         session.user.gender = token.gender;
         session.user.userName = token.userName;
         session.user.phoneNumber = token.phoneNumber;
+        session.user.asName = token.asName;
         session.user.urlImage = token.picture;
         session.user.emailConfirmed = token.emailConfirmed;
       }

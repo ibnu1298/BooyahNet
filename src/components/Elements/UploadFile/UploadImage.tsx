@@ -9,7 +9,11 @@ import React, { useEffect, useState } from "react";
 const UploadImage = () => {
   const { data: session, update: update }: { data: any; update: any } =
     useSession();
-  const [imageUrl, setImageUrl] = useState<string>("");
+  let image = "/images/people/cat.jpg";
+  if (session?.user.image != undefined) {
+    image = session?.user.image as string;
+  }
+  const [imageUrl, setImageUrl] = useState<string>(image);
   console.log(session?.user);
   async function updateImage(id: string, imageURL: string, token: string) {
     const res = await fetch(`/api/user/updateImage`, {
@@ -28,8 +32,9 @@ const UploadImage = () => {
     console.log(res);
   }
   useEffect(() => {
-    setImageUrl(session?.user.image as string);
-  }, [session?.user.image]);
+    setImageUrl(image);
+  }, [image]);
+  console.log(session?.user.image as string);
 
   return (
     <>

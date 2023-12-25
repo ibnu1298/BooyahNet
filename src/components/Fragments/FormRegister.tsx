@@ -19,7 +19,7 @@ export default function FormRegister() {
         password: event.currentTarget.password.value as string,
       }),
     });
-    const data = res.json();
+    const data = await res.json();
     console.log(data);
   };
   const genders = [

@@ -12,6 +12,7 @@ import Image from "next/image";
 
 export default function DropdownNext() {
   const { data: session }: { data: any } = useSession();
+  console.log(session?.user);
 
   let image = "";
   if (session?.user.image != undefined) {
@@ -28,9 +29,7 @@ export default function DropdownNext() {
         <DropdownTrigger>
           <div className="flex items-center justify-center cursor-pointer">
             <div className="text-right">
-              <div className="text-md text-bold ">
-                {session?.user.firstName}
-              </div>
+              <div className="text-md text-bold ">{session?.user.name}</div>
               {session?.user.name == "" ? (
                 <div className="text-md text-bold ">
                   {session?.user.email == "" ? session?.user.userName : email}
@@ -42,29 +41,18 @@ export default function DropdownNext() {
               )}
             </div>
             <div className="ml-2 hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600">
-              {image != "" ? (
-                <Image
-                  className="rounded-full w-8 h-8 md:w-10 md:h-10 "
-                  src={image}
-                  width={500}
-                  height={500}
-                  alt={`${session?.user.name}`}
-                />
-              ) : (
-                <Image
-                  className="rounded-full w-8 h-8 md:w-10 md:h-10 "
-                  src="/images/people/cat.jpg"
-                  width={500}
-                  height={500}
-                  alt={`${session?.user.name as string}`}
-                />
-              )}
+              <Image
+                className="rounded-full w-8 h-8 md:w-10 md:h-10 "
+                src={image}
+                width={500}
+                height={500}
+                alt={`${session?.user.name}`}
+              />
             </div>
           </div>
         </DropdownTrigger>
         <DropdownMenu aria-label="User Actions">
           <DropdownItem href="/profile-settings">Settings</DropdownItem>
-
           <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
             Log Out
           </DropdownItem>
