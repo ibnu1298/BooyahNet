@@ -72,7 +72,7 @@ export const options: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile, user }: any) {
+    async jwt({ token, account, trigger, session, user }: any) {
       const urlGetUser =
         "https://booyahnetapi.azurewebsites.net/api/User/GetByEmailOrUsername";
       async function GetUser(email: any, token: string) {
@@ -135,8 +135,8 @@ export const options: NextAuthOptions = {
 
         return response;
       }
-
       interface JwtDecodeCustom {
+        id?: string;
         exp?: number;
         username?: string;
         email?: string;
@@ -177,18 +177,8 @@ export const options: NextAuthOptions = {
           image,
           token.type
         );
-        console.log(
-          user.id,
-          name[0],
-          name[1],
-          user.email,
-          username[0],
-          image,
-          token.type
-        );
 
         const decoded = jwtDecode<JwtDecodeCustom>(getToken.token);
-        console.log(getToken);
         const getUser = await GetUser(decoded?.email, getToken.token);
         console.log(getUser);
 
@@ -206,6 +196,15 @@ export const options: NextAuthOptions = {
         token.emailConfirmed = getUser.emailConfirmed;
         token.token = getToken.token;
       }
+      if (trigger === "update" && session?.image) {
+        console.log(trigger);
+
+        const sessionImage = session.image;
+
+        token.picture = sessionImage;
+      }
+      console.log(token);
+
       return token;
     },
     async session({ session, token }: any) {
@@ -229,6 +228,8 @@ export const options: NextAuthOptions = {
         session.user.urlImage = token.picture;
         session.user.emailConfirmed = token.emailConfirmed;
       }
+      console.log(session);
+
       return session;
     },
   },

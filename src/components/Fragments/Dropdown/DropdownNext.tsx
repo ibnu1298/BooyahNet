@@ -17,8 +17,7 @@ export default function DropdownNext() {
   if (session?.user.image != undefined) {
     image = session?.user.image as string;
   }
-  const email = `${session?.user.email.toString().substring(0, 20)}...`;
-  console.log(email);
+  const email = `${session?.user.email.toString().substring(0, 18)}...`;
 
   return (
     <div className="flex items-center justify-center">
@@ -64,12 +63,8 @@ export default function DropdownNext() {
           </div>
         </DropdownTrigger>
         <DropdownMenu aria-label="User Actions">
-          <DropdownItem>My Settings</DropdownItem>
-          <DropdownItem>Team Settings</DropdownItem>
-          <DropdownItem>Analytics</DropdownItem>
-          <DropdownItem>System</DropdownItem>
-          <DropdownItem>Configurations</DropdownItem>
-          <DropdownItem color="secondary">Help & Feedback</DropdownItem>
+          <DropdownItem href="/profile-settings">Settings</DropdownItem>
+
           <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
             Log Out
           </DropdownItem>

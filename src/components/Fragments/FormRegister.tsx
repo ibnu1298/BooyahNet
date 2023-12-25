@@ -1,13 +1,14 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import InputForm from "../Elements/Input/page";
 import Button from "../Elements/Button/page";
 import SelectOption from "../Elements/Select/SelectOption";
 
 export default function FormRegister() {
-  const handleRegister = (event: any) => {
+  const [response, setResponse] = useState();
+  const handleRegister = async (event: any) => {
     event.preventDefault();
-    fetch("/api/auth/register", {
+    const res = await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
         firstname: event.currentTarget.firstname.value as string,
@@ -18,6 +19,8 @@ export default function FormRegister() {
         password: event.currentTarget.password.value as string,
       }),
     });
+    const data = res.json();
+    console.log(data);
   };
   const genders = [
     { label: "Laki-laki", value: "0" },

@@ -12,4 +12,5 @@ export default withAuth(mainMiddleware, [
   "/package",
   "/login",
   "/register",
+  "/profile-settings",
 ]);
