@@ -6,10 +6,7 @@ const MyProfilePage = () => {
     <div className=" h-screen flex items-start">
       <div className="flex items-center">
         <UploadImage />
-        <div className="text-3xl text-bold gap-4 flex flex-col">
-          <div>Nama Depan</div>
-          <div>Nama Belakang</div>
-        </div>
+        <div className="text-3xl text-bold gap-4 flex flex-col"></div>
       </div>
     </div>
   );
