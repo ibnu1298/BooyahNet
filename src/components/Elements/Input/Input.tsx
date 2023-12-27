@@ -13,15 +13,17 @@ const Input = ({
   eyeIcon,
   input,
   classname = "",
+  defaultValue,
 }: {
   onclick?: any;
   classname?: string;
   type: string;
-  placeholder: string;
+  placeholder?: string;
   name: string;
   id: string;
   eyeIcon?: React.ReactNode;
   input?: React.ReactNode;
+  defaultValue?: any;
 }) => {
   const hide = <TbEyeClosed className="absolute mr-14" size="28px" />;
   const show = <TbEye className="absolute mr-14" size="28px" />;
@@ -47,6 +49,7 @@ const Input = ({
         name={name}
         id={id}
         placeholder={placeholder}
+        defaultValue={defaultValue}
       />
     );
     eyeIcon = (
@@ -68,6 +71,7 @@ const Input = ({
         name={name}
         id={id}
         placeholder={placeholder}
+        defaultValue={defaultValue}
       />
     );
   }

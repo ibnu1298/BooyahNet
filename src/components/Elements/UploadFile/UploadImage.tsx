@@ -5,6 +5,7 @@ import Spinner from "@/components/Elements/Spinner/Spinner";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { readFile } from "fs/promises";
 
 const UploadImage = () => {
   const { data: session, update: update }: { data: any; update: any } =
@@ -37,7 +38,7 @@ const UploadImage = () => {
       <div className="flex flex-col justify-center items-center p-9 ">
         <div className="rounded-full">
           <Image
-            className="rounded-full md:w-36 md:h-36 w-24 h-24"
+            className="rounded-full md:w-36 md:h-36 w-24 h-24 object-cover"
             alt="UserProfile"
             width={300}
             height={300}
@@ -78,9 +79,18 @@ const UploadImage = () => {
             update({ image: res[0].url });
             updateImage(session?.user.id, res[0].url, session?.user.token);
           }}
+          onBeforeUploadBegin={(files) => {
+            if (files[0].size > 2000000) {
+              alert(`Max file 2 MB`);
+            }
+            return files.map(
+              (f) => new File([f], "BooyahNet-" + f.name, { type: f.type })
+            );
+          }}
           onUploadError={(error: Error) => {
             // Do something with the error.
-            alert(`ERROR! ${error.message}`);
+            console.log(error.message);
+            // alert(`ERROR! ${error.message}`);
           }}
         />
       </div>

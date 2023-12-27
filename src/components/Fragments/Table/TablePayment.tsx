@@ -189,11 +189,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
           </div>
         </>
       ) : (
-        <div className="relative w-[365px] sm:w-[500px] flex flex-col justify-center shadow-xl rounded-lg sm:absolute backdrop-blur-sm bg-gray-700/70">
-          <div className="flex justify-center my-5 text-base md:text-2xl text-bold">
-            Belum Ada Riwayat Pembayaran
-          </div>
-        </div>
+        <></>
       )}
     </div>
   );

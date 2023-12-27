@@ -8,6 +8,8 @@ export default function ModalForgotPass({
   show?: string;
   showModal?: any;
 }) {
+  const className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-900 dark:border-gray-600 dark:focus:border-gray-200`;
+
   return (
     <>
       <div
@@ -43,6 +45,7 @@ export default function ModalForgotPass({
                 Silahkan Isi alamat Email
               </h3>
               <Input
+                classname={className}
                 type="email"
                 placeholder="contoh@mail.com"
                 name="email"

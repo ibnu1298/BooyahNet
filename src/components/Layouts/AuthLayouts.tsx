@@ -36,10 +36,10 @@ export default function AuthLayouts({
       />
       <div
         onClick={() => hideNotif("-left-full", "")}
-        className="flex items-center min-h-screen bg-gray-900"
+        className="flex items-center min-h-screen bg-gray-900/90 backdrop-blur-md"
       >
         <div className="container mx-auto">
-          <div className="max-w-md mx-auto my-10 rounded-3xl px-4 py-5">
+          <div className="max-w-md mx-auto md:ml-0 md:w-[500px] my-10 rounded-3xl px-4 py-5">
             <div className="text-center">
               <div className="my-3 text-5xl font-semibold text-gray-100 dark:text-gray-100">
                 {title}

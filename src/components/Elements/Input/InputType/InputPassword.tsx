@@ -7,18 +7,21 @@ export default function InputPassword({
   id,
   classname,
   placeholder,
+  defaultValue,
 }: {
   onclick?: any;
   classname: string;
   type: string;
   name: string;
   id: string;
-  placeholder: string;
+  placeholder?: string;
+  defaultValue?: any;
 }) {
   const [password, setPassword] = useState("");
 
   return (
     <input
+      defaultValue={defaultValue}
       onClick={() => onclick()}
       type={type}
       name={name}

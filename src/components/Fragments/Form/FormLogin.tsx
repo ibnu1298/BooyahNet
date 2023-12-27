@@ -95,6 +95,7 @@ export default function FormLogin({ searchParams }: any) {
         <InputForm
           className={className}
           label="Email atau Username"
+          styleLabel="text-white text-sm"
           type="text"
           name="text"
           placeholder="contoh@mail.com"
@@ -105,6 +106,7 @@ export default function FormLogin({ searchParams }: any) {
         <InputForm
           className={className}
           label="Kata Sandi"
+          styleLabel="text-white text-sm"
           type="password"
           name="password"
           placeholder="*********"
@@ -120,7 +122,10 @@ export default function FormLogin({ searchParams }: any) {
           }
         />
         <ErrorInput visible={passField}>Password harus diisi</ErrorInput>
-        <Button className={`${cursor} mt-3`} type="submit">
+        <Button
+          className={`w-full px-3 text-white py-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 ${cursor} mt-3`}
+          type="submit"
+        >
           {isLoading ? (
             <div className="flex justify-center ">
               <SpinCircle size={6} />
@@ -131,7 +136,7 @@ export default function FormLogin({ searchParams }: any) {
           )}
         </Button>
         <Button
-          className={`${cursor} mt-3`}
+          className={`w-full px-3 text-white py-4 rounded-md bg-teal-800 focus:bg-teal-700 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 ${cursor} mt-3`}
           type="button"
           onClick={() => signIn("google", { callbackUrl, redirect: false })}
         >

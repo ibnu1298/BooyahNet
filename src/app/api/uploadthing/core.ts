@@ -1,3 +1,4 @@
+import { error } from "console";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();

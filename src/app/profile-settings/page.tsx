@@ -4,8 +4,8 @@ import React from "react";
 
 const MyProfilePage = () => {
   return (
-    <div className=" h-screen flex items-start">
-      <div className="flex flex-col items-center">
+    <div className="flex ">
+      <div className="flex flex-col m-auto md:ml-20">
         <UploadImage />
         <FormUpdateProfile />
       </div>

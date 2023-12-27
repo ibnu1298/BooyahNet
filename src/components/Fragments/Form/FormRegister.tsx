@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import InputForm from "../../Elements/Input/page";
 import Button from "../../Elements/Button/page";
-import SelectOption from "../../Elements/Select/SelectOption";
+import SelectOption from "../../Elements/Input/Select/SelectOption";
 import { genders } from "@/interface/user";
 import ModalRegistrasiSuccess from "../Modal/ModalRegistrasiSuccess";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
@@ -17,7 +17,7 @@ export default function FormRegister({
 }) {
   let bordergray = "dark:border-gray-600";
   let borderRed = "dark:border-red-500 bg-red-700";
-  let className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-900 dark:focus:border-gray-200`;
+  let className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-200 focus:ring-1  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 `;
 
   const [isLoading, setIsloading] = useState(false);
   const [classname, setClassame] = useState(`${className} `);
@@ -153,7 +153,7 @@ export default function FormRegister({
           <SelectOption
             className={`${classname}${bordergray}`}
             name="gender"
-            label="Jenis Kelamin"
+            placeholder="Jenis Kelamin"
             data={genders}
           />
           <InputForm
@@ -163,7 +163,10 @@ export default function FormRegister({
             name="password"
             placeholder="Kata Sandi"
           />
-          <Button className={`${cursor} my-4`} type="submit">
+          <Button
+            className={`w-full px-3 text-white py-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 ${cursor} my-4`}
+            type="submit"
+          >
             {isLoading ? (
               <div className="flex justify-center ">
                 <SpinCircle size={6} />

@@ -33,6 +33,7 @@ async function UpdateUser(
   if (!res.ok) {
     return res;
   }
+
   return res;
 }
 
@@ -40,6 +41,7 @@ export async function POST(request: NextRequest) {
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
   const req = await request.json();
+
   const res = await UpdateUser(
     req.id,
     req.firstName,

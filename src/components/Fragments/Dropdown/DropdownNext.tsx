@@ -17,7 +17,14 @@ export default function DropdownNext() {
   if (session?.user.image != undefined) {
     image = session?.user.image as string;
   }
-  const email = `${session?.user.email.toString().substring(0, 18)}...`;
+  const email = `${session?.user.email.split("@")[0]}@...`;
+  const firstname =
+    session?.user.firstName.charAt(0).toUpperCase() +
+    session?.user.firstName.slice(1);
+  const lastname =
+    session?.user.lastName.charAt(0).toUpperCase() +
+    session?.user.lastName.slice(1);
+  const nameLength = session?.user.name.length;
 
   return (
     <div className="flex items-center justify-center">
@@ -28,7 +35,9 @@ export default function DropdownNext() {
         <DropdownTrigger>
           <div className="flex items-center justify-center cursor-pointer">
             <div className="text-right">
-              <div className="text-md text-bold ">{session?.user.name}</div>
+              <div className="text-md text-bold ">
+                {`${firstname} ${nameLength < 15 ? lastname : ""}`}
+              </div>
               {session?.user.name == "" ? (
                 <div className="text-md text-bold ">
                   {session?.user.email == "" ? session?.user.userName : email}
@@ -41,7 +50,7 @@ export default function DropdownNext() {
             </div>
             <div className="ml-2 hover:text-gray-200 hover:outline outline-offset-2 outline-4 rounded-full outline-slate-600">
               <Image
-                className="rounded-full w-8 h-8 md:w-10 md:h-10 "
+                className="rounded-full w-8 h-8 md:w-10 md:h-10 object-cover"
                 src={image}
                 width={500}
                 height={500}

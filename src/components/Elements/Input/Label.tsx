@@ -3,16 +3,15 @@ import React from "react";
 const Label = ({
   htmlFor,
   children,
+  className,
 }: {
+  className?: string;
   htmlFor: string;
   children: React.ReactNode;
 }) => {
   const margin = children != null ? "my-3" : "";
   return (
-    <label
-      htmlFor={htmlFor}
-      className={` text-sm text-gray-600 dark:text-gray-400`}
-    >
+    <label htmlFor={htmlFor} className={`${className}`}>
       {children}
     </label>
   );
