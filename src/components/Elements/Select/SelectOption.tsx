@@ -10,16 +10,21 @@ const gender = [
 ];
 
 export default function SelectOption({
+  onclick = () => {},
+  className,
   name,
   data = gender,
   label,
 }: {
+  onclick?: any;
+  className?: string;
   name: string;
   label?: string;
   data?: dataProps[];
 }) {
   return (
     <Select
+      onClick={onclick}
       items={data}
       name={name}
       aria-label={label}
@@ -30,10 +35,9 @@ export default function SelectOption({
         isEnabled: true,
       }}
       classNames={{
-        label: "group-data-[filled=true]:-translate-y-2 ",
-        trigger:
-          "w-full h-fit py-2 px-3 border  border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500",
-        listboxWrapper: "max-h-[800px] bg-gray-500 rounded-lg ",
+        label: "group-data-[filled=true]:-translate-y-2",
+        trigger: `w-full h-fit py-2 px-3 border  border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white ${className}`,
+        listboxWrapper: "max-h-[800px] bg-gray-500  rounded-lg ",
       }}
       listboxProps={{
         itemClasses: {

@@ -174,7 +174,7 @@ export const options: NextAuthOptions = {
       }
       if (account?.provider === "google" || account?.provider == "facebook") {
         token.type = account?.provider;
-        const username = user.email.split("@");
+        const username = "";
         const name = user.name.split(" ");
         const image = await CekImage(user.image);
 
@@ -183,7 +183,7 @@ export const options: NextAuthOptions = {
           name[0],
           name[1],
           user.email,
-          username[0],
+          username,
           image,
           token.type
         );
@@ -239,7 +239,6 @@ export const options: NextAuthOptions = {
         session.user.urlImage = token.picture;
         session.user.emailConfirmed = token.emailConfirmed;
       }
-      console.log(session);
 
       return session;
     },

@@ -17,7 +17,6 @@ const getUserPayment = async (userId: any, token: any, page: number) => {
       }),
     });
     const response = await res.json();
-    console.log(response);
     if (!response.isSucceeded) {
       return { response, payments: null };
     }

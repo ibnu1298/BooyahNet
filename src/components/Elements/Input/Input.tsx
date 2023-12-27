@@ -1,18 +1,20 @@
 "use client";
 import React, { useState } from "react";
 import { TbEye, TbEyeClosed } from "react-icons/tb";
-import InputEmail from "./InputType/InputEmail";
 import InputPassword from "./InputType/InputPassword";
+import InputData from "./InputType/InputEmail";
 
 const Input = ({
+  onclick = () => {},
   type,
   placeholder,
   name,
   id,
   eyeIcon,
   input,
-  classname = "w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500",
+  classname = "",
 }: {
+  onclick?: any;
   classname?: string;
   type: string;
   placeholder: string;
@@ -39,6 +41,7 @@ const Input = ({
   if (name == "password") {
     input = (
       <InputPassword
+        onclick={onclick}
         classname={classname}
         type={tipe}
         name={name}
@@ -58,7 +61,8 @@ const Input = ({
   }
   if (name != "password") {
     input = (
-      <InputEmail
+      <InputData
+        onclick={onclick}
         classname={classname}
         type={tipe}
         name={name}

@@ -58,7 +58,6 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
     if (payments.length <= rowsPerPage) {
       setHidePagination("invisible");
     }
-    console.log(payments);
   }, [payments]);
 
   const pages = Math.ceil(payments.length / rowsPerPage);

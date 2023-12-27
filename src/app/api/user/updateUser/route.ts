@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-const url = "https://booyahnetapi.azurewebsites.net/api/User/UpdateImage";
+const url = "https://booyahnetapi.azurewebsites.net/api/User/UpdateUser";
 
-async function UpdateImage(id: string, imageURL: string, token: string) {
+async function UpdateUser(
+  id: string,
+  firstName: string,
+  lastName: string,
+  address: string,
+  gender: number,
+  phoneNumber: string,
+  token: string
+) {
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -12,7 +20,11 @@ async function UpdateImage(id: string, imageURL: string, token: string) {
     },
     body: JSON.stringify({
       id,
-      imageURL,
+      firstName,
+      lastName,
+      address,
+      gender,
+      phoneNumber,
     }),
   });
   if (res.status === 401) {
@@ -28,7 +40,15 @@ export async function POST(request: NextRequest) {
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
   const req = await request.json();
-  const res = await UpdateImage(req.id, req.imageURL, authorization as string);
+  const res = await UpdateUser(
+    req.id,
+    req.firstName,
+    req.lastName,
+    req.address,
+    req.gender,
+    req.phoneNumber,
+    authorization as string
+  );
   const result = await res.json();
 
   try {

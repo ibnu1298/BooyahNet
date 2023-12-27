@@ -6,8 +6,6 @@ import { sessionCustom } from "@/interface/user";
 import TablePayment from "../Fragments/Table/TablePayment";
 
 const getUserPayment = async (userId: string, token: string) => {
-  console.log(userId, token);
-
   if (token != undefined) {
     const res = await fetch(`${process.env.NEXT_URL_PUBLIC}/api/payment`, {
       method: "POST",
@@ -21,7 +19,6 @@ const getUserPayment = async (userId: string, token: string) => {
     });
 
     const response = await res.json();
-    console.log(response);
     if (!response.isSucceeded) {
       return { response };
     }
@@ -34,7 +31,6 @@ const PaymentLayout = async () => {
   const session = await getServerSession<AuthOptions, sessionCustom>(options);
   const tokenSession = session?.user?.token as string;
   const userIdSession = session?.user?.id as string;
-  console.log(session);
 
   const { payments } = await getUserPayment(userIdSession, tokenSession);
   return (

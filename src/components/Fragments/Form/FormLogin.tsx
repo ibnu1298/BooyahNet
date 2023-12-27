@@ -1,15 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import InputForm from "../Elements/Input/page";
-import Button from "../Elements/Button/page";
-import ModalLoginError from "./Modal/ModalLoginError";
-import ModalForgotPass from "./Modal/ModalForgotPass";
+import InputForm from "../../Elements/Input/page";
+import Button from "../../Elements/Button/page";
+import ModalLoginError from "../Modal/ModalLoginError";
+import ModalForgotPass from "../Modal/ModalForgotPass";
 import { signIn } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import SpinCircle from "../Elements/Loading/spinCircle";
-import ErrorInput from "../Elements/Input/ErrorInput";
+import SpinCircle from "../../Elements/Loading/spinCircle";
+import ErrorInput from "../../Elements/Input/ErrorInput";
 
 export default function FormLogin({ searchParams }: any) {
+  let className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-900 dark:border-gray-600 dark:focus:border-gray-200`;
+
   const [forgotPass, setForgotPass] = useState("hidden");
   const [errLogin, setErrLogin] = useState("hidden");
   const [isLoading, setIsloading] = useState(false);
@@ -46,7 +48,6 @@ export default function FormLogin({ searchParams }: any) {
           password: event.currentTarget.password.value,
           callbackUrl,
         });
-        console.log(cursor);
 
         if (!response?.error) {
           if (pathName == "/" || errLogin == "") {
@@ -59,11 +60,10 @@ export default function FormLogin({ searchParams }: any) {
             setIsloading(false);
           }
           setErrLogin("");
-          // console.log(response.error);
         }
       } catch (err) {
         setIsloading(false);
-        // console.log(err);
+        console.log(err);
       }
     }
   };
@@ -93,6 +93,7 @@ export default function FormLogin({ searchParams }: any) {
       <ModalForgotPass show={forgotPass} showModal={forgotPassModal} />
       <form onSubmit={(event) => handleLogin(event)}>
         <InputForm
+          className={className}
           label="Email atau Username"
           type="text"
           name="text"
@@ -102,6 +103,7 @@ export default function FormLogin({ searchParams }: any) {
           Email atau Username Harus Diisi
         </ErrorInput>
         <InputForm
+          className={className}
           label="Kata Sandi"
           type="password"
           name="password"
@@ -133,14 +135,7 @@ export default function FormLogin({ searchParams }: any) {
           type="button"
           onClick={() => signIn("google", { callbackUrl, redirect: false })}
         >
-          {isLoading ? (
-            <div className="flex justify-center ">
-              <SpinCircle size={6} />
-              Loading...{" "}
-            </div>
-          ) : (
-            <>Login With Google</>
-          )}
+          Login With Google
         </Button>
       </form>
     </div>

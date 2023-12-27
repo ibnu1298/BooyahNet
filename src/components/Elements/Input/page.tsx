@@ -3,12 +3,16 @@ import Label from "./Label";
 import Input from "./Input";
 
 export default function InputForm({
+  className,
+  onclick,
   label,
   type,
   name,
   placeholder,
   additional,
 }: {
+  onclick?: any;
+  className?: string;
   label?: React.ReactNode;
   additional?: React.ReactNode;
   type: string;
@@ -25,7 +29,14 @@ export default function InputForm({
           <span>{additional}</span>
         </div>
       </Label>
-      <Input type={type} placeholder={placeholder} name={name} id={name} />
+      <Input
+        onclick={onclick}
+        classname={className}
+        type={type}
+        placeholder={placeholder}
+        name={name}
+        id={name}
+      />
     </div>
   );
 }

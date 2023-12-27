@@ -14,7 +14,6 @@ const UploadImage = () => {
     image = session?.user.image as string;
   }
   const [imageUrl, setImageUrl] = useState<string>(image);
-  console.log(session?.user);
   async function updateImage(id: string, imageURL: string, token: string) {
     const res = await fetch(`/api/user/updateImage`, {
       method: "POST",
@@ -28,14 +27,10 @@ const UploadImage = () => {
       }),
     });
     const response = await res.json();
-    console.log(response);
-    console.log(res);
   }
   useEffect(() => {
     setImageUrl(image);
   }, [image]);
-  console.log(session?.user.image as string);
-  console.log(imageUrl);
 
   return (
     <>
@@ -79,7 +74,6 @@ const UploadImage = () => {
           }}
           endpoint="imageUploader"
           onClientUploadComplete={(res) => {
-            console.log("Files: ", res);
             setImageUrl(res[0].url);
             update({ image: res[0].url });
             updateImage(session?.user.id, res[0].url, session?.user.token);

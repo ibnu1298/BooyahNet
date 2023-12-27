@@ -1,13 +1,20 @@
 import React from "react";
 import AskHaveAccount from "../Fragments/AskHaveAccount";
+import ModalNotification from "../Fragments/Modal/ModalNotification";
 
 export default function AuthLayouts({
+  messageNotif,
+  hideNotif = () => {},
+  showNotif,
   title,
   description,
   type,
   children,
   askHaveAccount,
 }: {
+  messageNotif?: string;
+  hideNotif?: any;
+  showNotif?: string;
   type: string;
   title: React.ReactNode;
   description: React.ReactNode;
@@ -19,20 +26,31 @@ export default function AuthLayouts({
   } else {
     askHaveAccount = <AskHaveAccount type={type} />;
   }
+
   return (
-    <div className="flex items-center min-h-screen bg-gray-900">
-      <div className="container mx-auto">
-        <div className="max-w-md mx-auto my-10 rounded-3xl px-4 py-5">
-          <div className="text-center">
-            <div className="my-3 text-5xl font-semibold text-gray-100 dark:text-gray-100">
-              {title}
+    <>
+      <ModalNotification
+        show={showNotif}
+        hideNotif={hideNotif}
+        messageNotif={messageNotif}
+      />
+      <div
+        onClick={() => hideNotif("-left-full", "")}
+        className="flex items-center min-h-screen bg-gray-900"
+      >
+        <div className="container mx-auto">
+          <div className="max-w-md mx-auto my-10 rounded-3xl px-4 py-5">
+            <div className="text-center">
+              <div className="my-3 text-5xl font-semibold text-gray-100 dark:text-gray-100">
+                {title}
+              </div>
+              <p className="text-gray-500 dark:text-gray-300">{description}</p>
             </div>
-            <p className="text-gray-500 dark:text-gray-300">{description}</p>
+            <div className="mb-9 mt-5">{children}</div>
+            {askHaveAccount}
           </div>
-          <div className="mb-9 mt-5">{children}</div>
-          {askHaveAccount}
         </div>
       </div>
-    </div>
+    </>
   );
 }

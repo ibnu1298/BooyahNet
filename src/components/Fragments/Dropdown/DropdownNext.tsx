@@ -12,9 +12,8 @@ import Image from "next/image";
 
 export default function DropdownNext() {
   const { data: session }: { data: any } = useSession();
-  console.log(session?.user);
 
-  let image = "";
+  let image = "/images/people/default.jpg";
   if (session?.user.image != undefined) {
     image = session?.user.image as string;
   }

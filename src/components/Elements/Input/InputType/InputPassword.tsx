@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 
 export default function InputPassword({
+  onclick,
   type,
   name,
   id,
   classname,
   placeholder,
 }: {
+  onclick?: any;
   classname: string;
   type: string;
   name: string;
@@ -14,8 +16,10 @@ export default function InputPassword({
   placeholder: string;
 }) {
   const [password, setPassword] = useState("");
+
   return (
     <input
+      onClick={() => onclick()}
       type={type}
       name={name}
       id={id}

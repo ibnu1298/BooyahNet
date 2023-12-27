@@ -36,9 +36,7 @@ async function PaymentUser(
 export async function POST(request: NextRequest) {
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
-  console.log(headersInstance.get("host"));
   const req = await request.json();
-  console.log(req);
 
   const res = await PaymentUser(
     req.paymentId,
@@ -48,7 +46,6 @@ export async function POST(request: NextRequest) {
     authorization
   );
   const result = await res.json();
-  console.log(result);
 
   try {
     if (res.status !== 401) {

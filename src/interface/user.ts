@@ -14,3 +14,8 @@ export interface userSessionCustom {
   phoneNumber?: string;
   token?: string;
 }
+
+export const genders = [
+  { label: "Laki-laki", value: "0" },
+  { label: "Perempuan", value: "1" },
+];

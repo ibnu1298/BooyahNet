@@ -26,7 +26,6 @@ export default function withAuth(
         return NextResponse.redirect(url);
       }
       if (token) {
-        console.log(token);
         if (authPage.includes(pathname)) {
           return NextResponse.redirect(new URL("/", req.url));
         }

@@ -57,7 +57,6 @@ const ModalMakeSure = ({
       return response;
     }
   };
-  console.log(show);
 
   return (
     <>
