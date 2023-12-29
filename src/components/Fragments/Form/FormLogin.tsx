@@ -10,7 +10,7 @@ import SpinCircle from "../../Elements/Loading/spinCircle";
 import ErrorInput from "../../Elements/Input/ErrorInput";
 
 export default function FormLogin({ searchParams }: any) {
-  let className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-900 dark:border-gray-600 dark:focus:border-gray-200`;
+  let className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-0 focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-300 dark:border-gray-600 dark:focus:border-gray-200`;
 
   const [forgotPass, setForgotPass] = useState("hidden");
   const [errLogin, setErrLogin] = useState("hidden");

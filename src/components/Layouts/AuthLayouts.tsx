@@ -1,6 +1,6 @@
 import React from "react";
 import AskHaveAccount from "../Fragments/AskHaveAccount";
-import ModalNotification from "../Fragments/Modal/ModalNotification";
+import ModalNotificationError from "../Fragments/Modal/ModalNotificationError";
 
 export default function AuthLayouts({
   messageNotif,
@@ -29,7 +29,7 @@ export default function AuthLayouts({
 
   return (
     <>
-      <ModalNotification
+      <ModalNotificationError
         show={showNotif}
         hideNotif={hideNotif}
         messageNotif={messageNotif}

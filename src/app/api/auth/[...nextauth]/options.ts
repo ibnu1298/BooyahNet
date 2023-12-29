@@ -148,7 +148,6 @@ export const options: NextAuthOptions = {
 
         const getUser = await GetUser(decoded?.username, user.token);
         console.log(getUser);
-        console.log(getUser.urlImage);
 
         const image =
           getUser.urlImage != ""
@@ -170,6 +169,7 @@ export const options: NextAuthOptions = {
         token.picture = image;
         token.asName = getUser.asName;
         token.emailConfirmed = getUser.emailConfirmed;
+        token.passwordExist = getUser.passwordExist;
         token.token = user.token;
       }
       if (account?.provider === "google" || account?.provider == "facebook") {
@@ -206,6 +206,7 @@ export const options: NextAuthOptions = {
         token.picture = getUser.urlImage;
         token.asName = getUser.asName;
         token.emailConfirmed = getUser.emailConfirmed;
+        token.passwordExist = getUser.passwordExist;
         token.token = getToken.token;
       }
       if (trigger === "update" && session?.image) {
@@ -238,7 +239,9 @@ export const options: NextAuthOptions = {
         session.user.asName = token.asName;
         session.user.urlImage = token.picture;
         session.user.emailConfirmed = token.emailConfirmed;
+        session.user.passwordExist = token.passwordExist;
       }
+      console.log(session);
 
       return session;
     },

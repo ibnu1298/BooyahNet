@@ -1,28 +1,30 @@
 import React from "react";
 
-const ModalNotification = ({
+const ModalNotificationSuccess = ({
   messageNotif,
   hideNotif,
   show = "-left-full ",
   count = 0,
+  position = "-top-20",
 }: {
   messageNotif?: string;
   hideNotif?: any;
   show?: string;
   count?: number;
+  position?: string;
 }) => {
   return (
     <div
       id="Notification"
-      className={`z-10 ${show} -top-20 md:top-0 transition-all duration-1000 absolute w-80 md:w-96 flex items-center p-4 mt-28 border-t-4 border-red-300  dark:text-red-400 backdrop-blur-md dark:border-red-800 rounded-tr-3xl rounded-br-lg`}
+      className={`z-10 ${show} ${position} md:top-0 transition-all duration-1000 absolute w-80 md:w-96 flex items-center p-4 mt-28 border-t-4 border-teal-300  dark:text-teal-400 backdrop-blur-md dark:border-teal-500  rounded-tr-3xl rounded-br-lg`}
     >
-      <div className="ml-9 text-red-500 text-sm font-medium">
+      <div className="ml-9 text-teal-500 text-sm font-medium">
         {messageNotif}
       </div>
       <button
         type="button"
         onClick={() => hideNotif("-left-full")}
-        className="ms-auto -mx-1.5 -my-1.5  text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8  dark:text-red-400 dark:hover:bg-gray-700 duration-1000"
+        className="ms-auto -mx-1.5 -my-1.5  text-teal-500 rounded-lg focus:ring-2 focus:ring-teal-400 p-1.5 hover:bg-teal-200 inline-flex items-center justify-center h-8 w-8  dark:text-teal-400 dark:hover:bg-gray-700 duration-1000"
         data-dismiss-target="#alert-border-3"
         aria-label="Close"
       >
@@ -47,4 +49,4 @@ const ModalNotification = ({
   );
 };
 
-export default ModalNotification;
+export default ModalNotificationSuccess;

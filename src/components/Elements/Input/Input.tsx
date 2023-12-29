@@ -40,7 +40,7 @@ const Input = ({
       setTipe("password");
     }
   };
-  if (name == "password") {
+  if (type == "password") {
     input = (
       <InputPassword
         onclick={onclick}
@@ -62,7 +62,7 @@ const Input = ({
       </span>
     );
   }
-  if (name != "password") {
+  if (type != "password") {
     input = (
       <InputData
         onclick={onclick}
