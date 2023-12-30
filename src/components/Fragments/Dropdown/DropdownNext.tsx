@@ -24,7 +24,8 @@ export default function DropdownNext() {
   const lastname =
     session?.user.lastName.charAt(0).toUpperCase() +
     session?.user.lastName.slice(1);
-  const nameLength = session?.user.name.length;
+  const fullname = `${firstname} ${lastname}`;
+  const nameLength = fullname.length;
 
   return (
     <div className="flex items-center justify-center">
