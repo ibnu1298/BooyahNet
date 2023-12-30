@@ -1,19 +1,28 @@
 "use client";
-import Button from "@/components/Elements/Button/page";
-import InputForm from "@/components/Elements/Input/page";
-import SpinCircle from "@/components/Elements/Loading/spinCircle";
-import SelectOption from "@/components/Elements/Input/Select/SelectOption";
-import { genders, userSessionCustom } from "@/interface/user";
+
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import { Card, CardBody, Tab, Tabs, Tooltip } from "@nextui-org/react";
+import React, { Children, useEffect, useState } from "react";
+import { Tab, Tabs } from "@nextui-org/react";
 import FormUpdatePassword from "../Fragments/Form/FormUpdatePassword";
 import FormUpdateBiodata from "../Fragments/Form/FormUpdateBiodata";
 import FormUpdateCredential from "../Fragments/Form/FormUpdateCredential";
+import Notifications from "../Elements/Notif.tsx/Notifications";
 
 let className = `w-full text-sm px-3 py-2  border border-gray-300 rounded-md focus:outline-none  focus:border-indigo-300 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-500 dark:border-gray-500 dark:focus:border-gray-500`;
-const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
-  const { data: session }: { data: any } = useSession();
+const UpdateDataUser = ({
+  hideNotif = () => {},
+  showNotif = () => {},
+  show,
+  message,
+  success,
+}: {
+  show?: string;
+  hideNotif?: any;
+  showNotif?: any;
+  message: string;
+  success?: boolean;
+}) => {
+  const { data: session, update }: { data: any; update: any } = useSession();
   let isDisabled = false;
 
   isDisabled =
@@ -33,16 +42,16 @@ const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
     const username = event.currentTarget.username.value;
     const password = event.currentTarget.password.value;
     if (email == "") {
-      showNotif("left-0", "Email Belum Diisi", false);
       setIsloading(false);
+      showNotif("opacity-100", "Email Belum Diisi", false);
     }
     if (username == "") {
-      showNotif("left-0", "Username Belum Diisi", false);
       setIsloading(false);
+      showNotif("opacity-100", "Username Belum Diisi", false);
     }
     if (password == "") {
-      showNotif("left-0", "Password Belum Diisi", false);
       setIsloading(false);
+      showNotif("opacity-100", "Password Belum Diisi", false);
     }
     if (email != "" && username != "" && password != "") {
       const res = await fetch("/api/user/updateCredential", {
@@ -59,17 +68,33 @@ const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
           changePassword: false,
         }),
       });
+
       const data = await res.json();
-      console.log(data);
 
       setIsloading(false);
       if (data.isSucceeded) {
-        showNotif("left-0", "Update Data Berhasil", true);
+        showNotif("opacity-100", data.message, true);
+        let emailConfirmed = true;
+        if (email != session?.user.email) {
+          emailConfirmed = false;
+        }
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            email,
+            username,
+            emailConfirmed,
+            passwordExist: true,
+          },
+        });
       } else {
         if (data.message == null) {
-          showNotif("left-0", data.errors.Id[0], false);
+          showNotif("opacity-100", "Ganti Data Gagal", false);
+        } else if (res.status == 401) {
+          showNotif("opacity-100", "Password Salah", false);
         } else {
-          showNotif("left-0", data.message, false);
+          showNotif("opacity-100", data.message, false);
         }
       }
     }
@@ -83,16 +108,16 @@ const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
     const newPassword = event.currentTarget.newPassword.value as string;
     const confirmPassword = event.currentTarget.confirmPassword.value as string;
     if (newPassword != confirmPassword) {
-      showNotif(
-        "left-0",
-        "Password baru dan Password Konfirmasi Tidak sama",
-        false
-      );
       setIsloading(false);
+      showNotif("opacity-100", "Password Konfirmasi Berbeda", false);
     }
     if (newPassword.length < 6) {
-      showNotif("left-0", "Password Minimal 6 Karakter", false);
       setIsloading(false);
+      showNotif("opacity-100", "Password Minimal 6 Karakter", false);
+    }
+    if (email == "") {
+      setIsloading(false);
+      showNotif("opacity-100", "Email Belum Diisi", false);
     }
     if (
       email != "" &&
@@ -120,12 +145,14 @@ const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
 
       setIsloading(false);
       if (data.isSucceeded) {
-        showNotif("left-0", "Update Data Berhasil", true);
+        showNotif("opacity-100", "Ganti Password Berhasil", true);
       } else {
         if (data.message == null) {
-          showNotif("left-0", data.errors.Id[0], false);
+          showNotif("opacity-100", "Ganti Password Gagal", false);
+        } else if (res.status == 401) {
+          showNotif("opacity-100", "Password Salah", false);
         } else {
-          showNotif("left-0", data.message, false);
+          showNotif("opacity-100", data.message, false);
         }
       }
     }
@@ -161,6 +188,7 @@ const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
           )}
           Verifikasi Email
         </div>
+
         <Tabs
           aria-label="Options"
           color="primary"
@@ -172,10 +200,24 @@ const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
               "rounded-full px-4 text-white data-focus-visible:border-red-500",
           }}
         >
-          <Tab key="biodata" title="Biodata" isDisabled={false}>
-            <FormUpdateBiodata showNotif={showNotif} />
+          <Tab
+            key="biodata"
+            title={
+              <span onClick={() => hideNotif("-left-full opacity-0")}>
+                Biodata
+              </span>
+            }
+          >
+            <FormUpdateBiodata showNotif={showNotif} user={user} />
           </Tab>
-          <Tab key="credential" title="Credential">
+          <Tab
+            key="credential"
+            title={
+              <span onClick={() => hideNotif("-left-full opacity-0")}>
+                Credential
+              </span>
+            }
+          >
             <FormUpdateCredential
               className={className}
               user={user}
@@ -184,15 +226,29 @@ const UpdateDataUser = ({ showNotif = () => {} }: { showNotif?: any }) => {
               handleUpdateCredential={handleUpdateUsernameEmail}
             />
           </Tab>
-          <Tab key="password" isDisabled={isDisabled} title="Password">
+          <Tab
+            key="password"
+            isDisabled={isDisabled}
+            title={
+              <span onClick={() => hideNotif("-left-full opacity-0")}>
+                Password
+              </span>
+            }
+          >
             <FormUpdatePassword
               user={user}
               cursor={cursor}
               isLoading={isLoading}
               handleUpdateCredential={handleUpdatePassword}
+              isDisabled={isDisabled}
             />
           </Tab>
         </Tabs>
+        <div className="flex w-full justify-center items-center flex-col -mt-7  rounded-md">
+          <Notifications show={show} hideNotif={hideNotif} success={success}>
+            {message}
+          </Notifications>
+        </div>
       </div>
     </>
   );

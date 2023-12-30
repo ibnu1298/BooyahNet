@@ -11,11 +11,13 @@ const FormUpdatePassword = ({
   cursor,
   isLoading,
   handleUpdateCredential = () => {},
+  isDisabled,
 }: {
   cursor?: string;
   isLoading?: boolean;
   user?: userSessionCustom;
   handleUpdateCredential?: any;
+  isDisabled?: boolean;
 }) => {
   return (
     <div>
@@ -31,6 +33,7 @@ const FormUpdatePassword = ({
           label="Email"
         />
         <InputForm
+          isDisabled={isDisabled}
           className={className}
           styleLabel="text-white text-sm"
           type="password"
@@ -38,14 +41,16 @@ const FormUpdatePassword = ({
           label="Password Sekarang"
         />
         <InputForm
-          className={className}
+          isDisabled={isDisabled}
+          className={`${className} select-none`}
           styleLabel="text-white text-sm"
           type="password"
           name="newPassword"
           label="Password Baru"
         />
         <InputForm
-          className={className}
+          isDisabled={isDisabled}
+          className={`${className} select-none`}
           styleLabel="text-white text-sm"
           type="password"
           name="confirmPassword"
@@ -63,7 +68,7 @@ const FormUpdatePassword = ({
               Loading...{" "}
             </div>
           ) : (
-            <>Ganti Data</>
+            <>Ganti Password</>
           )}
         </Button>
       </form>

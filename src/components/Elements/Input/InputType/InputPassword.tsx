@@ -8,7 +8,9 @@ export default function InputPassword({
   classname,
   placeholder,
   defaultValue,
+  isDisabled,
 }: {
+  isDisabled?: boolean;
   onclick?: any;
   classname: string;
   type: string;
@@ -21,6 +23,7 @@ export default function InputPassword({
 
   return (
     <input
+      disabled={isDisabled}
       defaultValue={defaultValue}
       onClick={() => onclick()}
       type={type}

@@ -38,7 +38,7 @@ const UploadImage = () => {
       <div className="flex flex-col justify-center items-center p-9 ">
         <div className="rounded-full">
           <Image
-            className="rounded-full md:w-36 md:h-36 w-24 h-24 object-cover"
+            className="rounded-full md:w-36 md:h-36 w-32 h-32 object-cover"
             alt="UserProfile"
             width={300}
             height={300}

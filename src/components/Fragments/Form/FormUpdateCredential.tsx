@@ -14,13 +14,13 @@ const FormUpdateCredential = ({
   className?: string;
   cursor?: string;
   isLoading?: boolean;
-  user?: userSessionCustom;
+  user?: any;
   handleUpdateCredential?: any;
 }) => {
   return (
     <form
       onSubmit={(event) => handleUpdateCredential(event)}
-      className="flex flex-col gap-2  my-6"
+      className="flex flex-col gap-2  my-6 w-full"
     >
       <InputForm
         className={className}
@@ -41,6 +41,9 @@ const FormUpdateCredential = ({
 
       <InputForm
         className={className}
+        placeholder={
+          user?.passwordExist ? "Masukan Password" : "Tambahkan Password"
+        }
         styleLabel="text-white text-sm"
         type="password"
         name="password"

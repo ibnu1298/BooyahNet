@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const url = "https://booyahnetapi.azurewebsites.net/api/User/Register";
 async function Registrasi(
   firstName: string,
+  lastName: string,
   gender: number,
   userName: string,
   email: string,
@@ -16,6 +17,7 @@ async function Registrasi(
     },
     body: JSON.stringify({
       firstName,
+      lastName,
       gender,
       userName,
       email,
@@ -40,6 +42,7 @@ export async function POST(request: NextRequest) {
   const Sort = "Date";
   const res = await Registrasi(
     req.firstname,
+    req.lastname,
     req.gender,
     req.username,
     req.email,

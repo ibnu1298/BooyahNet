@@ -174,8 +174,9 @@ export const options: NextAuthOptions = {
       }
       if (account?.provider === "google" || account?.provider == "facebook") {
         token.type = account?.provider;
-        const username = "";
+
         const name = user.name.split(" ");
+        const username = user.email.split("@");
         const image = await CekImage(user.image);
 
         const getToken = await LoginAuth(
@@ -183,15 +184,13 @@ export const options: NextAuthOptions = {
           name[0],
           name[1],
           user.email,
-          username,
+          username[0],
           image,
           token.type
         );
-        console.log(getToken);
 
         const decoded = jwtDecode<JwtDecodeCustom>(getToken.token);
         const getUser = await GetUser(decoded?.email, getToken.token);
-        console.log(getUser);
 
         token.id = getUser.id;
         token.email = getUser.email;
@@ -211,9 +210,12 @@ export const options: NextAuthOptions = {
       }
       if (trigger === "update" && session?.image) {
         const sessionImage = session.image;
-
         token.picture = sessionImage;
       }
+      if (trigger === "update") {
+        return { ...token, ...session.user };
+      }
+
       console.log(token);
 
       return token;

@@ -16,7 +16,7 @@ const ModalNotificationError = ({
   return (
     <div
       id="Notification"
-      className={`z-10 ${show} ${position} md:top-0 transition-all duration-1000 absolute w-80 md:w-96 flex items-center p-4 mt-28 border-t-4 border-red-300  dark:text-red-400 backdrop-blur-md dark:border-red-800 rounded-tr-3xl rounded-br-lg`}
+      className={`z-10 ${show} ${position} md:-top-9 transition-all duration-1000 absolute w-80 md:w-96 flex items-center p-4 mt-28 border-t-4 border-red-300  dark:text-red-400 backdrop-blur-md dark:border-red-800 rounded-tr-3xl rounded-br-lg`}
     >
       <div className="ml-9 text-red-500 text-sm font-medium">
         {messageNotif}

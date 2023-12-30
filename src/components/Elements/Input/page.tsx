@@ -12,6 +12,7 @@ export default function InputForm({
   additional,
   defaultValue,
   styleLabel,
+  isDisabled,
 }: {
   onclick?: any;
   className?: string;
@@ -22,6 +23,7 @@ export default function InputForm({
   placeholder?: string;
   defaultValue?: any;
   styleLabel?: string;
+  isDisabled?: boolean;
 }) {
   const margin = label != null ? "my-1 flex justify-between" : "";
   const hidden = label != null ? false : true;
@@ -35,6 +37,7 @@ export default function InputForm({
         </div>
       </Label>
       <Input
+        isDisabled={isDisabled}
         onclick={onclick}
         classname={className}
         type={type}

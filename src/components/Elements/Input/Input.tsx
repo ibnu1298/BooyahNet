@@ -14,6 +14,7 @@ const Input = ({
   input,
   classname = "",
   defaultValue,
+  isDisabled,
 }: {
   onclick?: any;
   classname?: string;
@@ -24,6 +25,7 @@ const Input = ({
   eyeIcon?: React.ReactNode;
   input?: React.ReactNode;
   defaultValue?: any;
+  isDisabled?: boolean;
 }) => {
   const hide = <TbEyeClosed className="absolute mr-14" size="28px" />;
   const show = <TbEye className="absolute mr-14" size="28px" />;
@@ -43,6 +45,7 @@ const Input = ({
   if (type == "password") {
     input = (
       <InputPassword
+        isDisabled={isDisabled}
         onclick={onclick}
         classname={classname}
         type={tipe}

@@ -11,8 +11,6 @@ async function UpdateEmailUsername(
   changePassword: boolean,
   token: string
 ) {
-  console.log(id, email, userName, oldPassword, changePassword);
-
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -72,7 +70,6 @@ export async function POST(request: NextRequest) {
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
   const req = await request.json();
-  console.log(req);
 
   let res;
   if (req.changePassword) {
@@ -95,9 +92,6 @@ export async function POST(request: NextRequest) {
     );
   }
   const result = await res?.json();
-
-  console.log(result);
-  console.log(res?.status);
 
   try {
     if (res?.status !== 401) {

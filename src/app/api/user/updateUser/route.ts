@@ -52,7 +52,6 @@ export async function POST(request: NextRequest) {
     authorization as string
   );
   const result = await res.json();
-  console.log(result);
 
   try {
     if (res.status !== 401) {

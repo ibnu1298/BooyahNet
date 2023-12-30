@@ -18,6 +18,7 @@ export default function SelectOption({
   label,
   styleLabel,
   placeholder,
+  defaultValue,
 }: {
   onclick?: any;
   className?: string;
@@ -26,6 +27,7 @@ export default function SelectOption({
   data?: dataProps[];
   styleLabel?: string;
   placeholder?: string;
+  defaultValue?: string;
 }) {
   const margin = label != null ? "my-1 flex justify-between" : "";
   const hidden = label != null ? false : true;
@@ -35,6 +37,7 @@ export default function SelectOption({
         {label}
       </label>
       <Select
+        defaultSelectedKeys={defaultValue}
         onClick={onclick}
         items={data}
         name={name}

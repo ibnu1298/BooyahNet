@@ -2,14 +2,21 @@
 import SelectOption from "@/components/Elements/Input/Select/SelectOption";
 import InputForm from "@/components/Elements/Input/page";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
+import { userSessionCustom } from "@/interface/user";
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
-const FormUpdateBiodata = ({ showNotif = () => {} }: { showNotif?: any }) => {
+const FormUpdateBiodata = ({
+  showNotif = () => {},
+  user,
+}: {
+  showNotif?: any;
+  user?: any;
+}) => {
   let className = `w-full text-sm px-3 py-2  border border-gray-200 rounded-md focus:outline-none  focus:border-indigo-300 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-300 dark:border-gray-500 dark:focus:border-gray-300`;
 
-  const { data: session }: { data: any } = useSession();
+  const { data: session, update }: { data: any; update: any } = useSession();
 
   const [isLoading, setIsloading] = useState(false);
   const [cursor, setCursor] = useState("");
@@ -17,32 +24,53 @@ const FormUpdateBiodata = ({ showNotif = () => {} }: { showNotif?: any }) => {
   const handleUpdateUser = async (event: any) => {
     setIsloading(true);
     event.preventDefault();
-    const res = await fetch("/api/user/updateUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session?.user.token as string}`,
-      },
-      body: JSON.stringify({
-        id: session?.user.id as string,
-        firstName: event.currentTarget.firstName.value as string,
-        lastName: event.currentTarget.lastName.value as string,
-        address: event.currentTarget.address.value as string,
-        gender: Number(event.currentTarget.gender.value),
-        phoneNumber: event.currentTarget.phoneNumber.value as string,
-      }),
-    });
-    const data = await res.json();
-    console.log();
+    const firstName = event.currentTarget.firstName.value as string;
+    const lastName = event.currentTarget.lastName.value as string;
+    const address = event.currentTarget.address.value as string;
+    const gender = Number(event.currentTarget.gender.value);
+    const phoneNumber = event.currentTarget.phoneNumber.value as string;
+    if (firstName == "") {
+      showNotif("left-0", "Nama Depan Belum Diisi", false);
+      setIsloading(false);
+    }
+    if (firstName != "") {
+      const res = await fetch("/api/user/updateUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user.token as string}`,
+        },
+        body: JSON.stringify({
+          id: session?.user.id as string,
+          firstName,
+          lastName,
+          address,
+          gender,
+          phoneNumber,
+        }),
+      });
+      const data = await res.json();
 
-    setIsloading(false);
-    if (data.isSucceeded) {
-      showNotif("left-0", "Update Data Berhasil", true);
-    } else {
-      if (data.message == null) {
-        showNotif("left-0", data.errors.Id[0], false);
+      setIsloading(false);
+      if (data.isSucceeded) {
+        showNotif("left-0", "Update Data Berhasil", true);
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            firstName,
+            lastName,
+            address,
+            gender,
+            phoneNumber,
+          },
+        });
       } else {
-        showNotif("left-0", data.message, false);
+        if (data.message == null) {
+          showNotif("left-0", data.errors.Id[0], false);
+        } else {
+          showNotif("left-0", data.message, false);
+        }
       }
     }
   };
@@ -95,6 +123,7 @@ const FormUpdateBiodata = ({ showNotif = () => {} }: { showNotif?: any }) => {
         defaultValue={session?.user.address as string}
       />
       <SelectOption
+        defaultValue={user?.gender?.toString()}
         className={className}
         name="gender"
         label="Jenis Kelamin"
