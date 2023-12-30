@@ -8,6 +8,7 @@ async function PaymentUser(
   pricePayment: Array<number>,
   packageId: number,
   userID: string,
+  urlImage: string,
   token: any
 ) {
   const res = await fetch(url, {
@@ -20,6 +21,7 @@ async function PaymentUser(
       userID,
       paymentId,
       pricePayment,
+      urlImage,
       packageId,
     }),
   });
@@ -43,9 +45,12 @@ export async function POST(request: NextRequest) {
     req.pricePayment,
     req.packageId,
     req.userId,
+    req.urlImage,
     authorization
   );
   const result = await res.json();
+  console.log(res);
+  console.log(result);
 
   try {
     if (res.status !== 401) {

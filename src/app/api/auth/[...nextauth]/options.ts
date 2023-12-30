@@ -99,7 +99,6 @@ export const options: NextAuthOptions = {
         });
 
         urlImage = res.status === 200 ? res.url : "/images/people/default.jpg";
-        console.log(res);
 
         return urlImage;
       }

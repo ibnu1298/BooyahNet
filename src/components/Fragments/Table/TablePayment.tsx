@@ -4,13 +4,17 @@ import ModalPayment from "../Modal/ModalPayment";
 import { Payments } from "@/interface/payment";
 import { Pagination } from "@nextui-org/react";
 import { FaSortDown, FaSortUp } from "react-icons/fa6";
+import ModalPreviewPending from "../Modal/ModalPreviewPending";
 
 const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
   const [hidePagination, setHidePagination] = useState("");
   const [showModal, setShowModal] = useState("");
+  const [urlImage, setUrlImage] = useState("");
+  const [showModalPending, setShowModalPending] = useState("hidden");
   const [ascStatus, setAscStatus] = useState(false);
   const [ascDate, setAscDate] = useState(false);
   const [payments, setPayments] = useState(paymentsBase);
+  const [payment, setPayment] = useState(null);
   const [page, setPage] = useState(1);
   const rowsPerPage = 6;
 
@@ -40,12 +44,22 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
     }
   }
 
-  const PaymentModal = (status: number) => {
+  const PaymentModal = (status: number, payment: any) => {
     if (status == 0) {
       if (showModal == "hidden") {
         setShowModal("");
       } else {
         setShowModal("hidden");
+      }
+    }
+
+    if (status == 1) {
+      if (showModalPending == "hidden") {
+        setShowModalPending("");
+        setPayment(payment);
+      } else {
+        setShowModalPending("hidden");
+        setPayment(payment);
       }
     }
   };
@@ -79,10 +93,10 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                 <ModalPayment
                   payments={notPayment}
                   show={showModal}
-                  showModal={() => PaymentModal(notPayment[0].status)}
+                  showModal={() => PaymentModal(notPayment[0].status, "")}
                 />
               ) : (
-                <a onClick={() => PaymentModal(notPayment[0].status)}>
+                <a onClick={() => PaymentModal(notPayment[0].status, "")}>
                   <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 end-5 md:hidden text-white  bg-red-500/30 dark:bg-red-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
                     Bayar
                   </div>
@@ -90,6 +104,13 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
               )}
             </>
           )}
+          {
+            <ModalPreviewPending
+              payment={payment}
+              show={showModalPending}
+              showModal={() => PaymentModal(1, payment)}
+            />
+          }
 
           <div className="relative w-[365px] sm:w-[500px] flex flex-col justify-center shadow-xl rounded-lg sm:absolute backdrop-blur-sm bg-gray-700/70">
             <div className="flex justify-center py-4 w-full text-2xl md:text-3xl text-bold text-white">
@@ -142,7 +163,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                         payment.status == 0 && "cursor-pointer"
                       }`}
                       key={payment.id}
-                      onClick={() => PaymentModal(payment.status)}
+                      onClick={() => PaymentModal(payment.status, payment)}
                     >
                       <td className="px-6 py-4">
                         {payment.status == 0
@@ -156,8 +177,13 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                           </div>
                         )}
                         {payment.status == 1 && (
-                          <div className="text-yellow-300 bg-yellow-500/30 rounded-full px-4 py-1 w-24 flex justify-center">
-                            {payment.statusDesc}
+                          <div className="relative">
+                            <div className="absolute px-2 w-fit h-full  sm:px-4 py-1 rounded-full z-10  bg-gray-50 dark:bg-gray-600 text-white flex flex-col items-center justify-center opacity-0  hover:opacity-100 cursor-pointer bg-opacity-90 duration-300">
+                              <p>Klik Untuk Lihat</p>
+                            </div>
+                            <div className="text-yellow-300 bg-yellow-500/30 rounded-full px-4 py-1 w-24 flex justify-center">
+                              {payment.statusDesc}
+                            </div>
                           </div>
                         )}
                         {payment.status == 0 && (

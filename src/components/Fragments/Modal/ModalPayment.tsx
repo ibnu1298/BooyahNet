@@ -1,10 +1,10 @@
 import Currency from "@/components/Elements/Function/Currency";
-import SpinCircle from "@/components/Elements/Loading/spinCircle";
 import { Payments } from "@/interface/payment";
-import { Checkbox } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import ModalMakeSure from "./ModalMakeSure";
+import { UploadButton } from "@/utils/uploadthing";
+import UploadImagePayment from "@/components/Elements/UploadFile/UploadImagePayment";
 
 const ModalPayment = ({
   payments,
@@ -18,7 +18,9 @@ const ModalPayment = ({
   const defaultId = payments[payments.length - 1].id;
   const defaultPrice = payments[payments.length - 1].package?.pricePackage;
   const [selectedPayments, setSelectedPayments] = useState([defaultId]);
+  const [cursor, setCursor] = useState("cursor-pointer");
   const [showMakeSureModal, setShowMakeSureModal] = useState("hidden");
+  const [urlImage, setUrlImage] = useState("");
   const [selectedPricePayments, setSelectedPricePayments] = useState([
     defaultPrice as number,
   ]);
@@ -62,7 +64,9 @@ const ModalPayment = ({
       setSelectedPricePayments([]);
     }
   };
-
+  const getImage = async (urlImage: string) => {
+    setUrlImage(urlImage);
+  };
   function MakeSureModal() {
     if (showMakeSureModal == "hidden") {
       setShowMakeSureModal("");
@@ -70,6 +74,16 @@ const ModalPayment = ({
       setShowMakeSureModal("hidden");
     }
   }
+  console.log(urlImage);
+
+  useEffect(() => {
+    if (urlImage == "") {
+      setCursor("cursor-not-allowed");
+    } else {
+      setCursor("cursor-pointer");
+    }
+  }, [urlImage]);
+
   return (
     <>
       <ModalMakeSure
@@ -79,6 +93,7 @@ const ModalPayment = ({
         selectedPricePayments={selectedPricePayments}
         show={showMakeSureModal}
         showModal={MakeSureModal}
+        urlImage={urlImage}
       />
       <div
         id="popup-modal"
@@ -185,18 +200,27 @@ const ModalPayment = ({
                   />
                 </div>
               </div>
-              <div className="flex justify-center mb-2">
+              <div className="flex justify-center items-center mb-2 gap-2">
                 <button
                   onClick={showModal}
                   type="button"
-                  className="w-20 me-2 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  className="w-20  h-fit text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                 >
                   Nanti
                 </button>
                 <button
+                  className={`w-20 h-fit text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
+                >
+                  <UploadImagePayment
+                    buttonUpload={<>Upload</>}
+                    getImage={getImage}
+                  />
+                </button>
+                <button
                   type="button"
+                  disabled={urlImage == "" ? true : false}
                   onClick={MakeSureModal}
-                  className={`w-20 text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
+                  className={`w-20 ${cursor} h-fit text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
                 >
                   Lanjut
                 </button>

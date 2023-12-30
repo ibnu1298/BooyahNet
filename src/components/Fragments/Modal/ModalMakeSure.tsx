@@ -1,8 +1,18 @@
 import Currency from "@/components/Elements/Function/Currency";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
+import Spinner from "@/components/Elements/Spinner/Spinner";
 import { Payments } from "@/interface/payment";
+import { UploadButton } from "@/utils/uploadthing";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
+import { AiOutlineEdit } from "react-icons/ai";
+import ModalPreviewImage from "./ModalPreviewImage";
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@nextui-org/react";
 
 const ModalMakeSure = ({
   totalTagihan,
@@ -11,6 +21,7 @@ const ModalMakeSure = ({
   packageId,
   selectedPayments,
   selectedPricePayments,
+  urlImage,
 }: {
   selectedPricePayments: number[];
   selectedPayments: number[];
@@ -18,6 +29,7 @@ const ModalMakeSure = ({
   packageId: number;
   show: string;
   showModal: any;
+  urlImage: string;
 }) => {
   const { data: session }: { data: any } = useSession();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +40,7 @@ const ModalMakeSure = ({
     pricePayment: Array<number>,
     packageId: number,
     userId: string,
+    UrlImage: string,
     token: string
   ) => {
     setIsLoading(true);
@@ -44,6 +57,7 @@ const ModalMakeSure = ({
           pricePayment,
           packageId,
           userId,
+          urlImage,
         }),
       });
 
@@ -117,6 +131,7 @@ const ModalMakeSure = ({
                       selectedPricePayments,
                       packageId,
                       session.user.id,
+                      urlImage,
                       session.user.token
                     )
                   }
@@ -131,10 +146,29 @@ const ModalMakeSure = ({
                 <button
                   onClick={showModal}
                   type="button"
-                  className="w-20 me-2 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  className="w-20  text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
                 >
                   Nanti
                 </button>
+                <Popover placement="top-end">
+                  <PopoverTrigger>
+                    <button
+                      className={`w-20 h-fit text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
+                    >
+                      Lihat
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="px-1 py-2 flex flex-col gap-2">
+                      <div>
+                        <ModalPreviewImage src={urlImage} />
+                      </div>
+                      <div className="text-tiny">
+                        This is the popover content
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           </div>
