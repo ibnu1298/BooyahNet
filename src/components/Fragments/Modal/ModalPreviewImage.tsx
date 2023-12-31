@@ -5,13 +5,13 @@ const ModalPreviewImage = ({ src }: { src: string }) => {
   console.log(src);
 
   return (
-    <div className="rounded-full">
+    <div className="rounded-full ">
       <Image
         alt="Preview Image"
         width={500}
         height={500}
         src={src}
-        className="rounded-xl"
+        className="rounded-xl h-3/6"
       />
     </div>
   );

@@ -1,18 +1,11 @@
 import Currency from "@/components/Elements/Function/Currency";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
-import Spinner from "@/components/Elements/Spinner/Spinner";
-import { Payments } from "@/interface/payment";
-import { UploadButton } from "@/utils/uploadthing";
+
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { AiOutlineEdit } from "react-icons/ai";
+
 import ModalPreviewImage from "./ModalPreviewImage";
-import {
-  Button,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@nextui-org/react";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 
 const ModalMakeSure = ({
   totalTagihan,
@@ -150,25 +143,6 @@ const ModalMakeSure = ({
                 >
                   Nanti
                 </button>
-                <Popover placement="top-end">
-                  <PopoverTrigger>
-                    <button
-                      className={`w-20 h-fit text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
-                    >
-                      Lihat
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <div className="px-1 py-2 flex flex-col gap-2">
-                      <div>
-                        <ModalPreviewImage src={urlImage} />
-                      </div>
-                      <div className="text-tiny">
-                        This is the popover content
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
               </div>
             </div>
           </div>

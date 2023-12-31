@@ -1,5 +1,6 @@
 import { UploadButton } from "@/utils/uploadthing";
 import React from "react";
+import SpinCircle from "../Loading/spinCircle";
 
 const UploadImagePayment = ({
   getImage = () => {},
@@ -12,7 +13,12 @@ const UploadImagePayment = ({
     <UploadButton
       content={{
         button({ ready, isUploading }) {
-          if (isUploading) return <div>Loading...</div>;
+          if (isUploading)
+            return (
+              <div>
+                <SpinCircle size={6} />
+              </div>
+            );
           if (ready) return <>{buttonUpload}</>;
 
           return "Getting ready...";

@@ -1,6 +1,8 @@
 "use client";
+import UploadImagePayment from "@/components/Elements/UploadFile/UploadImagePayment";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const ModalPreviewPending = ({
   payment,
@@ -11,6 +13,41 @@ const ModalPreviewPending = ({
   show?: string;
   showModal?: any;
 }) => {
+  const { data: session }: { data: any } = useSession();
+  const [urlImage, setUrlImage] = useState("/images/people/default.jpg");
+  useEffect(() => {
+    if (payment != null) {
+      setUrlImage(payment.urlImage);
+    }
+  }, [payment]);
+  function getImage(urlImage: string) {
+    setUrlImage(urlImage);
+    updateImage(payment.id, session?.user.id, urlImage, session?.user.token);
+  }
+  async function updateImage(
+    id: string,
+    userId: string,
+    imageURL: string,
+    token: string
+  ) {
+    const res = await fetch(`/api/user/updateImage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id,
+        userId,
+        imageURL,
+        from: "payment",
+      }),
+    });
+    console.log(res);
+
+    const response = await res.json();
+    console.log(response);
+  }
   return (
     <>
       <div
@@ -57,21 +94,11 @@ const ModalPreviewPending = ({
                   </tr>
                 </tbody>
               </table>
-              <a
-                href={
-                  payment != null
-                    ? payment.urlImage.toString()
-                    : "/images/people/default.jpg"
-                }
-              >
+              <a href={urlImage}>
                 <Image
                   className="rounded-md"
                   alt="Bukti Pembayaran"
-                  src={
-                    payment != null
-                      ? payment.urlImage
-                      : "/images/people/default.jpg"
-                  }
+                  src={urlImage}
                   width={500}
                   height={500}
                 />
@@ -85,10 +112,12 @@ const ModalPreviewPending = ({
                   Kembali
                 </button>
                 <button
-                  type="button"
-                  className="text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+                  className={`w-20 h-fit text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
                 >
-                  Ganti
+                  <UploadImagePayment
+                    buttonUpload={<>Ganti</>}
+                    getImage={getImage}
+                  />
                 </button>
               </div>
             </div>

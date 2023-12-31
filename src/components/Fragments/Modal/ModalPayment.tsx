@@ -3,7 +3,7 @@ import { Payments } from "@/interface/payment";
 
 import React, { useEffect, useState } from "react";
 import ModalMakeSure from "./ModalMakeSure";
-import { UploadButton } from "@/utils/uploadthing";
+
 import UploadImagePayment from "@/components/Elements/UploadFile/UploadImagePayment";
 
 const ModalPayment = ({
@@ -199,8 +199,13 @@ const ModalPayment = ({
                     value={TotalTagihan as number}
                   />
                 </div>
+                <p className="text-xs">
+                  Silahkan <span className="text-bold">Upload</span> Bukti
+                  Pembayaran
+                </p>
               </div>
-              <div className="flex justify-center items-center mb-2 gap-2">
+              <hr />
+              <div className="flex justify-center items-center my-2 gap-2">
                 <button
                   onClick={showModal}
                   type="button"
@@ -220,7 +225,11 @@ const ModalPayment = ({
                   type="button"
                   disabled={urlImage == "" ? true : false}
                   onClick={MakeSureModal}
-                  className={`w-20 ${cursor} h-fit text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
+                  className={`w-20 ${cursor} h-fit  ${
+                    urlImage != ""
+                      ? `bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 focus:ring-4 text-white`
+                      : `bg-gray-600 text-gray-400`
+                  }  transition duration-500 delay-100 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center `}
                 >
                   Lanjut
                 </button>
