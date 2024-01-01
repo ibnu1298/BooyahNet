@@ -9,11 +9,11 @@ import ModalPreviewPending from "../Modal/ModalPreviewPending";
 const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
   const [hidePagination, setHidePagination] = useState("");
   const [showModal, setShowModal] = useState("");
-  const [urlImage, setUrlImage] = useState("");
   const [showModalPending, setShowModalPending] = useState("hidden");
   const [ascStatus, setAscStatus] = useState(false);
   const [ascDate, setAscDate] = useState(false);
   const [payments, setPayments] = useState(paymentsBase);
+  const [paymentSelectedId, setPaymentSelectedId] = useState(0);
   const [payment, setPayment] = useState(null);
   const [page, setPage] = useState(1);
   const rowsPerPage = 6;
@@ -48,6 +48,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
     if (status == 0) {
       if (showModal == "hidden") {
         setShowModal("");
+        setPaymentSelectedId(payment.id);
       } else {
         setShowModal("hidden");
       }
@@ -93,6 +94,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                 <ModalPayment
                   payments={notPayment}
                   show={showModal}
+                  paymentId={paymentSelectedId}
                   showModal={() => PaymentModal(notPayment[0].status, "")}
                 />
               ) : (

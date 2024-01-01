@@ -10,12 +10,14 @@ const ModalPayment = ({
   payments,
   show,
   showModal,
+  paymentId,
 }: {
   payments: Payments[];
   show: string;
   showModal: any;
+  paymentId?: number;
 }) => {
-  const defaultId = payments[payments.length - 1].id;
+  const defaultId = paymentId || payments[payments.length - 1].id;
   const defaultPrice = payments[payments.length - 1].package?.pricePackage;
   const [selectedPayments, setSelectedPayments] = useState([defaultId]);
   const [cursor, setCursor] = useState("cursor-pointer");
