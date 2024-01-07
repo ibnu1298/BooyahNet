@@ -61,6 +61,7 @@ export default function DropdownNext() {
           </div>
         </DropdownTrigger>
         <DropdownMenu aria-label="User Actions">
+          <DropdownItem href="/admin">Admin</DropdownItem>
           <DropdownItem href="/profile-settings">Settings</DropdownItem>
           <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
             Log Out

@@ -1,12 +1,10 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
-import ModalPayment from "../Modal/ModalPayment";
-import { Payments } from "@/interface/payment";
 import { Pagination } from "@nextui-org/react";
+import Image from "next/image";
+import React, { useMemo, useState } from "react";
 import { FaSortDown, FaSortUp } from "react-icons/fa6";
-import ModalPreviewPending from "../Modal/ModalPreviewPending";
 
-const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
+const TablePaymentACC = ({ paymentsBase }: { paymentsBase: any[] }) => {
   const [hidePagination, setHidePagination] = useState("");
   const [showModal, setShowModal] = useState("");
   const [showModalPending, setShowModalPending] = useState("hidden");
@@ -16,7 +14,11 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
   const [paymentSelectedId, setPaymentSelectedId] = useState(0);
   const [payment, setPayment] = useState(null);
   const [page, setPage] = useState(1);
-  const rowsPerPage = 6;
+  const rowsPerPage = 8;
+
+  const notPayment = payments.filter(function (payment) {
+    return payment.status == 0;
+  });
 
   function sortData(sortBy: string) {
     return sortBy == "status" ? sortStatus() : sortDate();
@@ -43,7 +45,6 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
       }
     }
   }
-
   const PaymentModal = (status: number, payment: any) => {
     if (status == 0) {
       if (showModal == "hidden") {
@@ -65,17 +66,6 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
     }
   };
 
-  const notPayment = payments.filter(function (payment) {
-    return payment.status == 0;
-  });
-  console.log(payments);
-
-  useEffect(() => {
-    if (payments.length <= rowsPerPage) {
-      setHidePagination("invisible");
-    }
-  }, [payments]);
-
   const pages = Math.ceil(payments.length / rowsPerPage);
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -85,37 +75,13 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
     return payments.slice(start, end);
   }, [page, payments, ascDate, ascStatus]);
 
+  console.log(items);
+
   return (
     <div className="m-4">
       {payments.length > 0 ? (
         <>
-          {payments.length > 0 && notPayment.length > 0 && (
-            <>
-              {showModal == "" ? (
-                <ModalPayment
-                  payments={notPayment}
-                  show={showModal}
-                  paymentId={paymentSelectedId}
-                  showModal={() => PaymentModal(notPayment[0].status, "")}
-                />
-              ) : (
-                <a onClick={() => PaymentModal(notPayment[0].status, "")}>
-                  <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 end-5 md:hidden text-white  bg-red-500/30 dark:bg-red-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
-                    Bayar
-                  </div>
-                </a>
-              )}
-            </>
-          )}
-          {
-            <ModalPreviewPending
-              payment={payment}
-              show={showModalPending}
-              showModal={() => PaymentModal(1, payment)}
-            />
-          }
-
-          <div className="relative w-[365px] sm:w-[500px] flex flex-col justify-center shadow-xl rounded-lg sm:absolute backdrop-blur-sm bg-gray-700/70">
+          <div className="relative w-[600px] sm:w-full flex flex-col justify-center shadow-xl rounded-lg sm:absolute backdrop-blur-sm bg-gray-700/70">
             <div className="flex justify-center py-4 w-full text-2xl md:text-3xl text-bold text-white">
               Riwayat Pembayaran
             </div>
@@ -156,6 +122,7 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                       </div>
                     </a>
                   </th>
+                  <th className="px-6 py-3">Customer</th>
                 </tr>
               </thead>
               <tbody>
@@ -200,6 +167,31 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
                           </div>
                         )}
                       </td>
+                      <td className="px-6 py-4 text-gray-200 w-fit">
+                        <span className="flex flex-row gap-2 items-center">
+                          <span>
+                            <Image
+                              className="h-8 w-8 rounded-full"
+                              width={500}
+                              height={500}
+                              alt="profile"
+                              src={`${
+                                payment.user.urlImage != null
+                                  ? payment.user.urlImage
+                                  : `/images/people/default.jpg`
+                              }`}
+                            />
+                          </span>
+                          <span className="flex flex-col">
+                            <span className="text-lg -mb-1">
+                              {payment.user.firstName}
+                            </span>
+                            <span className="text-xs -mt-1">
+                              {payment.user.userName}
+                            </span>
+                          </span>
+                        </span>
+                      </td>
                     </tr>
                   ))}
               </tbody>
@@ -224,4 +216,4 @@ const TablePayment = ({ paymentsBase }: { paymentsBase: Payments[] }) => {
   );
 };
 
-export default TablePayment;
+export default TablePaymentACC;

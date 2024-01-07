@@ -76,7 +76,6 @@ const ModalPayment = ({
       setShowMakeSureModal("hidden");
     }
   }
-  console.log(urlImage);
 
   useEffect(() => {
     if (urlImage == "") {
