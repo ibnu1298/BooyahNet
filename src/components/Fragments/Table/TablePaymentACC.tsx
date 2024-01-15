@@ -26,28 +26,39 @@ import {
   ChipProps,
   SortDescriptor,
 } from "@nextui-org/react";
+import ModalPaymentACC from "../Modal/ModalPaymentACC";
+import ModalPreviewImage from "../Modal/ModalPreviewImage";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   2: "success",
-  0: "danger",
   1: "warning",
+  0: "danger",
 };
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "tanggal", "status", "actions"];
-
 export default function TablePaymentACC({ payments }: { payments: any }) {
+  let selectedPaymentPrice: any = [];
+  let notPendingPaymentId: any = [];
   const [filterValue, setFilterValue] = useState("");
+  const [showModal, setShowModal] = useState("hidden");
+  const [showImage, setShowImage] = useState("hidden");
+  const [srcImage, setSrcImage] = useState("/images/people/cat.jpg");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [statusFilter, setStatusFilter] = useState<Selection>("all");
-  console.log(statusFilter);
+
+  const [statusFilter, setStatusFilter] = useState<Selection>(new Set(["1"]));
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
+
+  payments.map(
+    (payment: any) =>
+      payment.status != 1 && notPendingPaymentId.push(payment.id.toString())
+  );
 
   const [page, setPage] = useState(1);
 
@@ -78,10 +89,11 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
         Array.from(statusFilter).includes(payment.status.toString())
       );
     }
-    console.log(filteredPayments);
 
     return filteredPayments;
   }, [payments, filterValue, statusFilter, hasSearchFilter]);
+
+  let selectedPaymentId = Array.from(selectedKeys);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -102,55 +114,87 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((payment: any, columnKey: any) => {
-    const cellValue = payment[columnKey as keyof any];
+  if (selectedPaymentId.join().replace(/,/g, "") == "all") {
+    selectedPaymentId.splice(0, 3);
+    filteredItems.map((payment: any) => selectedPaymentId.push(payment.id));
+  } else {
+    filteredItems.map(
+      (payment: any) =>
+        payment.id == selectedPaymentId.values() &&
+        selectedPaymentPrice.push(payment.pricePayment)
+    );
+  }
 
-    switch (columnKey) {
-      case "name":
-        return (
-          <div className="flex flex-col">
-            <span>
-              {payment.user.firstName} {payment.user.lastName}
-            </span>
-            <span className="text-xs font-thin">{payment.user.userName}</span>
-          </div>
-        );
+  const renderCell = useCallback(
+    (payment: any, columnKey: any) => {
+      const cellValue = payment[columnKey as keyof any];
+      function actionRow(key: string) {
+        let image = "/images/people/default.jpg";
+        switch (key) {
+          case "view":
+            if (showImage == "hidden") {
+              setShowImage("");
+              image = payment.urlImage != null ? payment.urlImage : image;
+              setSrcImage(image);
+            } else {
+              setShowImage("hidden");
+            }
+        }
+      }
+      switch (columnKey) {
+        case "name":
+          return (
+            <div className="flex flex-col text-white">
+              <span>
+                {payment.user.firstName} {payment.user.lastName}
+              </span>
+              <span className="text-xs font-thin ">
+                {payment.user.userName}
+              </span>
+            </div>
+          );
 
-      case "tanggal":
-        return <div className="w-36 md:w-full">{payment.billingDateDesc}</div>;
+        case "tanggal":
+          return (
+            <div className="w-36 md:w-full text-white">
+              {payment.billingDateDesc}
+            </div>
+          );
 
-      case "status":
-        return (
-          <Chip
-            className="capitalize px-2"
-            color={statusColorMap[payment.status]}
-            size="sm"
-            variant="flat"
-          >
-            {payment.statusDesc}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-400" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+        case "status":
+          return (
+            <Chip
+              className="capitalize px-2"
+              color={statusColorMap[payment.status]}
+              size="sm"
+              variant="flat"
+            >
+              {payment.statusDesc}
+            </Chip>
+          );
+        case "actions":
+          return (
+            <div className="relative flex justify-center items-center gap-2">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="sm" variant="light">
+                    <VerticalDotsIcon className="text-default-400" />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu onAction={(key) => actionRow(key.toString())}>
+                  <DropdownItem key="view">View</DropdownItem>
+                  <DropdownItem>Edit</DropdownItem>
+                  <DropdownItem>Delete</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [showImage]
+  );
 
   const onNextPage = useCallback(() => {
     if (page < pages) {
@@ -185,7 +229,25 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     setFilterValue("");
     setPage(1);
   }, []);
-
+  const PaymentModal = () => {
+    if (selectedPaymentId.length <= 0) {
+      alert("Silahkan Pilih Payment");
+    }
+    if (showModal == "hidden" && selectedPaymentId.length > 0) {
+      setShowModal("");
+    } else {
+      setShowModal("hidden");
+    }
+  };
+  const imageModal = (image: string) => {
+    if (showImage == "hidden") {
+      setShowImage("");
+      image = image != null ? image : "/images/people/default.jpg";
+      setSrcImage(image);
+    } else {
+      setShowImage("hidden");
+    }
+  };
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -312,6 +374,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
             : `${selectedKeys.size} of ${filteredItems.length} selected`}
         </span>
         <Pagination
+          className="z-0"
           isCompact
           showControls
           showShadow
@@ -326,6 +389,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
             size="sm"
             variant="flat"
             onPress={onPreviousPage}
+            className="hover:bg-default-100"
           >
             Previous
           </Button>
@@ -334,6 +398,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
             size="sm"
             variant="flat"
             onPress={onNextPage}
+            className="hover:bg-default-100"
           >
             Next
           </Button>
@@ -349,44 +414,78 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     filteredItems.length,
   ]);
 
+  const handleSelectUser = (payment: any) => {
+    console.log(payment);
+  };
+
   return (
-    <Table
-      aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: "max-h-[382px]",
-      }}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"No Payments found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+    <>
+      <Table
+        aria-label="Example table with custom cells, pagination and sorting"
+        isHeaderSticky
+        color="success"
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={{
+          wrapper: "max-h-[370px]  bg-gray-900/80 backdrop-blur-[3px] ",
+        }}
+        selectedKeys={selectedKeys}
+        selectionMode="multiple"
+        disabledKeys={notPendingPaymentId}
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+        className="md:w-fit"
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent={"No Payments found"} items={sortedItems}>
+          {(item) => (
+            <TableRow key={item.id} onClick={() => handleSelectUser(item)}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <>
+        {selectedPaymentId.length > 0 && (
+          <>
+            {showModal == "" ? (
+              <ModalPaymentACC
+                payments={filteredItems}
+                show={showModal}
+                paymentId={selectedPaymentId}
+                showModal={() => PaymentModal()}
+              />
+            ) : (
+              <a onClick={() => PaymentModal()}>
+                <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 end-5  text-white   dark:bg-teal-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
+                  ACC Payment
+                </div>
+              </a>
             )}
-          </TableRow>
+          </>
         )}
-      </TableBody>
-    </Table>
+        <ModalPreviewImage
+          showModal={imageModal}
+          show={showImage}
+          src={srcImage}
+        />
+      </>
+    </>
   );
 }
 

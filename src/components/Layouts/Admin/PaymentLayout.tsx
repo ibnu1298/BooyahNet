@@ -38,7 +38,6 @@ const PaymentLayout = async () => {
   return (
     <div className="m-4">
       <TablePaymentACC payments={response.payments} />
-      {/* <TableNext /> */}
     </div>
   );
 };
