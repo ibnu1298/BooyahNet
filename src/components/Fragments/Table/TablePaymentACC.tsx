@@ -373,7 +373,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === "all"
-            ? "All items selected"
+            ? `${selectedPaymentId.length} of ${filteredItems.length} selected`
             : `${selectedKeys.size} of ${filteredItems.length} selected`}
         </span>
         <Pagination
