@@ -116,7 +116,10 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
 
   if (selectedPaymentId.join().replace(/,/g, "") == "all") {
     selectedPaymentId.splice(0, 3);
-    filteredItems.map((payment: any) => selectedPaymentId.push(payment.id));
+    filteredItems.map(
+      (payment: any) =>
+        payment.status == 1 && selectedPaymentId.push(payment.id)
+    );
   } else {
     filteredItems.map(
       (payment: any) =>
@@ -472,7 +475,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
               />
             ) : (
               <a onClick={() => PaymentModal()}>
-                <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 end-5  text-white   dark:bg-teal-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
+                <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 start-5  text-white   dark:bg-teal-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
                   ACC Payment
                 </div>
               </a>
