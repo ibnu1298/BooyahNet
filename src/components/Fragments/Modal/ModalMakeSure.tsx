@@ -4,9 +4,6 @@ import SpinCircle from "@/components/Elements/Loading/spinCircle";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
-import ModalPreviewImage from "./ModalPreviewImage";
-import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
-
 const ModalMakeSure = ({
   totalTagihan,
   show,

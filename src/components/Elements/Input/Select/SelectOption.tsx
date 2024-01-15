@@ -12,22 +12,26 @@ const gender = [
 
 export default function SelectOption({
   onclick = () => {},
-  className,
+  className = "w-full h-fit py-2 px-3 border  border-gray-300 rounded-md focus:outline-none dark:bg-gray-700 dark:text-white",
   name,
   data = gender,
   label,
   styleLabel,
   placeholder,
   defaultValue,
+  onChange,
+  width = "w-full",
 }: {
+  width?: string;
+  onChange?: any;
   onclick?: any;
   className?: string;
-  name: string;
+  name?: string;
   label?: React.ReactNode;
   data?: dataProps[];
   styleLabel?: string;
   placeholder?: string;
-  defaultValue?: string;
+  defaultValue?: string[];
 }) {
   const margin = label != null ? "my-1 flex justify-between" : "";
   const hidden = label != null ? false : true;
@@ -39,18 +43,19 @@ export default function SelectOption({
       <Select
         defaultSelectedKeys={defaultValue}
         onClick={onclick}
+        onChange={onChange}
         items={data}
         name={name}
         aria-label="Select Option"
         placeholder={placeholder}
-        className="w-full"
+        className={width}
         variant="flat"
         scrollShadowProps={{
           isEnabled: true,
         }}
         classNames={{
-          label: "group-data-[filled=true]:-translate-y-2",
-          trigger: `w-full h-fit py-2 px-3 border  border-gray-300 rounded-md focus:outline-none dark:bg-gray-700 dark:text-white ${className}`,
+          label: "group-data-[filled=true]:-translate-y-2 ",
+          trigger: ` ${className}`,
           listboxWrapper: "max-h-[800px] bg-gray-700  rounded-lg ",
         }}
         listboxProps={{
@@ -61,6 +66,7 @@ export default function SelectOption({
               "transition-opacity",
               "data-[hover=true]:text-foreground",
               "data-[hover=true]:bg-teal-100",
+              "data-hover:bg-red-500",
               "dark:data-[hover=true]:bg-teal-600",
               "data-[selectable=true]:focus:bg-teal-500",
               "data-[pressed=true]:opacity-70",

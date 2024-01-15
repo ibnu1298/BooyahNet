@@ -18,13 +18,15 @@ const ModalPreviewImage = ({
       className={`${show} p-4 gap-5 flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 w-full md:w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
     >
       <div>
-        <Image
-          alt="Preview Image"
-          width={500}
-          height={500}
-          src={src}
-          className="rounded-xl h-100 w-fit"
-        />
+        <a href={src}>
+          <Image
+            alt="Preview Image"
+            width={500}
+            height={500}
+            src={src}
+            className="rounded-xl h-100 w-fit"
+          />
+        </a>
       </div>
       <div>
         <button

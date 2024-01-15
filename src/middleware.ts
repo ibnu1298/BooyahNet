@@ -8,6 +8,7 @@ export function mainMiddleware(request: NextRequest) {
 export default withAuth(mainMiddleware, [
   "/",
   "/payment",
+  "/admin",
   "/products",
   "/package",
   "/login",

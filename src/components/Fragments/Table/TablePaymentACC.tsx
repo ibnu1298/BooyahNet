@@ -28,12 +28,18 @@ import {
 } from "@nextui-org/react";
 import ModalPaymentACC from "../Modal/ModalPaymentACC";
 import ModalPreviewImage from "../Modal/ModalPreviewImage";
+import SelectOption from "@/components/Elements/Input/Select/SelectOption";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   2: "success",
   1: "warning",
   0: "danger",
 };
+const rowPerPage = [
+  { value: "5", label: "5" },
+  { value: "10", label: "10" },
+  { value: "15", label: "15" },
+];
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "tanggal", "status", "actions"];
 export default function TablePaymentACC({ payments }: { payments: any }) {
@@ -66,6 +72,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
   );
 
   const [page, setPage] = useState(1);
+  console.log(page);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -293,7 +300,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
           />
           <div className="flex gap-3 ">
             <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
+              <DropdownTrigger className="flex">
                 <Button
                   endContent={<ChevronDownIcon className="text-small" />}
                   variant="flat"
@@ -340,25 +347,22 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
             Total {payments.length} Riwayat Pembayaran
           </span>
+
           <label className="flex items-center bg-gray-500/50 text-white text-small border-1 border-gray-500 rounded-xl pl-4">
             Rows per page :
-            <select
-              className="bg-transparent outline-none  text-small border-0 focus:ring-0 text-white "
+            <SelectOption
+              width="w-fit"
+              defaultValue={["5"]}
+              className="bg-transparent outline-none w-16 text-small border-0 focus:ring-0 text-white "
+              data={rowPerPage}
               onChange={onRowsPerPageChange}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-            </select>
+            />
           </label>
         </div>
       </div>
@@ -382,6 +386,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
             : `${selectedKeys.size} of ${pendingPaymentId.length} selected`}
         </span>
         <Pagination
+          hidden={pages == 1}
           className="z-0"
           isCompact
           showControls
@@ -391,35 +396,14 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
           total={pages}
           onChange={setPage}
         />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onPreviousPage}
-            className="hover:bg-default-100"
-          >
-            Previous
-          </Button>
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onNextPage}
-            className="hover:bg-default-100"
-          >
-            Next
-          </Button>
-        </div>
       </div>
     );
   }, [
-    onNextPage,
-    onPreviousPage,
     selectedKeys,
     page,
     pages,
-    filteredItems.length,
+    pendingPaymentId.length,
+    selectedPaymentId.length,
   ]);
 
   const handleSelectUser = (payment: any) => {
@@ -480,7 +464,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
               />
             ) : (
               <a onClick={() => PaymentModal()}>
-                <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 start-5  text-white   dark:bg-teal-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
+                <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 end-5 md:start-5  text-white w-fit  dark:bg-teal-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
                   ACC Payment
                 </div>
               </a>
