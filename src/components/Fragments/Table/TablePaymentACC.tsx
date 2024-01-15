@@ -39,6 +39,7 @@ const INITIAL_VISIBLE_COLUMNS = ["name", "tanggal", "status", "actions"];
 export default function TablePaymentACC({ payments }: { payments: any }) {
   let selectedPaymentPrice: any = [];
   let notPendingPaymentId: any = [];
+  let pendingPaymentId: any = [];
   const [filterValue, setFilterValue] = useState("");
   const [showModal, setShowModal] = useState("hidden");
   const [showImage, setShowImage] = useState("hidden");
@@ -58,6 +59,10 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
   payments.map(
     (payment: any) =>
       payment.status != 1 && notPendingPaymentId.push(payment.id.toString())
+  );
+  payments.map(
+    (payment: any) =>
+      payment.status == 1 && pendingPaymentId.push(payment.id.toString())
   );
 
   const [page, setPage] = useState(1);
@@ -373,8 +378,8 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === "all"
-            ? `${selectedPaymentId.length} of ${filteredItems.length} selected`
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+            ? `${selectedPaymentId.length} of ${pendingPaymentId.length} selected`
+            : `${selectedKeys.size} of ${pendingPaymentId.length} selected`}
         </span>
         <Pagination
           className="z-0"
