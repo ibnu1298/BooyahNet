@@ -29,6 +29,7 @@ import {
 import ModalPaymentACC from "../Modal/ModalPaymentACC";
 import ModalPreviewImage from "../Modal/ModalPreviewImage";
 import SelectOption from "@/components/Elements/Input/Select/SelectOption";
+import ModalPaymentACCNotif from "../Modal/ModalPaymentACCNotif";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   2: "success",
@@ -49,6 +50,8 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
   const [filterValue, setFilterValue] = useState("");
   const [showModal, setShowModal] = useState("hidden");
   const [showImage, setShowImage] = useState("hidden");
+  const [payment, setPayment] = useState(null);
+  const [showModalNotif, setShowModalNotif] = useState("hidden");
   const [srcImage, setSrcImage] = useState("/images/people/cat.jpg");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -72,7 +75,6 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
   );
 
   const [page, setPage] = useState(1);
-  console.log(page);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -151,6 +153,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
               setShowImage("");
               image = payment.urlImage != null ? payment.urlImage : image;
               setSrcImage(image);
+              setPayment(payment);
             } else {
               setShowImage("hidden");
             }
@@ -254,6 +257,16 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
       setShowModal("hidden");
     }
   };
+
+  function PaymentNotifModal() {
+    console.log("test");
+
+    if (showModalNotif == "hidden") {
+      setShowModalNotif("");
+    } else {
+      setShowModalNotif("hidden");
+    }
+  }
   const imageModal = (image: string) => {
     if (showImage == "hidden") {
       setShowImage("");
@@ -380,7 +393,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
   const bottomContent = useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
+        <span className="w-fit text-small text-default-400">
           {selectedKeys === "all"
             ? `${selectedPaymentId.length} of ${pendingPaymentId.length} selected`
             : `${selectedKeys.size} of ${pendingPaymentId.length} selected`}
@@ -453,6 +466,12 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
         </TableBody>
       </Table>
       <>
+        <ModalPaymentACCNotif
+          payments={filteredItems}
+          show={showModalNotif}
+          paymentId={selectedPaymentId}
+          showModal={() => PaymentNotifModal()}
+        />
         {selectedPaymentId.length > 0 && (
           <>
             {showModal == "" ? (
@@ -461,6 +480,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
                 show={showModal}
                 paymentId={selectedPaymentId}
                 showModal={() => PaymentModal()}
+                showModalNotif={() => PaymentNotifModal()}
               />
             ) : (
               <a onClick={() => PaymentModal()}>
@@ -475,6 +495,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
           showModal={imageModal}
           show={showImage}
           src={srcImage}
+          payment={payment}
         />
       </>
     </>

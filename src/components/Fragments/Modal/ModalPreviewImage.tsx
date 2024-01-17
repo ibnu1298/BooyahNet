@@ -5,28 +5,54 @@ const ModalPreviewImage = ({
   src,
   show,
   showModal,
+  payment,
 }: {
   showModal: any;
+  payment: any;
   show: string;
   src: string;
 }) => {
   console.log(src);
+  console.log(payment);
 
   return (
     <div
       id="popup-modal"
-      className={`${show} p-4 gap-5 flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 w-full md:w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
+      className={`${show} bg-gray-800/70 p-4 gap-5 flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 w-full md:w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
     >
-      <div>
-        <a href={src}>
-          <Image
-            alt="Preview Image"
-            width={500}
-            height={500}
-            src={src}
-            className="rounded-xl h-100 w-fit"
-          />
-        </a>
+      <div className="bg-gray-900/20 p-5 rounded-lg backdrop-blur-md">
+        <table className="text-left text-[15px] font-medium">
+          <tbody>
+            <tr>
+              <td>Payment Date</td>
+              <td>: {payment != null && payment.paymentDateDesc}</td>
+            </tr>
+            <tr>
+              <td>Billing Date</td>
+              <td>: {payment != null && payment.billingDateDesc}</td>
+            </tr>
+            <tr>
+              <td>Customer</td>
+              <td>
+                :{" "}
+                {payment != null && payment.user.asName == null
+                  ? `${payment.user.firstName} ${payment.user.lastName}`
+                  : payment?.user.asName}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div>
+          <a href={src}>
+            <Image
+              alt="Preview Image"
+              width={500}
+              height={500}
+              src={src}
+              className="rounded-xl h-100 w-fit"
+            />
+          </a>
+        </div>
       </div>
       <div>
         <button

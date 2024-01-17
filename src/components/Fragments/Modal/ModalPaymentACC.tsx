@@ -1,20 +1,26 @@
 "use client";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
+import ModalPaymentACCNotif from "./ModalPaymentACCNotif";
 
 const ModalPaymentACC = ({
   payments,
   show,
   showModal,
   paymentId,
+  showModalNotif,
 }: {
   payments: any[];
   show: string;
   showModal: any;
   paymentId: any[];
+  showModalNotif: any;
 }) => {
+  const { data: session }: { data: any } = useSession();
   const selectedPaymentPrice: any = [];
   const selectedUserId: any = [];
+  const accept: any = [];
   const [isLoading, setIsLoading] = useState(false);
   const [cursor, setCursor] = useState("");
 
@@ -30,6 +36,45 @@ const ModalPaymentACC = ({
         selectedUserId.push(payment.user.id)
     );
   }
+
+  const PaymentACC = async (
+    userId: Array<string>,
+    paymentId: Array<number>,
+    accept: Array<boolean>,
+    token: string,
+    acc: boolean
+  ) => {
+    console.log("run");
+    accept.push(acc);
+    setIsLoading(true);
+    setCursor("cursor-wait");
+    if (token != undefined) {
+      const res = await fetch(`/api/payment/paymentACC`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId,
+          paymentId,
+          accept,
+        }),
+      });
+
+      const response = await res.json();
+      console.log(response);
+
+      if (!response.isSucceeded) {
+        return { response };
+      }
+      setIsLoading(false);
+      setCursor("");
+      showModalNotif();
+      showModal();
+      return response;
+    }
+  };
 
   return (
     <>
@@ -78,6 +123,15 @@ const ModalPaymentACC = ({
                 <button
                   type="submit"
                   className={`w-20 text-white bg-red-600 focus:bg-red-950 focus:outline-none hover:bg-red-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
+                  onClick={() =>
+                    PaymentACC(
+                      selectedUserId,
+                      paymentId,
+                      accept,
+                      session.user.token,
+                      false
+                    )
+                  }
                 >
                   {isLoading ? (
                     <SpinCircle size={6} className="mx-3 flex justify-center" />
@@ -88,6 +142,15 @@ const ModalPaymentACC = ({
                 <button
                   type="submit"
                   className={`w-20 text-white bg-teal-600 focus:bg-teal-950 focus:outline-none hover:bg-teal-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
+                  onClick={() =>
+                    PaymentACC(
+                      selectedUserId,
+                      paymentId,
+                      accept,
+                      session.user.token,
+                      true
+                    )
+                  }
                 >
                   {isLoading ? (
                     <SpinCircle size={6} className="mx-3 flex justify-center" />

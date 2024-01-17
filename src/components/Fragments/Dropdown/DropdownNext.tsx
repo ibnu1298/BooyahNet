@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -12,6 +12,7 @@ import Image from "next/image";
 
 export default function DropdownNext() {
   const { data: session }: { data: any } = useSession();
+  const [show, setShow] = useState("");
 
   let image = "/images/people/default.jpg";
   if (session?.user.image != undefined) {
@@ -26,6 +27,9 @@ export default function DropdownNext() {
     session?.user.lastName.slice(1);
   const fullname = `${firstname} ${lastname}`;
   const nameLength = fullname.length;
+  useEffect(() => {
+    session?.user.role != "admin" ? setShow("hidden") : setShow("");
+  }, [session?.user.role]);
 
   return (
     <div className="flex items-center justify-center">
@@ -61,7 +65,9 @@ export default function DropdownNext() {
           </div>
         </DropdownTrigger>
         <DropdownMenu aria-label="User Actions">
-          <DropdownItem href="/admin">Admin</DropdownItem>
+          <DropdownItem href="/admin" className={`${show}`}>
+            Admin
+          </DropdownItem>
           <DropdownItem href="/profile-settings">Settings</DropdownItem>
           <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
             Log Out
