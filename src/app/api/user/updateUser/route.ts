@@ -8,7 +8,7 @@ async function UpdateUser(
   firstName: string,
   lastName: string,
   address: string,
-  gender: number,
+  gender: string,
   phoneNumber: string,
   token: string
 ) {
@@ -36,22 +36,61 @@ async function UpdateUser(
 
   return res;
 }
+async function UpdateWIFI(
+  id: string,
+  UserNameWifi: string,
+  PasswordWifi: string,
+  token: string
+) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      id,
+      UserNameWifi,
+      PasswordWifi,
+    }),
+  });
+  console.log(res);
+
+  if (res.status === 401) {
+    return res;
+  }
+  if (!res.ok) {
+    return res;
+  }
+
+  return res;
+}
 
 export async function POST(request: NextRequest) {
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
   const req = await request.json();
-
-  const res = await UpdateUser(
-    req.id,
-    req.firstName,
-    req.lastName,
-    req.address,
-    req.gender,
-    req.phoneNumber,
-    authorization as string
-  );
-  const result = await res.json();
+  let res;
+  if (req.type == "WIFI") {
+    res = await UpdateWIFI(
+      req.id,
+      req.userName,
+      req.password,
+      authorization as string
+    );
+  } else {
+    res = await UpdateUser(
+      req.id,
+      req.firstName,
+      req.lastName,
+      req.address,
+      req.gender,
+      req.phoneNumber,
+      authorization as string
+    );
+  }
+  const result = await res?.json();
+  console.log(result);
 
   try {
     if (res.status !== 401) {

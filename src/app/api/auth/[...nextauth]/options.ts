@@ -169,6 +169,7 @@ export const options: NextAuthOptions = {
         token.asName = getUser.asName;
         token.emailConfirmed = getUser.emailConfirmed;
         token.passwordExist = getUser.passwordExist;
+        token.status = getUser.status;
         token.token = user.token;
       }
       if (account?.provider === "google" || account?.provider == "facebook") {
@@ -206,6 +207,7 @@ export const options: NextAuthOptions = {
         token.emailConfirmed = getUser.emailConfirmed;
         token.passwordExist = getUser.passwordExist;
         token.token = getToken.token;
+        token.status = getUser.status;
       }
       if (trigger === "update" && session?.image) {
         const sessionImage = session.image;
@@ -237,6 +239,7 @@ export const options: NextAuthOptions = {
         session.user.gender = token.gender;
         session.user.userName = token.userName;
         session.user.phoneNumber = token.phoneNumber;
+        session.user.status = token.status;
         session.user.asName = token.asName;
         session.user.urlImage = token.picture;
         session.user.emailConfirmed = token.emailConfirmed;

@@ -56,6 +56,7 @@ async function UpdatePassword(
       changePassword,
     }),
   });
+  console.log(res);
   if (res.status === 401) {
     return res;
   }
@@ -70,6 +71,7 @@ export async function POST(request: NextRequest) {
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
   const req = await request.json();
+  console.log(req);
 
   let res;
   if (req.changePassword) {

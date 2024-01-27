@@ -54,9 +54,9 @@ export default function SelectOption({
           isEnabled: true,
         }}
         classNames={{
-          label: "group-data-[filled=true]:-translate-y-2 ",
-          trigger: ` ${className}`,
-          listboxWrapper: "max-h-[800px] bg-gray-700  rounded-lg ",
+          label: "group-data-[filled=true]:-translate-y-2",
+          trigger: ` ${className} `,
+          listboxWrapper: "max-h-[800px] bg-gray-400  rounded-lg ",
         }}
         listboxProps={{
           itemClasses: {
@@ -76,7 +76,7 @@ export default function SelectOption({
         }}
         popoverProps={{
           classNames: {
-            base: "before:bg-default-300",
+            base: "before:bg-default-500",
             content: "p-0 border-small border-divider bg-background",
           },
         }}

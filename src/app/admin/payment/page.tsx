@@ -1,12 +1,7 @@
-import PaymentLayout from "@/components/Layouts/Admin/PaymentLayout";
 import React from "react";
 
 const paymentPage = () => {
-  return (
-    <div>
-      <PaymentLayout />
-    </div>
-  );
+  return <div>ini payment</div>;
 };
 
 export default paymentPage;

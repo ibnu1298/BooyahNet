@@ -26,15 +26,15 @@ import {
   ChipProps,
   SortDescriptor,
 } from "@nextui-org/react";
-import ModalPaymentACC from "../Modal/ModalPaymentACC";
-import ModalPreviewImage from "../Modal/ModalPreviewImage";
 import SelectOption from "@/components/Elements/Input/Select/SelectOption";
-import ModalPaymentACCNotif from "../Modal/ModalPaymentACCNotif";
+import ModalUserNotif from "../Modal/User/ModalUserNotif";
+import ModalUser from "../Modal/User/ModalUser";
+import Image from "next/image";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  2: "success",
-  1: "warning",
-  0: "danger",
+  Active: "success",
+  Pending: "warning",
+  Inactive: "danger",
 };
 const rowPerPage = [
   { value: "5", label: "5" },
@@ -42,36 +42,45 @@ const rowPerPage = [
   { value: "15", label: "15" },
 ];
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "tanggal", "status", "actions"];
-export default function TablePaymentACC({ payments }: { payments: any }) {
-  let selectedPaymentPrice: any = [];
-  let notPendingPaymentId: any = [];
-  let pendingPaymentId: any = [];
+const INITIAL_VISIBLE_COLUMNS = ["name", "email", "status", "actions"];
+export default function TableUser({ users }: { users: any }) {
+  console.log(users);
+
+  let selectedUserPrice: any = [];
+  let pendingUserId: any = [];
   const [filterValue, setFilterValue] = useState("");
   const [showModal, setShowModal] = useState("hidden");
   const [showImage, setShowImage] = useState("hidden");
-  const [payment, setPayment] = useState(null);
+  const [User, setUser] = useState(null);
   const [showModalNotif, setShowModalNotif] = useState("hidden");
-  const [srcImage, setSrcImage] = useState("/images/people/cat.jpg");
+  const [srcImage, setSrcImage] = useState("/images/people/default.jpg");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
+  async function CekImage(url: string) {
+    let urlImage = "";
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  const [statusFilter, setStatusFilter] = useState<Selection>(new Set(["1"]));
+    urlImage = res.status === 200 ? res.url : "/images/people/default.jpg";
+
+    return urlImage;
+  }
+  const [statusFilter, setStatusFilter] = useState<Selection>(
+    new Set(["Pending"])
+  );
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
 
-  payments.map(
-    (payment: any) =>
-      payment.status != 1 && notPendingPaymentId.push(payment.id.toString())
-  );
-  payments.map(
-    (payment: any) =>
-      payment.status == 1 && pendingPaymentId.push(payment.id.toString())
+  users.map(
+    (User: any) => User.status == 1 && pendingUserId.push(User.id.toString())
   );
 
   const [page, setPage] = useState(1);
@@ -87,11 +96,11 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredPayments = [...payments];
+    let filteredUsers = [...users];
 
     if (hasSearchFilter) {
-      filteredPayments = filteredPayments.filter((payment) =>
-        payment.user.firstName.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((User) =>
+        User.firstName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
@@ -99,15 +108,15 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
     ) {
-      filteredPayments = filteredPayments.filter((payment) =>
-        Array.from(statusFilter).includes(payment.status.toString())
+      filteredUsers = filteredUsers.filter((user) =>
+        Array.from(statusFilter).includes(user.status.toString())
       );
     }
 
-    return filteredPayments;
-  }, [payments, filterValue, statusFilter, hasSearchFilter]);
+    return filteredUsers;
+  }, [users, filterValue, statusFilter, hasSearchFilter]);
 
-  let selectedPaymentId = Array.from(selectedKeys);
+  let selectedUserId = Array.from(selectedKeys);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -128,32 +137,31 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     });
   }, [sortDescriptor, items]);
 
-  if (selectedPaymentId.join().replace(/,/g, "") == "all") {
-    selectedPaymentId.splice(0, 3);
+  if (selectedUserId.join().replace(/,/g, "") == "all") {
+    selectedUserId.splice(0, 3);
     filteredItems.map(
-      (payment: any) =>
-        payment.status == 1 && selectedPaymentId.push(payment.id)
+      (User: any) => User.status == 1 && selectedUserId.push(User.id)
     );
   } else {
     filteredItems.map(
-      (payment: any) =>
-        payment.id == selectedPaymentId.values() &&
-        selectedPaymentPrice.push(payment.pricePayment)
+      (User: any) =>
+        User.id == selectedUserId.values() &&
+        selectedUserPrice.push(User.priceUser)
     );
   }
 
   const renderCell = useCallback(
-    (payment: any, columnKey: any) => {
-      const cellValue = payment[columnKey as keyof any];
+    (User: any, columnKey: any) => {
+      const cellValue = User[columnKey as keyof any];
       function actionRow(key: string) {
         let image = "/images/people/default.jpg";
         switch (key) {
           case "view":
             if (showImage == "hidden") {
               setShowImage("");
-              image = payment.urlImage != null ? payment.urlImage : image;
+              image = User.urlImage != null ? User.urlImage : image;
               setSrcImage(image);
-              setPayment(payment);
+              setUser(User);
             } else {
               setShowImage("hidden");
             }
@@ -162,30 +170,42 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
       switch (columnKey) {
         case "name":
           return (
-            <div className="flex flex-col w-16 text-white">
-              <span>
-                {payment.user.firstName} {payment.user.lastName}
-              </span>
-              <span className="text-xs font-thin ">
-                {payment.user.userName}
-              </span>
+            <div className="flex gap-2 w-fit mr-5 items-center">
+              <Image
+                className="rounded-full w-9 h-9 object-cover "
+                src={
+                  User.urlImage == null || User.urlImage == ""
+                    ? "/images/people/default.jpg"
+                    : User.urlImage
+                }
+                alt="Image Profile"
+                width={500}
+                height={500}
+              />
+              <div className="flex flex-col text-white">
+                <span>
+                  {User.firstName} {User.lastName}
+                </span>
+                <span className="text-xs font-thin ">{User.userName}</span>
+              </div>
             </div>
           );
 
-        case "tanggal":
-          return (
-            <div className="w-36 text-white">{payment.billingDateDesc}</div>
-          );
+        case "role":
+          return <div>{User.userRoles[0].role.name}</div>;
+
+        case "gender":
+          return <div>{User.gender == 0 ? "Laki-laki" : "Perempuan"}</div>;
 
         case "status":
           return (
             <Chip
               className="capitalize px-2"
-              color={statusColorMap[payment.status]}
+              color={statusColorMap[User.status]}
               size="sm"
               variant="flat"
             >
-              {payment.statusDesc}
+              {User.status}
             </Chip>
           );
         case "actions":
@@ -245,18 +265,18 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     setFilterValue("");
     setPage(1);
   }, []);
-  const PaymentModal = () => {
-    if (selectedPaymentId.length <= 0) {
-      alert("Silahkan Pilih Payment");
+  const UserModal = () => {
+    if (selectedUserId.length <= 0) {
+      alert("Silahkan Pilih User");
     }
-    if (showModal == "hidden" && selectedPaymentId.length > 0) {
+    if (showModal == "hidden" && selectedUserId.length > 0) {
       setShowModal("");
     } else {
       setShowModal("hidden");
     }
   };
 
-  function PaymentNotifModal() {
+  function UserNotifModal() {
     console.log("test");
 
     if (showModalNotif == "hidden") {
@@ -362,7 +382,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {payments.length} Riwayat Pembayaran
+            Total {users.length} Riwayat Pembayaran
           </span>
 
           <label className="flex items-center bg-gray-500/50 text-white text-small border-1 border-gray-500 rounded-xl pl-4">
@@ -385,22 +405,16 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    payments.length,
+    users.length,
   ]);
 
   const bottomContent = useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-fit text-small text-default-400">
-          {selectedKeys === "all"
-            ? `${selectedPaymentId.length} of ${pendingPaymentId.length} selected`
-            : `${selectedKeys.size} of ${pendingPaymentId.length} selected`}
-        </span>
+      <div className="py-2 px-2 flex justify-start items-center">
         <Pagination
           hidden={pages == 1}
           className="z-0"
           isCompact
-          showControls
           showShadow
           color="primary"
           page={page}
@@ -409,16 +423,10 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
         />
       </div>
     );
-  }, [
-    selectedKeys,
-    page,
-    pages,
-    pendingPaymentId.length,
-    selectedPaymentId.length,
-  ]);
+  }, [page, pages]);
 
-  const handleSelectUser = (payment: any) => {
-    console.log(payment);
+  const handleSelectUser = (User: any) => {
+    console.log(User);
   };
 
   return (
@@ -432,9 +440,6 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
         classNames={{
           wrapper: "max-h-[370px]  bg-gray-900/80 backdrop-blur-[3px] ",
         }}
-        selectedKeys={selectedKeys}
-        selectionMode="multiple"
-        disabledKeys={notPendingPaymentId}
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
@@ -453,7 +458,7 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No Payments found"} items={sortedItems}>
+        <TableBody emptyContent={"No Users found"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id} onClick={() => handleSelectUser(item)}>
               {(columnKey) => (
@@ -464,37 +469,19 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
         </TableBody>
       </Table>
       <>
-        <ModalPaymentACCNotif
-          payments={filteredItems}
+        <ModalUserNotif
+          users={filteredItems}
           show={showModalNotif}
-          paymentId={selectedPaymentId}
-          showModal={() => PaymentNotifModal()}
+          userId={selectedUserId}
+          showModal={() => UserNotifModal()}
         />
-        {selectedPaymentId.length > 0 && (
-          <>
-            {showModal == "" ? (
-              <ModalPaymentACC
-                payments={filteredItems}
-                show={showModal}
-                paymentId={selectedPaymentId}
-                showModal={() => PaymentModal()}
-                showModalNotif={() => PaymentNotifModal()}
-              />
-            ) : (
-              <a onClick={() => PaymentModal()}>
-                <div className="z-50 animate-bounce animate-infinite animate-ease-linear animate-fill-forwards fixed bottom-8 end-5 md:start-5  text-white w-fit  dark:bg-teal-500/70 rounded-full px-4 text-center sm:px-5 py-1.5 cursor-pointer">
-                  ACC Payment
-                </div>
-              </a>
-            )}
-          </>
-        )}
-        <ModalPreviewImage
+
+        {/* <ModalPreviewImage
           showModal={imageModal}
           show={showImage}
           src={srcImage}
-          payment={payment}
-        />
+          //   User={User}
+        /> */}
       </>
     </>
   );
@@ -507,16 +494,25 @@ type IconSvgProps = SVGProps<SVGSVGElement> & {
 const columns = [
   { name: "ID", uid: "id", sortable: true },
   { name: "NAME", uid: "name", sortable: true },
-  { name: "TANGGAL", uid: "tanggal", sortable: true },
+  { name: "ADDRESS", uid: "address", sortable: true },
   { name: "EMAIL", uid: "email", sortable: true },
+  { name: "USERNAME", uid: "userName", sortable: true },
+  { name: "GENDER", uid: "gender", sortable: true },
+  { name: "No HP", uid: "phoneNumber" },
   { name: "STATUS", uid: "status", sortable: true },
+  { name: "USERNAME WIFI", uid: "userNameWifi", sortable: true },
+  { name: "PASSWORD WIFI", uid: "passwordWifi" },
+  { name: "CUSTOMER", uid: "asName" },
+  { name: "CUSTOMER NO", uid: "customerNo" },
+  { name: "EMAIL CONFIRMED", uid: "emailConfirmed" },
+  { name: "ROLE", uid: "role" },
   { name: "ACTIONS", uid: "actions" },
 ];
 
 const statusOptions = [
-  { name: "Lunas", uid: "2" },
-  { name: "Pending", uid: "1" },
-  { name: "Belum Dibayar", uid: "0" },
+  { name: "Active", uid: "Active" },
+  { name: "Pending", uid: "Pending" },
+  { name: "Inactive", uid: "Inactive" },
 ];
 
 function capitalize(str: string) {

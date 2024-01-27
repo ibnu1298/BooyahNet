@@ -3,11 +3,12 @@ import SelectOption from "@/components/Elements/Input/Select/SelectOption";
 import InputForm from "@/components/Elements/Input/page";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
 import { userSessionCustom } from "@/interface/user";
-import { Button } from "@nextui-org/react";
+import { Button, Chip } from "@nextui-org/react";
+import { stat } from "fs";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
-const FormUpdateBiodata = ({
+const FormUpdateWIFI = ({
   showNotif = () => {},
   user,
 }: {
@@ -17,23 +18,28 @@ const FormUpdateBiodata = ({
   let className = `w-full text-sm px-3 py-2  border border-gray-200 rounded-md focus:outline-none  focus:border-indigo-300 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-300 dark:border-gray-500 dark:focus:border-gray-300`;
 
   const { data: session, update }: { data: any; update: any } = useSession();
+  console.log(session?.user);
 
   const [isLoading, setIsloading] = useState(false);
   const [cursor, setCursor] = useState("");
+  const [status, setStatus] = useState("Active");
+  const [colorStatus, setColorStatus] = useState("bg-green-500");
 
-  const handleUpdateUser = async (event: any) => {
+  const handleUpdateWIFI = async (event: any) => {
     setIsloading(true);
     event.preventDefault();
-    const firstName = event.currentTarget.firstName.value as string;
-    const lastName = event.currentTarget.lastName.value as string;
-    const address = event.currentTarget.address.value as string;
-    const gender = event.currentTarget.gender.value as string;
-    const phoneNumber = event.currentTarget.phoneNumber.value as string;
-    if (firstName == "") {
-      showNotif("left-0", "Nama Depan Belum Diisi", false);
+    const userName = event.currentTarget.userName.value as string;
+    const password = event.currentTarget.password.value as string;
+    const type = "WIFI";
+    if (password == "") {
+      showNotif("left-0", "Password Belum Diisi", false);
       setIsloading(false);
     }
-    if (firstName != "") {
+    if (userName == "") {
+      showNotif("left-0", "Username Belum Diisi", false);
+      setIsloading(false);
+    }
+    if (userName != "" && password != "") {
       const res = await fetch("/api/user/updateUser", {
         method: "POST",
         headers: {
@@ -42,29 +48,24 @@ const FormUpdateBiodata = ({
         },
         body: JSON.stringify({
           id: session?.user.id as string,
-          firstName,
-          lastName,
-          address,
-          gender,
-          phoneNumber,
+          userName,
+          password,
+          type,
         }),
       });
       const data = await res.json();
 
       setIsloading(false);
       if (data.isSucceeded) {
-        showNotif("left-0", "Update Data Berhasil", true);
         await update({
           ...session,
           user: {
             ...session?.user,
-            firstName,
-            lastName,
-            address,
-            gender,
-            phoneNumber,
+
+            status: 1,
           },
         });
+        showNotif("left-0", "Update Data Berhasil", true);
       } else {
         if (data.message == null) {
           showNotif("left-0", data.errors.Id[0], false);
@@ -82,7 +83,22 @@ const FormUpdateBiodata = ({
     } else {
       setCursor("");
     }
-  }, [isLoading, session?.user.gender]);
+    switch (session?.user.status) {
+      case 2:
+        setColorStatus("bg-red-500");
+        setStatus("Tidak Aktif");
+        break;
+      case 1:
+        setColorStatus("bg-yellow-500");
+        setStatus("Pending");
+        break;
+
+      default:
+        setColorStatus("bg-green-500");
+        setStatus("Aktif");
+        break;
+    }
+  }, [isLoading, session?.user.gender, session?.user.status]);
 
   if (
     session?.user.phoneNumber != undefined &&
@@ -93,56 +109,44 @@ const FormUpdateBiodata = ({
 
   return (
     <form
-      onSubmit={(event) => handleUpdateUser(event)}
+      onSubmit={(event) => handleUpdateWIFI(event)}
       className="flex flex-col gap-2 my-6"
     >
-      <div className="flex gap-4">
-        <InputForm
-          className={className}
-          styleLabel="text-white text-sm"
-          label="Nama Depan"
-          type="text"
-          name="firstName"
-          defaultValue={session?.user.firstName as string}
-        />
-        <InputForm
-          className={className}
-          styleLabel="text-white text-sm"
-          type="text"
-          name="lastName"
-          label="Nama Belakang"
-          defaultValue={session?.user.lastName as string}
-        />
-      </div>
       <InputForm
         className={className}
         styleLabel="text-white text-sm"
         type="text"
-        name="address"
-        label="Alamat"
-        defaultValue={session?.user.address as string}
-      />
-      <SelectOption
-        defaultValue={user?.gender?.toString()}
-        className={className}
-        name="gender"
-        label="Jenis Kelamin"
-        styleLabel="text-white text-sm"
+        name="userName"
+        label="Username WIFI"
+        placeholder="Tuliskan Username WIFI baru"
       />
       <InputForm
-        className={`${className} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-        type="number"
-        name="phoneNumber"
-        label="No Hanphone"
+        className={className}
         styleLabel="text-white text-sm"
-        defaultValue={phoneNumber}
+        type="password"
+        name="password"
+        label="Password WIFI"
+        placeholder="Tuliskan Password WIFI baru"
       />
+      <div className="flex justify-end gap-2 text-white items-center">
+        Status WIFI :{" "}
+        <span className={`font-semibold ${colorStatus}  px-3 rounded-full`}>
+          {status}
+        </span>
+      </div>
+      {status == "Pending" && (
+        <span className="flex justify-end text-white items-center text-xs">
+          <span className="text-red-400 items-start">*</span>Silakan gunakan
+          Username & Password yang lama dulu
+        </span>
+      )}
+
       <Button
-        className={`w-full px-3 text-white py-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 ${cursor} mt-3`}
+        className={`w-full px-3 text-white py-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 mt-3`}
         type="submit"
       >
         {isLoading ? (
-          <div className="flex justify-center ">
+          <div className="flex justify-center gap-2">
             <SpinCircle size={6} />
             Loading...{" "}
           </div>
@@ -154,4 +158,4 @@ const FormUpdateBiodata = ({
   );
 };
 
-export default FormUpdateBiodata;
+export default FormUpdateWIFI;

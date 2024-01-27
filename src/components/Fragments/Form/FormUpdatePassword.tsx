@@ -26,11 +26,11 @@ const FormUpdatePassword = ({
         className="flex flex-col gap-2  my-6"
       >
         <InputForm
-          className={className}
+          className={`${className} hidden`}
           styleLabel="text-white text-sm"
           type="email"
           name="email"
-          label="Email"
+          defaultValue={user?.email}
         />
         <InputForm
           isDisabled={isDisabled}

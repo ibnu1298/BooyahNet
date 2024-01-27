@@ -1,5 +1,4 @@
 "use client";
-
 import { useSession } from "next-auth/react";
 import React, { Children, useEffect, useState } from "react";
 import { Tab, Tabs } from "@nextui-org/react";
@@ -7,6 +6,7 @@ import FormUpdatePassword from "../Fragments/Form/FormUpdatePassword";
 import FormUpdateBiodata from "../Fragments/Form/FormUpdateBiodata";
 import FormUpdateCredential from "../Fragments/Form/FormUpdateCredential";
 import Notifications from "../Elements/Notif.tsx/Notifications";
+import FormUpdateWIFI from "../Fragments/Form/FormUpdateWIFI";
 
 let className = `w-full text-sm px-3 py-2  border border-gray-300 rounded-md focus:outline-none  focus:border-indigo-300 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-500 dark:border-gray-500 dark:focus:border-gray-500`;
 const UpdateDataUser = ({
@@ -107,6 +107,8 @@ const UpdateDataUser = ({
     const oldPassword = event.currentTarget.oldPassword.value as string;
     const newPassword = event.currentTarget.newPassword.value as string;
     const confirmPassword = event.currentTarget.confirmPassword.value as string;
+    console.log(email, oldPassword, newPassword, confirmPassword);
+
     if (newPassword != confirmPassword) {
       setIsloading(false);
       showNotif("opacity-100", "Password Konfirmasi Berbeda", false);
@@ -141,7 +143,6 @@ const UpdateDataUser = ({
         }),
       });
       const data = await res.json();
-      console.log(data);
 
       setIsloading(false);
       if (data.isSucceeded) {
@@ -242,6 +243,16 @@ const UpdateDataUser = ({
               handleUpdateCredential={handleUpdatePassword}
               isDisabled={isDisabled}
             />
+          </Tab>
+          <Tab
+            key="WIFI"
+            title={
+              <span onClick={() => hideNotif("-left-full opacity-0")}>
+                WIFI
+              </span>
+            }
+          >
+            <FormUpdateWIFI showNotif={showNotif} user={user} />
           </Tab>
         </Tabs>
         <div className="flex w-full justify-center items-center flex-col -mt-7  rounded-md">
