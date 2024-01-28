@@ -1,19 +1,21 @@
 "use client";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 import React, { useState } from "react";
 
 const ModalUser = ({
-  users,
+  user,
   show,
   showModal,
   userId,
   showModalNotif,
 }: {
-  users: any[];
-  show: string;
+  user: any;
+  show?: string;
   showModal: any;
-  userId: any[];
+  userId: any;
   showModalNotif: any;
 }) => {
   const { data: session }: { data: any } = useSession();
@@ -22,18 +24,9 @@ const ModalUser = ({
   const accept: any = [];
   const [isLoading, setIsLoading] = useState(false);
   const [cursor, setCursor] = useState("");
-
-  for (let i = 0; i < userId.length; i++) {
-    users.map(
-      (user) =>
-        user.id.toString() == userId[i] &&
-        selecteduserPrice.push(user.priceuser)
-    );
-    users.map(
-      (user) =>
-        user.id.toString() == userId[i] && selectedUserId.push(user.user.id)
-    );
-  }
+  console.log(userId);
+  console.log(user);
+  console.log(show);
 
   return (
     <>
@@ -65,20 +58,61 @@ const ModalUser = ({
                 />
               </svg>
             </button>
-            <div className="p-4 md:p-5  text-center flex flex-col gap-2">
-              <h3 className=" text-2xl font-bold text-white pt-2">
-                {userId?.length} Pending user
+            <div className="p-4 md:p-5  text-center flex  justify-center flex-col gap-2">
+              <h3 className=" text-2xl font-bold text-white py-2">
+                Customer Detail
               </h3>
-              <p className="text-xs">
-                Pilih{" "}
-                <span className=" bg-teal-600 py-1 px-2 rounded-md">
-                  Accept
-                </span>{" "}
-                jika pembayaran sudah benar
-              </p>
-
+              <div className="flex justify-center items-center gap-5 flex-col md:flex-row">
+                <a href={user != null && user.urlImage}>
+                  <Image
+                    className="w-28 h-28  object-cover rounded-md"
+                    width={500}
+                    height={500}
+                    src={user != null && user.urlImage}
+                    alt="profile user"
+                  />
+                </a>
+                <table className="text-left text-[12px] font-medium">
+                  <tbody>
+                    <tr>
+                      <td>Nama Lengkap</td>
+                      <td>
+                        : {user != null && user.firstName}{" "}
+                        {user != null && user.lastName}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>UserName WIFI</td>
+                      <td>: {user != null && user.userNameWifi}</td>
+                    </tr>
+                    <tr>
+                      <td>Password WIFI</td>
+                      <td>: {user != null && user.passwordWifi}</td>
+                    </tr>
+                    <tr>
+                      <td>No HP</td>
+                      <td>: {user != null && user.phoneNumber}</td>
+                    </tr>
+                    <tr>
+                      <td>Email</td>
+                      <td>: {user != null && user.email}</td>
+                    </tr>
+                    <tr>
+                      <td>Status</td>
+                      <td>: {user != null && user.status}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <hr />
-              <div className="flex justify-center items-center my-2 gap-2">
+              <div>
+                {user != null && user.status == "Pending" && (
+                  <span className="text-[12px] text-yellow-300">
+                    Silahkan Accept jika data sudah benar
+                  </span>
+                )}
+              </div>
+              <div className="flex justify-center items-center mt-2 gap-2">
                 <button
                   type="submit"
                   className={`w-20 text-white bg-red-600 focus:bg-red-950 focus:outline-none hover:bg-red-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
@@ -95,7 +129,7 @@ const ModalUser = ({
                   {isLoading ? (
                     <SpinCircle size={6} className="mx-3 flex justify-center" />
                   ) : (
-                    <>Reject</>
+                    <>Disable</>
                   )}
                 </button>
                 <button

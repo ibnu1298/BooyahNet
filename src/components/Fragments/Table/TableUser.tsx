@@ -28,8 +28,9 @@ import {
 } from "@nextui-org/react";
 import SelectOption from "@/components/Elements/Input/Select/SelectOption";
 import ModalUserNotif from "../Modal/User/ModalUserNotif";
-import ModalUser from "../Modal/User/ModalUser";
+
 import Image from "next/image";
+import ModalUser from "../Modal/User/ModalUser";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Active: "success",
@@ -53,6 +54,7 @@ export default function TableUser({ users }: { users: any }) {
   const [showImage, setShowImage] = useState("hidden");
   const [User, setUser] = useState(null);
   const [showModalNotif, setShowModalNotif] = useState("hidden");
+  const [selectedUserId, setSelectedUserId] = useState("");
   const [srcImage, setSrcImage] = useState("/images/people/default.jpg");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -116,8 +118,6 @@ export default function TableUser({ users }: { users: any }) {
     return filteredUsers;
   }, [users, filterValue, statusFilter, hasSearchFilter]);
 
-  let selectedUserId = Array.from(selectedKeys);
-
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = useMemo(() => {
@@ -137,18 +137,8 @@ export default function TableUser({ users }: { users: any }) {
     });
   }, [sortDescriptor, items]);
 
-  if (selectedUserId.join().replace(/,/g, "") == "all") {
-    selectedUserId.splice(0, 3);
-    filteredItems.map(
-      (User: any) => User.status == 1 && selectedUserId.push(User.id)
-    );
-  } else {
-    filteredItems.map(
-      (User: any) =>
-        User.id == selectedUserId.values() &&
-        selectedUserPrice.push(User.priceUser)
-    );
-  }
+  console.log(selectedUserId);
+  console.log(User);
 
   const renderCell = useCallback(
     (User: any, columnKey: any) => {
@@ -157,13 +147,14 @@ export default function TableUser({ users }: { users: any }) {
         let image = "/images/people/default.jpg";
         switch (key) {
           case "view":
-            if (showImage == "hidden") {
-              setShowImage("");
+            if (showModal == "hidden") {
+              setSelectedUserId(User.id);
+              setShowModal("");
               image = User.urlImage != null ? User.urlImage : image;
               setSrcImage(image);
               setUser(User);
             } else {
-              setShowImage("hidden");
+              setShowModal("hidden");
             }
         }
       }
@@ -229,7 +220,7 @@ export default function TableUser({ users }: { users: any }) {
           return cellValue;
       }
     },
-    [showImage]
+    [showModal]
   );
 
   const onNextPage = useCallback(() => {
@@ -266,10 +257,7 @@ export default function TableUser({ users }: { users: any }) {
     setPage(1);
   }, []);
   const UserModal = () => {
-    if (selectedUserId.length <= 0) {
-      alert("Silahkan Pilih User");
-    }
-    if (showModal == "hidden" && selectedUserId.length > 0) {
+    if (showModal == "hidden") {
       setShowModal("");
     } else {
       setShowModal("hidden");
@@ -474,6 +462,13 @@ export default function TableUser({ users }: { users: any }) {
           show={showModalNotif}
           userId={selectedUserId}
           showModal={() => UserNotifModal()}
+        />
+        <ModalUser
+          user={User}
+          userId={selectedUserId}
+          show={showModal}
+          showModal={() => UserModal()}
+          showModalNotif={() => UserNotifModal()}
         />
 
         {/* <ModalPreviewImage

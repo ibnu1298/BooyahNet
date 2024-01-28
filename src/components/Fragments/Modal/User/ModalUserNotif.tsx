@@ -12,7 +12,7 @@ const ModalUserNotif = ({
   users: any[];
   show: string;
   showModal: any;
-  userId: any[];
+  userId: any;
 }) => {
   const { data: session }: { data: any } = useSession();
 
@@ -47,9 +47,6 @@ const ModalUserNotif = ({
               </svg>
             </button>
             <div className="p-4 md:p-5  text-center flex flex-col gap-2">
-              <h3 className=" text-2xl font-bold text-white pt-2">
-                {userId?.length} Pending user
-              </h3>
               <p className="text-xs">Perubahan Status Pembayaran Berhasil</p>
 
               <hr />
