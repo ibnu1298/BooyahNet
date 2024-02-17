@@ -1,5 +1,6 @@
 "use client";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
+import { Snippet } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,14 +20,35 @@ const ModalUser = ({
   showModalNotif: any;
 }) => {
   const { data: session }: { data: any } = useSession();
-  const selecteduserPrice: any = [];
-  const selectedUserId: any = [];
-  const accept: any = [];
   const [isLoading, setIsLoading] = useState(false);
   const [cursor, setCursor] = useState("");
-  console.log(userId);
   console.log(user);
-  console.log(show);
+  const userACC = async (id: string, acc: boolean) => {
+    const res = await fetch("/api/user/updateUserStatus", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.user.token as string}`,
+      },
+      body: JSON.stringify({
+        id,
+        acc,
+      }),
+    });
+
+    const response = await res.json();
+
+    console.log(response);
+    if (!response.isSucceeded) {
+      return { response };
+    }
+    setIsLoading(false);
+    setCursor("");
+    showModalNotif();
+    showModal();
+    return response;
+  };
+  console.log(user);
 
   return (
     <>
@@ -34,7 +56,7 @@ const ModalUser = ({
         id="popup-modal"
         className={`${show}  flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 w-full md:w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
       >
-        <div className="relative p-4 w-96 md:w-full max-w-md max-h-full">
+        <div className="relative p-4 w-full md:w-full max-w-fit max-h-full">
           <div className="relative bg-white rounded-lg  shadow dark:bg-gray-700">
             <button
               type="button"
@@ -63,12 +85,22 @@ const ModalUser = ({
                 Customer Detail
               </h3>
               <div className="flex justify-center items-center gap-5 flex-col md:flex-row">
-                <a href={user != null && user.urlImage}>
+                <a
+                  href={
+                    user != null && user.urlImage != null
+                      ? user.urlImage
+                      : "/images/people/default.jpg"
+                  }
+                >
                   <Image
                     className="w-28 h-28  object-cover rounded-md"
                     width={500}
                     height={500}
-                    src={user != null && user.urlImage}
+                    src={
+                      user != null && user.urlImage != null
+                        ? user.urlImage
+                        : "/images/people/default.jpg"
+                    }
                     alt="profile user"
                   />
                 </a>
@@ -91,15 +123,49 @@ const ModalUser = ({
                     </tr>
                     <tr>
                       <td>No HP</td>
-                      <td>: {user != null && user.phoneNumber}</td>
+                      <td>
+                        :{" "}
+                        {user != null && user.phoneNumber == "" ? (
+                          <span></span>
+                        ) : (
+                          <Snippet
+                            className="py-0 gap-0 h-0 px-0 font-sans"
+                            hideSymbol={true}
+                          >{`${user != null && user.phoneNumber}`}</Snippet>
+                        )}
+                      </td>
                     </tr>
                     <tr>
                       <td>Email</td>
-                      <td>: {user != null && user.email}</td>
+                      <td>
+                        :{" "}
+                        {user != null && user.email == "" ? (
+                          <span></span>
+                        ) : (
+                          <Snippet
+                            className="py-0 gap-0 h-0 px-0"
+                            hideSymbol={true}
+                          >
+                            {user != null && user.email}
+                          </Snippet>
+                        )}
+                      </td>
                     </tr>
                     <tr>
                       <td>Status</td>
-                      <td>: {user != null && user.status}</td>
+                      <td>
+                        :{" "}
+                        {user != null && user.status == "Active" && (
+                          <span className="bg-green-600 px-2 py-0.5 rounded-xl">
+                            {user != null && user.status}
+                          </span>
+                        )}
+                        {user != null && user.status == "Inactive" && (
+                          <span className="bg-red-600/80 px-2 py-0.5 rounded-xl">
+                            {user != null && user.status}
+                          </span>
+                        )}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -116,15 +182,7 @@ const ModalUser = ({
                 <button
                   type="submit"
                   className={`w-20 text-white bg-red-600 focus:bg-red-950 focus:outline-none hover:bg-red-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
-                  //   onClick={() =>
-                  //     userACC(
-                  //       selectedUserId,
-                  //       userId,
-                  //       accept,
-                  //       session.user.token,
-                  //       false
-                  //     )
-                  //   }
+                  onClick={() => userACC(user.id, false)}
                 >
                   {isLoading ? (
                     <SpinCircle size={6} className="mx-3 flex justify-center" />
@@ -135,15 +193,7 @@ const ModalUser = ({
                 <button
                   type="submit"
                   className={`w-20 text-white bg-teal-600 focus:bg-teal-950 focus:outline-none hover:bg-teal-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
-                  //   onClick={() =>
-                  //     userACC(
-                  //       selectedUserId,
-                  //       userId,
-                  //       accept,
-                  //       session.user.token,
-                  //       true
-                  //     )
-                  //   }
+                  onClick={() => userACC(user.id, true)}
                 >
                   {isLoading ? (
                     <SpinCircle size={6} className="mx-3 flex justify-center" />

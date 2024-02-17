@@ -20,7 +20,7 @@ const ModalPreviewImage = ({
       id="popup-modal"
       className={`${show} bg-gray-800/70 p-4 gap-5 flex item-center justify-center flex-col items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-10 w-full md:w-full md:inset-0 h-[calc(100%-1rem)] max-h-full backdrop-blur-sm`}
     >
-      <div className="bg-gray-900/20 p-5 rounded-lg backdrop-blur-md">
+      <div className="bg-gray-900/20 p-5 rounded-lg backdrop-blur-md  flex flex-col items-center gap-3">
         <table className="text-left text-[15px] font-medium">
           <tbody>
             <tr>
@@ -49,7 +49,7 @@ const ModalPreviewImage = ({
               width={500}
               height={500}
               src={src}
-              className="rounded-xl h-100 w-fit"
+              className="rounded-xl max-h-96 w-fit"
             />
           </a>
         </div>

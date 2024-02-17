@@ -11,8 +11,11 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
 export default function DropdownNext() {
-  const { data: session }: { data: any } = useSession();
+  const { data: session, update: update }: { data: any; update: any } =
+    useSession();
   const [show, setShow] = useState("");
+
+  console.log(session?.user.image);
 
   let image = "/images/people/default.jpg";
   if (session?.user.image != undefined) {
@@ -30,6 +33,13 @@ export default function DropdownNext() {
   useEffect(() => {
     session?.user.role != "admin" ? setShow("hidden") : setShow("");
   }, [session?.user.role]);
+  const dateExp = new Date(
+    session?.user.expToken != null ? session?.user.expToken * 1000 : 0
+  );
+  const dateNow = new Date(Date.now());
+  if (dateExp.getTime() < dateNow.getTime() && session?.user != undefined) {
+    signOut();
+  }
 
   return (
     <div className="flex items-center justify-center">

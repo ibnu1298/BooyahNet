@@ -1,15 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-const url = "https://booyahnetapi.azurewebsites.net/api/Admin/GetUserRole";
+const url = "https://booyahnetapi.azurewebsites.net/api/Admin/UpdateUserStatus";
 
-async function GetAll(token: any) {
+async function UpdateUserStatus(id: string, acc: boolean, token: string) {
+  console.log(id, acc, token);
+
   const res = await fetch(url, {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: token,
     },
+    body: JSON.stringify({
+      id,
+      acc,
+    }),
   });
   console.log(res);
 
@@ -19,14 +25,19 @@ async function GetAll(token: any) {
   if (!res.ok) {
     return res;
   }
+
   return res;
 }
 
 export async function POST(request: NextRequest) {
   const headersInstance = headers();
   const authorization = headersInstance.get("authorization");
-  const res = await GetAll(authorization);
+  const req = await request.json();
+
+  const res = await UpdateUserStatus(req.id, req.acc, authorization as string);
+
   const result = await res.json();
+  console.log(result);
 
   try {
     if (res.status !== 401) {

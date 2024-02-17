@@ -4,7 +4,13 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CridetialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
-
+export default interface JwtDecodeCustom {
+  id?: string;
+  exp?: number;
+  username?: string;
+  email?: string;
+  role?: string;
+}
 export const options: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -135,15 +141,10 @@ export const options: NextAuthOptions = {
 
         return response;
       }
-      interface JwtDecodeCustom {
-        id?: string;
-        exp?: number;
-        username?: string;
-        email?: string;
-        role?: string;
-      }
+
       if (account?.provider === "credentials") {
         const decoded = jwtDecode<JwtDecodeCustom>(user.token);
+        console.log(decoded);
 
         const getUser = await GetUser(decoded?.username, user.token);
         console.log(getUser);
@@ -171,6 +172,7 @@ export const options: NextAuthOptions = {
         token.passwordExist = getUser.passwordExist;
         token.status = getUser.status;
         token.token = user.token;
+        token.expToken = decoded?.exp;
       }
       if (account?.provider === "google" || account?.provider == "facebook") {
         token.type = account?.provider;
@@ -208,6 +210,7 @@ export const options: NextAuthOptions = {
         token.passwordExist = getUser.passwordExist;
         token.token = getToken.token;
         token.status = getUser.status;
+        token.expToken = decoded?.exp;
       }
       if (trigger === "update" && session?.image) {
         const sessionImage = session.image;
@@ -216,7 +219,15 @@ export const options: NextAuthOptions = {
       if (trigger === "update") {
         return { ...token, ...session.user };
       }
-
+      const dateExp = new Date(
+        token.expToken != null ? token.expToken * 1000 : 0
+      );
+      const dateNow = new Date(Date.now());
+      console.log(dateExp.getTime() < dateNow.getTime());
+      console.log(dateExp.toLocaleDateString());
+      console.log(dateNow.toLocaleDateString());
+      if (dateExp.getTime() < dateNow.getTime()) {
+      }
       console.log(token);
 
       return token;
@@ -244,8 +255,8 @@ export const options: NextAuthOptions = {
         session.user.urlImage = token.picture;
         session.user.emailConfirmed = token.emailConfirmed;
         session.user.passwordExist = token.passwordExist;
+        session.user.expToken = token.expToken;
       }
-      console.log(session);
 
       return session;
     },

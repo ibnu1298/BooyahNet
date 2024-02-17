@@ -117,6 +117,7 @@ export default function TableUser({ users }: { users: any }) {
 
     return filteredUsers;
   }, [users, filterValue, statusFilter, hasSearchFilter]);
+  console.log(filteredItems.length);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -370,7 +371,7 @@ export default function TableUser({ users }: { users: any }) {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {users.length} Riwayat Pembayaran
+            Show {filteredItems.length} of {users.length} Users
           </span>
 
           <label className="flex items-center bg-gray-500/50 text-white text-small border-1 border-gray-500 rounded-xl pl-4">

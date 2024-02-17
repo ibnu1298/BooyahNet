@@ -1,10 +1,11 @@
 "use client";
 import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import UserLayout from "./UserLayout";
 import PaymentLayout from "./PaymentLayout";
 
 const AdminLayouts = ({ users, payments }: { users: any; payments: any }) => {
+  const [tab, setTab] = useState("payment");
   console.log(users);
 
   let tabs = [
@@ -43,7 +44,7 @@ const AdminLayouts = ({ users, payments }: { users: any; payments: any }) => {
         items={tabs}
       >
         {(item) => (
-          <Tab key={item.id} title={item.label}>
+          <Tab key={item.id} onClick={() => setTab(item.id)} title={item.label}>
             {item.content}
           </Tab>
         )}

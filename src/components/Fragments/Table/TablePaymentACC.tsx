@@ -58,7 +58,9 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
 
-  const [statusFilter, setStatusFilter] = useState<Selection>(new Set(["1"]));
+  const [statusFilter, setStatusFilter] = useState<Selection>(
+    new Set(["1", "0"])
+  );
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "age",

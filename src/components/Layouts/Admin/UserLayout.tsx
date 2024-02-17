@@ -3,8 +3,6 @@ import React from "react";
 
 const UserLayout = ({ users }: { users: any }) => {
   const response = users;
-  console.log(response);
-  console.log(users);
 
   return (
     <div className="m-4">

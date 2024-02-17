@@ -26,7 +26,10 @@ const ModalUserNotif = ({
           <div className="relative bg-white rounded-lg  shadow dark:bg-gray-700">
             <button
               type="button"
-              onClick={showModal}
+              onClick={() => {
+                showModal();
+                window.location.reload();
+              }}
               className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
               data-modal-hide="popup-modal"
             >
@@ -47,7 +50,9 @@ const ModalUserNotif = ({
               </svg>
             </button>
             <div className="p-4 md:p-5  text-center flex flex-col gap-2">
-              <p className="text-xs">Perubahan Status Pembayaran Berhasil</p>
+              <p className="text-lg font-bold my-4">
+                Perubahan Status User Berhasil
+              </p>
 
               <hr />
               <div className="flex justify-center items-center my-2 gap-2">

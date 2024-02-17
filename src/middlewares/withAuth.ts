@@ -1,4 +1,7 @@
+import JwtDecodeCustom from "@/app/api/auth/[...nextauth]/options";
+import { jwtDecode } from "jwt-decode";
 import { getToken } from "next-auth/jwt";
+import { signOut } from "next-auth/react";
 import {
   NextFetchEvent,
   NextMiddleware,
@@ -20,9 +23,21 @@ export default function withAuth(
         req,
         secret: process.env.NEXTAUTH_SECRET,
       });
+      if (token?.token != null) {
+        const decoded = jwtDecode<JwtDecodeCustom>(token?.token as string);
+        var dateExp = new Date(decoded.exp != null ? decoded.exp * 1000 : 0);
+        var dateNow = new Date(Date.now());
+        console.log(dateExp.getTime() < dateNow.getTime());
+        // console.log(dateExp.toLocaleDateString());
+        // console.log(dateNow.toLocaleDateString());
+        if (dateExp.getTime() < dateNow.getTime()) {
+        }
+      }
+
       if (!token && !authPage.includes(pathname)) {
         const url = new URL("/login", req.url);
         url.searchParams.set("callbackUrl", encodeURI(req.url));
+
         return NextResponse.redirect(url);
       }
       if (token) {
