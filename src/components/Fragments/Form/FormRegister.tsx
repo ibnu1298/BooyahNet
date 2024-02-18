@@ -4,7 +4,7 @@ import InputForm from "../../Elements/Input/page";
 import Button from "../../Elements/Button/page";
 import SelectOption from "../../Elements/Input/Select/SelectOption";
 import { genders } from "@/interface/user";
-import ModalRegistrasiSuccess from "../Modal/ModalRegistrasiSuccess";
+import ModalSuccess from "../Modal/ModalSuccess";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import SpinCircle from "@/components/Elements/Loading/spinCircle";
 
@@ -115,7 +115,8 @@ export default function FormRegister({
   }, [isLoading]);
   return (
     <>
-      <ModalRegistrasiSuccess
+      <ModalSuccess
+        message="Registrasi Berhasil"
         show={successRegist}
         showModal={successRegistModal}
       />

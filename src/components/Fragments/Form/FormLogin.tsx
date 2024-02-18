@@ -8,11 +8,15 @@ import { signIn } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import SpinCircle from "../../Elements/Loading/spinCircle";
 import ErrorInput from "../../Elements/Input/ErrorInput";
+import ModalSuccess from "../Modal/ModalSuccess";
 
 export default function FormLogin({ searchParams }: any) {
   let className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-0 focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-300 dark:border-gray-600 dark:focus:border-gray-200`;
 
   const [forgotPass, setForgotPass] = useState("hidden");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [modalSuccess, setModalSuccess] = useState("hidden");
   const [errLogin, setErrLogin] = useState("hidden");
   const [isLoading, setIsloading] = useState(false);
   const [emailField, setEmailField] = useState("invisible");
@@ -39,6 +43,7 @@ export default function FormLogin({ searchParams }: any) {
       event.currentTarget.password.value !== "" &&
       event.currentTarget.text.value !== ""
     ) {
+      setUsernameOrEmail(event.currentTarget.password.value);
       setIsloading(true);
 
       try {
@@ -82,15 +87,38 @@ export default function FormLogin({ searchParams }: any) {
   };
   const forgotPassModal = () => {
     if (forgotPass == "hidden") {
+      setModalSuccess("hidden");
       setForgotPass("");
     } else {
       setForgotPass("hidden");
     }
   };
+  const showModalSuccess = (message: string) => {
+    if (modalSuccess == "hidden") {
+      setModalSuccess("");
+      setMessage(message);
+    } else {
+      setModalSuccess("hidden");
+    }
+  };
+
   return (
     <div className="mx-9">
-      <ModalLoginError show={errLogin} showModal={errLoginModal} />
-      <ModalForgotPass show={forgotPass} showModal={forgotPassModal} />
+      <ModalLoginError
+        show={errLogin}
+        usernameOrEmail={usernameOrEmail}
+        showModal={errLoginModal}
+      />
+      <ModalForgotPass
+        show={forgotPass}
+        showModal={forgotPassModal}
+        showModalSuccess={showModalSuccess}
+      />
+      <ModalSuccess
+        show={modalSuccess}
+        message={message}
+        showModal={showModalSuccess}
+      />
       <form onSubmit={(event) => handleLogin(event)}>
         <InputForm
           className={className}
@@ -127,7 +155,7 @@ export default function FormLogin({ searchParams }: any) {
           type="submit"
         >
           {isLoading ? (
-            <div className="flex justify-center ">
+            <div className="flex justify-center gap-2">
               <SpinCircle size={6} />
               Loading...{" "}
             </div>

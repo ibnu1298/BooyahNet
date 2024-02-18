@@ -1,14 +1,127 @@
+import ErrorInput from "@/components/Elements/Input/ErrorInput";
 import Input from "@/components/Elements/Input/Input";
-import React from "react";
+import InputForm from "@/components/Elements/Input/page";
+import SpinCircle from "@/components/Elements/Loading/spinCircle";
+import { useSession } from "next-auth/react";
+import React, { useState } from "react";
 
 export default function ModalForgotPass({
   show,
   showModal,
+  showModalSuccess,
 }: {
   show?: string;
   showModal?: any;
+  showModalSuccess?: any;
 }) {
-  const className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-900 dark:border-gray-600 dark:focus:border-gray-200`;
+  const [isLoading, setIsloading] = useState(false);
+  const [hideEmail, setHideEmail] = useState(false);
+  const [saveEmail, setSaveEmail] = useState("");
+  const [hideError, setHideError] = useState(true);
+  const [errMessage, setErrMessage] = useState("");
+  const className = `w-full text-sm px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none   dark:bg-gray-700 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-900 dark:border-gray-600 dark:focus:border-gray-200`;
+  function resetModal() {
+    setHideError(true);
+    setHideEmail(false);
+  }
+  const handleSendOTP = async (event: any) => {
+    event.preventDefault();
+    setIsloading(true);
+    setHideError(true);
+
+    const email = event.currentTarget.email.value;
+    if (!email.includes("@") || !email.includes(".")) {
+      setHideError(false);
+      setErrMessage("Silahkan Masukan Email yang benar");
+      setIsloading(false);
+    }
+    if (email !== "") {
+      try {
+        const res = await fetch("/api/user/sendOTP", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        });
+        const data = await res.json();
+        if (!data.isSucceeded) {
+          setHideError(false);
+          setErrMessage(data.message);
+          setIsloading(false);
+        } else {
+          setSaveEmail(email);
+          setHideEmail(true);
+          setHideError(true);
+          setIsloading(false);
+        }
+        console.log(data);
+      } catch (err) {
+        setIsloading(false);
+        console.log(err);
+      }
+    }
+  };
+  const handleResetPassword = async (event: any) => {
+    event.preventDefault();
+    setIsloading(true);
+    setHideError(true);
+
+    const otp = event.currentTarget.otp.value;
+    const password = event.currentTarget.password.value;
+    const passwordConfirm = event.currentTarget.passwordConfirm.value;
+    if (password != passwordConfirm) {
+      setHideError(false);
+      setErrMessage("Password Baru Tidak Sama");
+      setIsloading(false);
+    }
+    console.log(password.length);
+
+    if (password.length < 8) {
+      setHideError(false);
+      setErrMessage("Password Minimal 8 Karakter");
+      setIsloading(false);
+    }
+
+    if (otp !== "" || password == "" || passwordConfirm == "") {
+      try {
+        const res = await fetch("/api/user/resetPassword", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: saveEmail,
+            otp,
+            password,
+          }),
+        });
+        const data = await res.json();
+        if (!data.isSucceeded) {
+          setHideError(false);
+          setErrMessage(data.message);
+          setIsloading(false);
+        } else {
+          setHideEmail(true);
+          setHideError(true);
+          setIsloading(false);
+          showModalSuccess(data.message);
+          showModal();
+        }
+      } catch (err) {
+        setIsloading(false);
+        console.log(err);
+      }
+    } else {
+      setHideError(false);
+      setErrMessage("Silahkan Masukan OTP yang benar");
+      setIsloading(false);
+    }
+  };
+  console.log(hideEmail);
+  console.log(hideError);
 
   return (
     <>
@@ -20,7 +133,10 @@ export default function ModalForgotPass({
           <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <button
               type="button"
-              onClick={showModal}
+              onClick={() => {
+                showModal();
+                resetModal();
+              }}
               className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
               data-modal-hide="popup-modal"
             >
@@ -29,7 +145,7 @@ export default function ModalForgotPass({
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 0 0"
+                viewBox="0 0 14 14"
               >
                 <path
                   stroke="currentColor"
@@ -41,31 +157,101 @@ export default function ModalForgotPass({
               </svg>
             </button>
             <div className="p-4 md:px-12 text-center">
-              <h3 className="mb-5 text-lg font-normal text-white ">
-                Silahkan Isi alamat Email
-              </h3>
-              <Input
-                classname={className}
-                type="email"
-                placeholder="contoh@mail.com"
-                name="email"
-                id="email"
-              />
-              <div className="mt-4">
-                <button
-                  type="button"
-                  className="text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
-                >
-                  Send OTP
-                </button>
-                <button
-                  onClick={showModal}
-                  type="button"
-                  className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                >
-                  Kembali
-                </button>
-              </div>
+              <form
+                onSubmit={(event) => handleSendOTP(event)}
+                hidden={hideEmail}
+              >
+                <h3 className="mb-2 text-lg font-bold text-white ">
+                  Silakan Isi alamat Email
+                </h3>
+                <Input
+                  classname={className}
+                  type="email"
+                  placeholder="contoh@mail.com"
+                  name="email"
+                  id="email"
+                />
+                <ErrorInput hidden={hideError}>{errMessage}</ErrorInput>
+                <div className="mt-4">
+                  <button
+                    type="submit"
+                    className="text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+                  >
+                    {isLoading ? (
+                      <div className="flex justify-center gap-2">
+                        <SpinCircle size={6} />
+                        Loading...{" "}
+                      </div>
+                    ) : (
+                      <>Send OTP</>
+                    )}
+                  </button>
+                  <button
+                    onClick={showModal}
+                    type="button"
+                    className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  >
+                    Kembali
+                  </button>
+                </div>
+              </form>
+              <form
+                hidden={!hideEmail}
+                onSubmit={(event) => handleResetPassword(event)}
+              >
+                <h2 className="mb-2 font-bold text-[25px] text-white ">
+                  Silakan isi code OTP
+                </h2>
+                <p className="text-xs mb-2">
+                  Silakan buka inbox atau spam pada email
+                </p>
+                <div className="flex flex-col gap-3 w-full">
+                  <InputForm
+                    className={className}
+                    type="password"
+                    placeholder="Masukan Password Baru"
+                    name="password"
+                  />
+
+                  <InputForm
+                    className={className}
+                    type="password"
+                    placeholder="Tulis Ulang Password Baru"
+                    name="passwordConfirm"
+                  />
+
+                  <InputForm
+                    className={`${className} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                    type="number"
+                    placeholder="Masukan code OTP dari Email"
+                    name="otp"
+                  />
+                  <ErrorInput hidden={hideError}>{errMessage}</ErrorInput>
+                </div>
+                <div className="mt-4 flex flex-col gap-2 items-center">
+                  <button
+                    type="submit"
+                    className="text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
+                  >
+                    {isLoading ? (
+                      <div className="flex justify-center gap-2">
+                        <SpinCircle size={6} />
+                        Loading...{" "}
+                      </div>
+                    ) : (
+                      <>Submit</>
+                    )}
+                  </button>
+                  <p className="text-xs">Tidak Menerima Code?</p>
+                  <button
+                    onClick={showModal}
+                    type="button"
+                    className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  >
+                    Kirim Ulang OTP
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

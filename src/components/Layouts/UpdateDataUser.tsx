@@ -113,9 +113,9 @@ const UpdateDataUser = ({
       setIsloading(false);
       showNotif("opacity-100", "Password Konfirmasi Berbeda", false);
     }
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       setIsloading(false);
-      showNotif("opacity-100", "Password Minimal 6 Karakter", false);
+      showNotif("opacity-100", "Password Minimal 8 Karakter", false);
     }
     if (email == "") {
       setIsloading(false);

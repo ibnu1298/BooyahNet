@@ -1,14 +1,21 @@
 import React from "react";
 
 const ErrorInput = ({
+  hidden,
   visible,
   children,
 }: {
-  visible: string;
+  hidden?: boolean;
+  visible?: string;
   children: React.ReactNode;
 }) => {
   return (
-    <p className={`text-red-500 text-xs mt-1 italic ${visible}`}>{children}</p>
+    <p
+      hidden={hidden}
+      className={`text-red-500 text-xs mt-1 italic ${visible}`}
+    >
+      {children}
+    </p>
   );
 };
 

@@ -2,11 +2,13 @@ import { PiSmileyXEyesFill } from "react-icons/pi";
 import React from "react";
 
 export default function ModalLoginError({
+  usernameOrEmail,
   show,
   showModal,
 }: {
   show: string;
   showModal: any;
+  usernameOrEmail: string;
 }) {
   return (
     <>
@@ -41,15 +43,14 @@ export default function ModalLoginError({
             <div className="p-4 md:p-5 text-center flex flex-col justify-center items-center">
               <PiSmileyXEyesFill size="80px" className="mb-3" />
               <h1 className="mb-5 text-xl font-bold text-white">
-                Email atau Password Salah
+                {usernameOrEmail.includes("@") &&
+                usernameOrEmail.includes(".") ? (
+                  <>Email atau Password Salah</>
+                ) : (
+                  <>Username atau Password Salah</>
+                )}
               </h1>
               <div className="mb-3">
-                <button
-                  type="button"
-                  className="text-white bg-teal-800 focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2"
-                >
-                  Login OTP ?
-                </button>
                 <button
                   onClick={showModal}
                   type="button"
