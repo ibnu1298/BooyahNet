@@ -125,7 +125,8 @@ const ModalUser = ({
                       <td>No HP</td>
                       <td>
                         :{" "}
-                        {(user != null && user.phoneNumber == "") ||
+                        {user != null &&
+                        user.phoneNumber == "" &&
                         user.phoneNumber == null ? (
                           <span></span>
                         ) : (
