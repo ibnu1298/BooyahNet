@@ -27,6 +27,8 @@ async function UpdateUser(
       phoneNumber,
     }),
   });
+  console.log(res);
+
   if (res.status === 401) {
     return res;
   }
@@ -65,6 +67,29 @@ async function UpdateWIFI(
 
   return res;
 }
+async function UpdateCustomer(id: string, asName: string, token: string) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      id,
+      asName,
+    }),
+  });
+  console.log(res);
+
+  if (res.status === 401) {
+    return res;
+  }
+  if (!res.ok) {
+    return res;
+  }
+
+  return res;
+}
 
 export async function POST(request: NextRequest) {
   const headersInstance = headers();
@@ -78,6 +103,8 @@ export async function POST(request: NextRequest) {
       req.password,
       authorization as string
     );
+  } else if (req.type == "admin") {
+    res = await UpdateCustomer(req.id, req.asName, authorization as string);
   } else {
     res = await UpdateUser(
       req.id,
@@ -89,6 +116,7 @@ export async function POST(request: NextRequest) {
       authorization as string
     );
   }
+  console.log(res);
   const result = await res?.json();
   console.log(result);
 

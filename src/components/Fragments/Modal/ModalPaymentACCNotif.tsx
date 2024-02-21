@@ -9,10 +9,10 @@ const ModalPaymentACCNotif = ({
   showModal,
   paymentId,
 }: {
-  payments: any[];
-  show: string;
-  showModal: any;
-  paymentId: any[];
+  payments?: any[];
+  show?: string;
+  showModal?: any;
+  paymentId?: any[];
 }) => {
   const { data: session }: { data: any } = useSession();
 
@@ -48,7 +48,7 @@ const ModalPaymentACCNotif = ({
             </button>
             <div className="p-4 md:p-5  text-center flex flex-col gap-2">
               <h3 className=" text-2xl font-bold text-white pt-2">
-                {paymentId?.length} Pending Payment
+                {paymentId?.length != 0 && paymentId?.length} Pending Payment
               </h3>
               <p className="text-xs">Perubahan Status Pembayaran Berhasil</p>
 

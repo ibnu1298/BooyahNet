@@ -1,15 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
 
-const url = "https://booyahnetapi.azurewebsites.net/api/User/SendOTP";
+const url =
+  "https://booyahnetapi.azurewebsites.net/api/User/OTP-VerifikasiEmail";
 
-async function SendOTP(usernameOrEmail: string) {
+async function VerifikasiEmail(
+  usernameOrEmail: string,
+  otp: string,
+  token: string
+) {
+  console.log(usernameOrEmail, otp, token);
+
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: token,
     },
     body: JSON.stringify({
       usernameOrEmail,
+      otp,
     }),
   });
   console.log(res);
@@ -24,9 +34,15 @@ async function SendOTP(usernameOrEmail: string) {
 }
 
 export async function POST(request: NextRequest) {
+  const headersInstance = headers();
+  const authorization = headersInstance.get("authorization");
   const req = await request.json();
-  console.log(req.email);
-  const res = await SendOTP(req.email);
+  console.log(req);
+  const res = await VerifikasiEmail(
+    req.email,
+    req.otp as string,
+    authorization as string
+  );
   console.log(res);
   const result = await res.json();
   console.log(result);

@@ -1,20 +1,64 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
+import SpinCircle from "@/components/Elements/Loading/spinCircle";
+import { useSession } from "next-auth/react";
 
 const ModalPreviewImage = ({
   src,
   show,
   showModal,
   payment,
+  ACC,
+  showModalNotif,
 }: {
   showModal: any;
   payment: any;
   show: string;
   src: string;
+  ACC?: boolean;
+  showModalNotif: any;
 }) => {
-  console.log(src);
-  console.log(payment);
+  console.log(ACC);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: session }: { data: any } = useSession();
+
+  const [cursor, setCursor] = useState("");
+  if (payment != null) {
+    console.log(payment.user.id);
+  }
+
+  const paymentACC = async (token: string, accept: boolean) => {
+    setIsLoading(true);
+    setCursor("cursor-wait");
+    if (token != undefined && payment != null) {
+      const res = await fetch(`/api/payment/paymentACC`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: [payment.user.id],
+          paymentId: [payment.id],
+          accept: [accept],
+        }),
+      });
+
+      const response = await res.json();
+      console.log(response);
+
+      if (!response.isSucceeded) {
+        return { response };
+      }
+      setIsLoading(false);
+      setCursor("");
+      showModalNotif();
+      showModal();
+      return response;
+    }
+  };
   return (
     <div
       id="popup-modal"
@@ -53,6 +97,32 @@ const ModalPreviewImage = ({
             />
           </a>
         </div>
+        {ACC && (
+          <div className="flex justify-center items-center mt-1 gap-3">
+            <button
+              type="submit"
+              className={`w-20 text-white bg-red-600 focus:bg-red-950 focus:outline-none hover:bg-red-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-md text-sm flex justify-center items-center px-2 py-1 text-center ${cursor} `}
+              onClick={() => paymentACC(session?.user.token, false)}
+            >
+              {isLoading ? (
+                <SpinCircle size={6} className="mx-3 flex justify-center" />
+              ) : (
+                <>Reject</>
+              )}
+            </button>
+            <button
+              type="submit"
+              className={`w-20 text-white bg-teal-600 focus:bg-teal-950 focus:outline-none hover:bg-teal-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-md text-sm flex justify-center items-center px-2 py-1 text-center ${cursor} `}
+              onClick={() => paymentACC(session?.user.token, true)}
+            >
+              {isLoading ? (
+                <SpinCircle size={6} className="mx-3 flex justify-center" />
+              ) : (
+                <>Accept</>
+              )}
+            </button>
+          </div>
+        )}
       </div>
       <div>
         <button

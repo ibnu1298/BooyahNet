@@ -59,7 +59,7 @@ const FormUpdatePassword = ({
         />
 
         <Button
-          className={`w-full px-3 text-white py-4 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 ${cursor} mt-3`}
+          className={`w-full px-3 text-white py-2 bg-teal-800 rounded-md focus:bg-teal-950 focus:outline-none hover:bg-teal-600 transition duration-500 delay-100 ${cursor} mt-3`}
           type="submit"
         >
           {isLoading ? (

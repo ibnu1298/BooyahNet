@@ -31,6 +31,7 @@ import ModalUserNotif from "../Modal/User/ModalUserNotif";
 
 import Image from "next/image";
 import ModalUser from "../Modal/User/ModalUser";
+import ModalUpdateUser from "../Modal/Admin/ModalUpdateUser";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Active: "success",
@@ -51,6 +52,7 @@ export default function TableUser({ users }: { users: any }) {
   let pendingUserId: any = [];
   const [filterValue, setFilterValue] = useState("");
   const [showModal, setShowModal] = useState("hidden");
+  const [showModalUpdateUser, setShowModalUpdateUser] = useState("hidden");
   const [showImage, setShowImage] = useState("hidden");
   const [User, setUser] = useState(null);
   const [showModalNotif, setShowModalNotif] = useState("hidden");
@@ -146,23 +148,34 @@ export default function TableUser({ users }: { users: any }) {
       const cellValue = User[columnKey as keyof any];
       function actionRow(key: string) {
         let image = "/images/people/default.jpg";
-        switch (key) {
-          case "view":
-            if (showModal == "hidden") {
-              setSelectedUserId(User.id);
-              setShowModal("");
-              image = User.urlImage != null ? User.urlImage : image;
-              setSrcImage(image);
-              setUser(User);
-            } else {
-              setShowModal("hidden");
-            }
+        console.log(key);
+        if (key == "edit") {
+          if (showModal == "hidden") {
+            setSelectedUserId(User.id);
+            setShowModalUpdateUser("");
+            image = User.urlImage != null ? User.urlImage : image;
+            setSrcImage(image);
+            setUser(User);
+          } else {
+            setShowModalUpdateUser("hidden");
+          }
+        }
+        if (key == "view") {
+          if (showModal == "hidden") {
+            setSelectedUserId(User.id);
+            setShowModal("");
+            image = User.urlImage != null ? User.urlImage : image;
+            setSrcImage(image);
+            setUser(User);
+          } else {
+            setShowModal("hidden");
+          }
         }
       }
       switch (columnKey) {
         case "name":
           return (
-            <div className="flex gap-2 w-fit mr-5 items-center">
+            <div className="flex gap-2 w-full mr-5 items-center">
               <Image
                 className="rounded-full w-9 h-9 object-cover "
                 src={
@@ -211,8 +224,8 @@ export default function TableUser({ users }: { users: any }) {
                 </DropdownTrigger>
                 <DropdownMenu onAction={(key) => actionRow(key.toString())}>
                   <DropdownItem key="view">View</DropdownItem>
-                  <DropdownItem>Edit</DropdownItem>
-                  <DropdownItem>Delete</DropdownItem>
+                  <DropdownItem key="edit">Edit</DropdownItem>
+                  <DropdownItem key="delete">Delete</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
@@ -272,6 +285,13 @@ export default function TableUser({ users }: { users: any }) {
       setShowModalNotif("");
     } else {
       setShowModalNotif("hidden");
+    }
+  }
+  function ShowUpdateUser() {
+    if (showModalUpdateUser == "hidden") {
+      setShowModalUpdateUser("");
+    } else {
+      setShowModalUpdateUser("hidden");
     }
   }
   const imageModal = (image: string) => {
@@ -394,6 +414,7 @@ export default function TableUser({ users }: { users: any }) {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
+    filteredItems.length,
     users.length,
   ]);
 
@@ -471,13 +492,11 @@ export default function TableUser({ users }: { users: any }) {
           showModal={() => UserModal()}
           showModalNotif={() => UserNotifModal()}
         />
-
-        {/* <ModalPreviewImage
-          showModal={imageModal}
-          show={showImage}
-          src={srcImage}
-          //   User={User}
-        /> */}
+        <ModalUpdateUser
+          user={User}
+          show={showModalUpdateUser}
+          showModal={() => ShowUpdateUser()}
+        />
       </>
     </>
   );

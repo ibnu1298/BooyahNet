@@ -394,21 +394,29 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-fit text-small text-default-400">
-          {selectedKeys === "all"
-            ? `${selectedPaymentId.length} of ${pendingPaymentId.length} selected`
-            : `${selectedKeys.size} of ${pendingPaymentId.length} selected`}
+          {pendingPaymentId.length > 0 ? (
+            <>
+              {selectedKeys === "all"
+                ? `${selectedPaymentId.length} of ${pendingPaymentId.length} selected`
+                : `${selectedKeys.size} of ${pendingPaymentId.length} selected`}
+            </>
+          ) : (
+            <>Pending Payment Not Found</>
+          )}
         </span>
-        <Pagination
-          hidden={pages == 1}
-          className="z-0"
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          page={page}
-          total={pages}
-          onChange={setPage}
-        />
+        {sortedItems.length > 0 && (
+          <Pagination
+            hidden={pages == 1}
+            className="z-0"
+            isCompact
+            showControls
+            showShadow
+            color="primary"
+            page={page}
+            total={pages}
+            onChange={setPage}
+          />
+        )}
       </div>
     );
   }, [
@@ -496,6 +504,8 @@ export default function TablePaymentACC({ payments }: { payments: any }) {
           show={showImage}
           src={srcImage}
           payment={payment}
+          ACC={true}
+          showModalNotif={PaymentNotifModal}
         />
       </>
     </>

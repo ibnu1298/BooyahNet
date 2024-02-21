@@ -125,7 +125,8 @@ const ModalUser = ({
                       <td>No HP</td>
                       <td>
                         :{" "}
-                        {user != null && user.phoneNumber == "" ? (
+                        {(user != null && user.phoneNumber == "") ||
+                        user.phoneNumber == null ? (
                           <span></span>
                         ) : (
                           <Snippet
@@ -179,28 +180,51 @@ const ModalUser = ({
                 )}
               </div>
               <div className="flex justify-center items-center mt-2 gap-2">
-                <button
-                  type="submit"
-                  className={`w-20 text-white bg-red-600 focus:bg-red-950 focus:outline-none hover:bg-red-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
-                  onClick={() => userACC(user.id, false)}
-                >
-                  {isLoading ? (
-                    <SpinCircle size={6} className="mx-3 flex justify-center" />
-                  ) : (
-                    <>Disable</>
-                  )}
-                </button>
-                <button
-                  type="submit"
-                  className={`w-20 text-white bg-teal-600 focus:bg-teal-950 focus:outline-none hover:bg-teal-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-5 py-2.5 text-center ${cursor} `}
-                  onClick={() => userACC(user.id, true)}
-                >
-                  {isLoading ? (
-                    <SpinCircle size={6} className="mx-3 flex justify-center" />
-                  ) : (
-                    <>Accept</>
-                  )}
-                </button>
+                {user != null && user.status != "Pending" && (
+                  <button
+                    onClick={showModal}
+                    type="button"
+                    className="w-fit text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-3 py-2 hover:text-gray-900 focus:z-10 dark:bg-gray-700/50 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                  >
+                    Kembali
+                  </button>
+                )}
+                {user != null && user.status != "Inactive" && (
+                  <button
+                    type="submit"
+                    className={`w-fit text-white bg-red-600 focus:bg-red-950 focus:outline-none hover:bg-red-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-3 py-2 text-center ${cursor} `}
+                    onClick={() => userACC(user.id, false)}
+                  >
+                    {isLoading ? (
+                      <SpinCircle
+                        size={6}
+                        className="mx-3 flex justify-center"
+                      />
+                    ) : user != null && user.status == "Pending" ? (
+                      <>Reject</>
+                    ) : (
+                      <>Disable</>
+                    )}
+                  </button>
+                )}
+                {user != null && user.status != "Active" && (
+                  <button
+                    type="submit"
+                    className={`w-fit text-white bg-teal-600 focus:bg-teal-950 focus:outline-none hover:bg-teal-800 transition duration-500 delay-100 focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center px-3 py-2 text-center ${cursor} `}
+                    onClick={() => userACC(user.id, true)}
+                  >
+                    {isLoading ? (
+                      <SpinCircle
+                        size={6}
+                        className="mx-3 flex justify-center"
+                      />
+                    ) : user != null && user.status == "Pending" ? (
+                      <>Accept</>
+                    ) : (
+                      <>Activate</>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </div>

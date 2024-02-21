@@ -7,6 +7,12 @@ import FormUpdateBiodata from "../Fragments/Form/FormUpdateBiodata";
 import FormUpdateCredential from "../Fragments/Form/FormUpdateCredential";
 import Notifications from "../Elements/Notif.tsx/Notifications";
 import FormUpdateWIFI from "../Fragments/Form/FormUpdateWIFI";
+import { Span } from "next/dist/trace";
+import Button from "../Elements/Button/page";
+import SpinCircle from "../Elements/Loading/spinCircle";
+import ModalVerifikasiEmail from "../Fragments/Modal/User/ModalVerifikasiEmail";
+import ModalSuccess from "../Fragments/Modal/ModalSuccess";
+import { time } from "console";
 
 let className = `w-full text-sm px-3 py-2  border border-gray-300 rounded-md focus:outline-none  focus:border-indigo-300 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400  dark:focus:ring-gray-500 dark:border-gray-500 dark:focus:border-gray-500`;
 const UpdateDataUser = ({
@@ -32,7 +38,11 @@ const UpdateDataUser = ({
 
   const [isLoading, setIsloading] = useState(false);
   const [user, setUser] = useState();
+  const [messageSuccess, setMessageSuccess] = useState("");
+  const [verifikasiModal, setVerifikasiModal] = useState("hidden");
+  const [modalSuccess, setModalSuccess] = useState("hidden");
   const [cursor, setCursor] = useState("");
+  const [timer, setTimer] = useState(0);
 
   const handleUpdateUsernameEmail = async (event: any) => {
     setIsloading(true);
@@ -177,17 +187,95 @@ const UpdateDataUser = ({
   ) {
     phoneNumber = Number(session?.user.phoneNumber);
   }
+  console.log(session?.user.email);
+  const verifikasiEmailModal = () => {
+    if (verifikasiModal == "hidden") {
+      setVerifikasiModal("");
+    } else {
+      setVerifikasiModal("hidden");
+    }
+  };
+  const showModalSuccess = (message: string) => {
+    if (modalSuccess == "hidden") {
+      setModalSuccess("");
+      setMessageSuccess(message);
+    } else {
+      setModalSuccess("hidden");
+    }
+  };
+  const handleSendOTP = async () => {
+    if (timer <= 0 && session?.user.email != "" && session?.user != undefined) {
+      try {
+        const res = await fetch("/api/user/sendOTP", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: session?.user.email,
+          }),
+        });
+        const data = await res.json();
+        console.log(data);
 
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+  function countdown(seconds: number) {
+    if (timer > 0) {
+      return;
+    }
+    const now = Date.now();
+    const then = now + seconds * 1000;
+
+    setInterval(() => {
+      const secondsLeft = Math.round((then - Date.now()) / 1000) + 1;
+      if (secondsLeft < 0) {
+        return;
+      }
+      setTimer(secondsLeft);
+    }, 1000);
+  }
   return (
     <>
-      <div className="bg-gray-600/50 p-5 rounded-lg mx-2 px-6 w-[365px] sm:w-[500px] flex flex-col">
-        <div className="text-right text-bold mb-4 mx-1">
+      <ModalVerifikasiEmail
+        show={verifikasiModal}
+        showModal={verifikasiEmailModal}
+        showModalSuccess={showModalSuccess}
+        handleSendOTP={handleSendOTP}
+        timer={timer}
+        countdown={countdown}
+      />
+      <ModalSuccess
+        show={modalSuccess}
+        message={messageSuccess}
+        showModal={showModalSuccess}
+      />
+      <div className="bg-gray-700/80 p-5 rounded-lg mx-2 px-6 w-[365px] sm:w-[500px] flex flex-col gap-3">
+        <div className="text-right text-bold  mx-1">
           {session?.user.emailConfirmed ? (
-            <span className="text-green-400">Sudah </span>
+            <div>
+              <span className="text-green-400">Sudah </span>
+              <span>Verifikasi Email</span>
+            </div>
           ) : (
-            <span className="text-red-500">Belum </span>
+            <div>
+              <span className="text-red-500">Belum </span>
+              <span
+                onClick={() => {
+                  countdown(30);
+                  verifikasiEmailModal();
+                  handleSendOTP();
+                }}
+                className="py-1 px-2  bg-teal-800 rounded-md focus:bg-teal-950 focus:ring-3 hover:bg-teal-600 transition duration-500 delay-100 cursor-pointer"
+              >
+                Verifikasi Email
+              </span>
+            </div>
           )}
-          Verifikasi Email
         </div>
 
         <Tabs
